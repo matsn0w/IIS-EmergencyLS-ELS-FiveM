@@ -1,4 +1,4 @@
-function parseVehData(xml, fileName)
+function ParseVehData(xml, fileName)
 
     local a = {}
     fileName = string.sub(fileName, 1, -5)

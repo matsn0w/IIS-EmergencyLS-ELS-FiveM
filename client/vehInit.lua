@@ -11,7 +11,7 @@ DisableControlAction(0, 58, true)
 DisableControlAction(0, 80, true)
 DisableControlAction(1, 80, true)
 
-function addVehicleToTable(vehicle)
+function AddVehicleToTable(vehicle)
     kjEnabledVehicles[vehicle] = {}
     kjEnabledVehicles[vehicle]["primary"] = false
     kjEnabledVehicles[vehicle]["secondary"] = false

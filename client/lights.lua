@@ -5,7 +5,7 @@ AddEventHandler("kjELS:resetExtras", function(vehicle)
         return
     end
 
-    if setContains(kjxmlData,
+    if SetContains(kjxmlData,
                    GetDisplayNameFromVehicleModel(GetEntityModel(vehicle))) then
         SetVehicleExtra(vehicle, 1, 1)
         SetVehicleExtra(vehicle, 2, 1)
@@ -57,7 +57,7 @@ AddEventHandler("kjELS:primaryLights", function(vehicle)
         return
     end
 
-    for ex, _ in pairs(kjxmlData[getCarHash(vehicle)].extras) do
+    for ex, _ in pairs(kjxmlData[GetCarHash(vehicle)].extras) do
         SetVehicleExtra(vehicle, ex, 1) -- Off
     end
 
@@ -67,7 +67,7 @@ AddEventHandler("kjELS:primaryLights", function(vehicle)
         SetVehicleEngineOn(vehicle, true, true, false) -- Keep engine on whilst lights are activated
 
         local lastFlash = {}
-        for _, flash in pairs(kjxmlData[getCarHash(vehicle)].patterns.primary) do
+        for _, flash in pairs(kjxmlData[GetCarHash(vehicle)].patterns.primary) do
             if kjEnabledVehicles[vehicle]["primary"] then
                 for _, extra in pairs(flash['extras']) do
                     SetVehicleExtra(vehicle, extra, 0)
@@ -94,7 +94,7 @@ AddEventHandler("kjELS:secondaryLights", function(vehicle)
     end
 
     if not kjEnabledVehicles[vehicle]["secondary"] then
-        for _, flash in pairs(kjxmlData[getCarHash(vehicle)].patterns.rearreds) do
+        for _, flash in pairs(kjxmlData[GetCarHash(vehicle)].patterns.rearreds) do
             for _, extra in pairs(flash['extras']) do
                 SetVehicleExtra(vehicle, extra, 1)
             end
@@ -105,7 +105,7 @@ AddEventHandler("kjELS:secondaryLights", function(vehicle)
         SetVehicleEngineOn(vehicle, true, true, false)
 
         local lastFlash = {}
-        for _, flash in pairs(kjxmlData[getCarHash(vehicle)].patterns.rearreds) do
+        for _, flash in pairs(kjxmlData[GetCarHash(vehicle)].patterns.rearreds) do
             if kjEnabledVehicles[vehicle]["secondary"] then
                 for _, extra in pairs(flash['extras']) do
                     table.insert(lastFlash, extra)
@@ -132,7 +132,7 @@ AddEventHandler("kjELS:warningLights", function(vehicle)
     end
 
     if not kjEnabledVehicles[vehicle]["warning"] then
-        for _, flash in pairs(kjxmlData[getCarHash(vehicle)].patterns.secondary) do
+        for _, flash in pairs(kjxmlData[GetCarHash(vehicle)].patterns.secondary) do
             for _, extra in pairs(flash['extras']) do
                 SetVehicleExtra(vehicle, extra, 1)
             end
@@ -143,7 +143,7 @@ AddEventHandler("kjELS:warningLights", function(vehicle)
         SetVehicleEngineOn(vehicle, true, true, false)
 
         local lastFlash = {}
-        for _, flash in pairs(kjxmlData[getCarHash(vehicle)].patterns.secondary) do
+        for _, flash in pairs(kjxmlData[GetCarHash(vehicle)].patterns.secondary) do
             if kjEnabledVehicles[vehicle]["warning"] then
                 for _, extra in pairs(flash['extras']) do
                     table.insert(lastFlash, extra)
@@ -173,7 +173,7 @@ AddEventHandler("kjELS:updateHorn", function(playerid, status)
         return
     end
 
-    if kjEnabledVehicles[vehicle] == nil then addVehicleToTable(vehicle) end
+    if kjEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
     kjEnabledVehicles[vehicle]["horn"] = status
 
     if kjEnabledVehicles[vehicle]["horn_sound"] ~= nil then
@@ -194,7 +194,7 @@ AddEventHandler("kjELS:updateSiren", function(playerid, status)
     local vehicle = GetVehiclePedIsUsing(GetPlayerPed(
                                              GetPlayerFromServerId(playerid)))
 
-    if kjEnabledVehicles[vehicle] == nil then addVehicleToTable(vehicle) end
+    if kjEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
     kjEnabledVehicles[vehicle]["siren"] = status
 
     if kjEnabledVehicles[vehicle]["sound"] ~= nil then
@@ -202,8 +202,8 @@ AddEventHandler("kjELS:updateSiren", function(playerid, status)
         ReleaseSoundId(kjEnabledVehicles[vehicle]["sound"])
         kjEnabledVehicles[vehicle]["sound"] = nil
     end
-    if kjxmlData[getCarHash(vehicle)].sounds then
-        vehicleSounds = kjxmlData[getCarHash(vehicle)].sounds
+    if kjxmlData[GetCarHash(vehicle)].sounds then
+        vehicleSounds = kjxmlData[GetCarHash(vehicle)].sounds
     end
 
     if status == 1 then
@@ -239,13 +239,13 @@ Citizen.CreateThread(function()
     while true do
         if kjxmlData then
             for vehicle, _ in pairs(kjEnabledVehicles) do
-                if kjxmlData[getCarHash(vehicle)] then
-                    for ex, det in pairs(kjxmlData[getCarHash(vehicle)].extras) do
+                if kjxmlData[GetCarHash(vehicle)] then
+                    for ex, det in pairs(kjxmlData[GetCarHash(vehicle)].extras) do
                         if IsVehicleExtraTurnedOn(vehicle, ex) and det.enabled then
                             -- Flash on walls e.t.c.
                             local ExtraInfo =
-                                kjxmlData[getCarHash(vehicle)].extras[ex]
-                            createEnviromentLight(vehicle, ex,
+                                kjxmlData[GetCarHash(vehicle)].extras[ex]
+                            CreateEnviromentLight(vehicle, ex,
                                                   ExtraInfo.env_pos.x,
                                                   ExtraInfo.env_pos.y,
                                                   ExtraInfo.env_pos.z,
