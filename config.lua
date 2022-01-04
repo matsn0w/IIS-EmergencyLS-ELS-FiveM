@@ -67,6 +67,9 @@ Config.ELSFiles = {
     "POLICEB.xml",
 }
 
+-- Allows passengers to control the sirens
+Config.AllowPassengers = false
+
 -- Whether indicators should be enabled or not. (Controlled with Left & Right arrows by default)
 Config.Indicators = true
 

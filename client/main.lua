@@ -2,6 +2,16 @@ local IndicatorL = false
 local IndicatorR = false
 local IndicatorHazard = false
 
+function canControlSirens(vehicle)
+    -- driver can always control the sirens
+    if GetPedInVehicleSeat(vehicle, -1) == PlayerPedId() then
+        return true
+    end
+
+    -- either true or false based on the config value
+    return Config.AllowPassengers
+end
+
 Citizen.CreateThread(function()
 
     while true do
@@ -29,6 +39,7 @@ Citizen.CreateThread(function()
 
                     if (IsDisabledControlJustPressed(0, 86)) then
                         vehicle = GetVehiclePedIsUsing(PlayerPedId())
+                        -- only the driver can control the horn
                         if GetPedInVehicleSeat(vehicle, -1) == PlayerPedId() then
                             TriggerServerEvent("kjELS:toggleHorn", 1)
                         end
@@ -49,7 +60,7 @@ Citizen.CreateThread(function()
                 if IsDisabledControlJustReleased(1, Config.KeyBinds['PrimaryLights']) then
                     if IsPedInAnyVehicle(PlayerPedId(), false) then
                         vehicle = GetVehiclePedIsUsing(PlayerPedId())
-                        if GetPedInVehicleSeat(vehicle, -1) == PlayerPedId() then
+                        if canControlSirens(vehicle) then
                             if setContains(kjxmlData, GetDisplayNameFromVehicleModel(GetEntityModel(vehicle))) then
                                 if kjEnabledVehicles[vehicle] == nil then 
                                     addVehicleToTable(vehicle)
@@ -80,7 +91,7 @@ Citizen.CreateThread(function()
                 elseif IsDisabledControlJustPressed(1, Config.KeyBinds['SecondaryLights']) then
                     if IsPedInAnyVehicle(PlayerPedId(), false) then
                         vehicle = GetVehiclePedIsUsing(PlayerPedId())
-                        if GetPedInVehicleSeat(vehicle, -1) == PlayerPedId() then -- If player is driver
+                        if canControlSirens(vehicle) then -- If player is driver
                             if kjEnabledVehicles[vehicle] == nil then 
                                 addVehicleToTable(vehicle)
                             end
@@ -103,7 +114,7 @@ Citizen.CreateThread(function()
                 elseif IsDisabledControlJustPressed(1, Config.KeyBinds['MiscLights']) then
                     if IsPedInAnyVehicle(PlayerPedId(), false) then
                         vehicle = GetVehiclePedIsUsing(PlayerPedId())
-                        if GetPedInVehicleSeat(vehicle, -1) == PlayerPedId() then
+                        if canControlSirens(vehicle) then
                             if kjEnabledVehicles[vehicle] == nil then 
                                 addVehicleToTable(vehicle)
                             end
@@ -125,7 +136,7 @@ Citizen.CreateThread(function()
                     end 
                 elseif IsDisabledControlJustReleased(1, Config.KeyBinds['ActivateSiren']) then
                     vehicle = GetVehiclePedIsUsing(PlayerPedId())
-	                if GetPedInVehicleSeat(vehicle, -1) == PlayerPedId() then
+	                if canControlSirens(vehicle) then
 		                if kjEnabledVehicles[vehicle] == nil then 
 			                addVehicleToTable(vehicle)
 		                end
@@ -157,7 +168,7 @@ Citizen.CreateThread(function()
                     end
                 elseif IsDisabledControlJustReleased(1, Config.KeyBinds['NextSiren']) then
                     vehicle = GetVehiclePedIsUsing(PlayerPedId())
-                    if GetPedInVehicleSeat(vehicle, -1) == PlayerPedId() then
+                    if canControlSirens(vehicle) then
                         if kjEnabledVehicles[vehicle] == nil then 
                             addVehicleToTable(vehicle)
                         end
@@ -190,7 +201,7 @@ Citizen.CreateThread(function()
                 --[[ Siren Toggles ]]--
                 if IsDisabledControlJustReleased(1, Config.KeyBinds['Siren1']) then -- Siren One
                     vehicle = GetVehiclePedIsUsing(PlayerPedId())
-                    if GetPedInVehicleSeat(vehicle, -1) == PlayerPedId() then
+                    if canControlSirens(vehicle) then
                         if kjEnabledVehicles[vehicle] == nil then 
                             addVehicleToTable(vehicle)
                         end
@@ -212,7 +223,7 @@ Citizen.CreateThread(function()
                     end
                 elseif IsDisabledControlJustReleased(1, Config.KeyBinds['Siren2']) then -- Siren Two
                     vehicle = GetVehiclePedIsUsing(PlayerPedId())
-                    if GetPedInVehicleSeat(vehicle, -1) == PlayerPedId() then
+                    if canControlSirens(vehicle) then
                         if kjEnabledVehicles[vehicle] == nil then 
                             addVehicleToTable(vehicle)
                         end
@@ -234,7 +245,7 @@ Citizen.CreateThread(function()
                     end
                 elseif IsDisabledControlJustReleased(1, Config.KeyBinds['Siren3']) then -- Siren Three
                     vehicle = GetVehiclePedIsUsing(PlayerPedId())
-                    if GetPedInVehicleSeat(vehicle, -1) == PlayerPedId() then
+                    if canControlSirens(vehicle) then
                         if kjEnabledVehicles[vehicle] == nil then 
                             addVehicleToTable(vehicle)
                         end
@@ -256,7 +267,7 @@ Citizen.CreateThread(function()
                     end
                 elseif IsDisabledControlJustReleased(1, Config.KeyBinds['Siren4']) then -- Siren Four
                     vehicle = GetVehiclePedIsUsing(PlayerPedId())
-                    if GetPedInVehicleSeat(vehicle, -1) == PlayerPedId() then
+                    if canControlSirens(vehicle) then
                         if kjEnabledVehicles[vehicle] == nil then 
                             addVehicleToTable(vehicle)
                         end
@@ -320,7 +331,7 @@ Citizen.CreateThread(function()
                 if IsDisabledControlJustReleased(1, 85) then
                     if IsPedInAnyVehicle(PlayerPedId(), false) then
                         vehicle = GetVehiclePedIsUsing(PlayerPedId())
-                        if GetPedInVehicleSeat(vehicle, -1) == PlayerPedId() then
+                        if canControlSirens(vehicle) then
                             if kjEnabledVehicles[vehicle] == nil then 
                                 addVehicleToTable(vehicle)
                             end
@@ -346,7 +357,7 @@ Citizen.CreateThread(function()
                     end
                 elseif IsDisabledControlJustReleased(1, 173) then
                     vehicle = GetVehiclePedIsUsing(PlayerPedId())
-	                if GetPedInVehicleSeat(vehicle, -1) == PlayerPedId() then
+	                if canControlSirens(vehicle) then
 		                if kjEnabledVehicles[vehicle] == nil then 
 			                addVehicleToTable(vehicle)
 		                end
@@ -378,7 +389,7 @@ Citizen.CreateThread(function()
                     end
                 elseif IsDisabledControlJustReleased(1, 170) then
                     vehicle = GetVehiclePedIsUsing(PlayerPedId())
-                    if GetPedInVehicleSeat(vehicle, -1) == PlayerPedId() then
+                    if canControlSirens(vehicle) then
                         if kjEnabledVehicles[vehicle] == nil then 
                             addVehicleToTable(vehicle)
                         end
