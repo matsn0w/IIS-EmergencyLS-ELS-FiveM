@@ -35,7 +35,7 @@ The server-side element restricts controls to the driver and allows the driver t
 
 ## Changelog
 
-v2.0.0
+### v2.0.0
 
 * Added configuration option to allow passengers to control the sirens
 * VCF: Added `AllowUse` flag to enable or disable the main horn
@@ -46,6 +46,6 @@ v2.0.0
 * Updated SLAXML parser to version 0.8
 * Lots of code improvements and optimizations
 
-v1.2.0 - v1.3.0
+### v1.2.0 - v1.3.0
 
 Original releases from [Infinite Impact Solutions](https://github.com/InfImpSolutions)
