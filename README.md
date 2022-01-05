@@ -24,7 +24,8 @@ The server-side element restricts controls to the driver and allows the driver t
 4. Edit the configuration to fit to your needs
 5. Place the folder **IIS-EmergencyLS-ELS-FiveM** into your resources directory
 6. Enable the resource in your `server.cfg` file: `ensure IIS-EmergencyLS-ELS-FiveM` or start it manually
-7. Enjoy!
+7. Make sure the `baseevents` resource from FiveM is started **before** this resource is started
+8. Enjoy!
 
 ## Video Demonstration (+ Installation)
 
