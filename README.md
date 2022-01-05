@@ -19,6 +19,16 @@ The server-side element restricts controls to the driver and allows the driver t
 * ELS Beeps
 * Indicators
 
+## Installation
+
+1. Download the latest release
+2. Extract the zip archive somewhere
+3. Copy `config.example.lua` and name it `config.lua`
+4. Edit the configuration to fit to your needs
+5. Place the folder **IIS-EmergencyLS-ELS-FiveM** into your resources directory
+6. Enable the resource in your `server.cfg` file: `ensure IIS-EmergencyLS-ELS-FiveM` or start it manually
+7. Enjoy!
+
 ## Video Demonstration (+ Install)
 
 <https://www.youtube.com/watch?v=MZnO9eIjFWA&t=54s>
