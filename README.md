@@ -1,23 +1,20 @@
-# Emergency Lighting System
+# EmergencyLS - Emergency Lighting System for FiveM
 
-## Description
+EmergencyLS is an all-in-one configurable Emergency Lighting System (ELS) for the popular Grand Theft Auto V (GTA V) multiplayer client called FiveM.
 
-EmergencyLS is an all-in-one configurable Emergency Lighting System for the popular Grand Theft Auto V (GTA V) Modification, FiveM. We kept it simple, allowing generic ELS XML Configurations to work alongside our system.
+The server-side element restricts controls to the driver and allows the driver to activate primary, secondary & warning lighting each with individually configurable key-bindings. Welcome to the best server-sided Emergency Lighting System for FiveM!
 
-The server-side element restricts controls to the driver and allows the driver to activate primary, secondary & warning lighting each with individually configurable key-bindings. Welcome to the best server-sided Emergency Lighting System for FiveM.
+## Key Features
 
-## Features
+* Sirens and lights synced across the entire server
+* Easy configuration per vehicle
+* Create your own light patterns
+* Use native game sirens or use your own with [WMServerSirens](https://github.com/Walsheyy/WMServerSirens)
+* A simple yet comprehensive configuration
+* Support for 3 different light stages
+* Support for up to 4 different sirens per vehicle
 
-* Configuration File
-* Multiple Stage Lighting Activation
-* Developer Configuration
-* Server-sided & Network Sync
-* Server-sided Siren Support as Standard.
-* Custom Light Patterns
-* ‘999 Mode Activated’ Sound Effect
-* Siren Beeps
-* ELS Beeps
-* Indicators
+...and more!
 
 ## Installation
 
@@ -29,11 +26,11 @@ The server-side element restricts controls to the driver and allows the driver t
 6. Enable the resource in your `server.cfg` file: `ensure IIS-EmergencyLS-ELS-FiveM` or start it manually
 7. Enjoy!
 
-## Video Demonstration (+ Install)
+## Video Demonstration (+ Installation)
+
+*Note that this video was made for version 1.x of this resource.*
 
 <https://www.youtube.com/watch?v=MZnO9eIjFWA&t=54s>
-
-**All instructions for install and use are included in the readme file included with the download :)** 
 
 ## Changelog
 
@@ -50,4 +47,4 @@ v2.0.0
 
 v1.2.0 - v1.3.0
 
-Initial releases from [Infinite Impact Solutions](https://github.com/InfImpSolutions)
+Original releases from [Infinite Impact Solutions](https://github.com/InfImpSolutions)
