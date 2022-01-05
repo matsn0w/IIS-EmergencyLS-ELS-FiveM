@@ -7,16 +7,26 @@ function ParseObjSet(data, fileName)
 end
 
 AddEventHandler('onResourceStart', function(name)
-    if name:lower() == GetCurrentResourceName():lower() then
-        for i = 1, #Config.ELSFiles do
-            local data = LoadResourceFile(GetCurrentResourceName(), 'xmlFiles/' .. Config.ELSFiles[i])
-
-            if data then ParseObjSet(data, Config.ELSFiles[i]) end
-        end
-
-        -- send the ELS data to all clients
-        TriggerClientEvent('kjELS:sendELSInformation', -1, kjxmlData)
+    if not Config then
+        error('You probably forgot to copy the example configuration file. Please see the installation instructions for further details.')
+        StopResource(GetCurrentResourceName())
+        CancelEvent()
+        return
     end
+
+    if name:lower() ~= GetCurrentResourceName():lower() then
+        CancelEvent()
+        return
+    end
+
+    for i = 1, #Config.ELSFiles do
+        local data = LoadResourceFile(GetCurrentResourceName(), 'xmlFiles/' .. Config.ELSFiles[i])
+
+        if data then ParseObjSet(data, Config.ELSFiles[i]) end
+    end
+
+    -- send the ELS data to all clients
+    TriggerClientEvent('kjELS:sendELSInformation', -1, kjxmlData)
 end)
 
 RegisterServerEvent('kjELS:requestELSInformation')

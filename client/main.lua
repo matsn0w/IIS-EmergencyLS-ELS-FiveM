@@ -106,87 +106,99 @@ local function HandleSiren(vehicle, siren)
     end
 end
 
-Citizen.CreateThread(function()
-    while true do
-        if not kjxmlData then
-            -- request ELS data
-            TriggerServerEvent('kjELS:requestELSInformation')
-
-            -- wait for the data to load
-            while not kjxmlData do Citizen.Wait(0) end
-        end
-
-        -- wait untill the player is in a vehicle
-        while not IsPedInAnyVehicle(PlayerPedId(), false) do Citizen.Wait(0) end
-
-        local ped = PlayerPedId()
-        local vehicle = GetVehiclePedIsUsing(ped)
-
-        if IsUsingKeyboard(0) then
-            -- indicators are allowed on all vehicles
-            if Config.Indicators then HandleIndicators(vehicle) end
-        end
-
-        -- only run if player is in an ELS enabled vehicle and can control the sirens
-        if IsELSVehicle(vehicle) and CanControlSirens(vehicle) then
-
-            local controls = {
-                58, -- INPUT_THROW_GRENADE
-                73, -- INPUT_VEH_DUCK
-                80, -- INPUT_VEH_CIN_CAM
-                80, -- INPUT_VEH_CIN_CAM
-                81, -- INPUT_VEH_NEXT_RADIO
-                82, -- INPUT_VEH_PREV_RADIO
-                83, -- INPUT_VEH_NEXT_RADIO_TRACK
-                84, -- INPUT_VEH_PREV_RADIO_TRACK
-                85, -- INPUT_VEH_RADIO_WHEEL
-            }
-
-            -- disable all conflicting controls
-            for _, control in ipairs(controls) do
-                DisableControlAction(0, control, true)
-            end
-
-            -- set vehicle state
-            SetVehRadioStation(vehicle, 'OFF')
-            SetVehicleRadioEnabled(vehicle, false)
-            SetVehicleAutoRepairDisabled(vehicle, true)
-
-            -- add vehicle to ELS table if not listed already
-            if kjEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
-
-            -- handle the horn
-            HandleHorn(vehicle)
-
-            if IsUsingKeyboard(0) then
-                -- light stages
-                if IsDisabledControlJustPressed(1, Config.KeyBinds['PrimaryLights']) then HandleLightStage(vehicle, 'primary')
-                elseif IsDisabledControlJustPressed(1, Config.KeyBinds['SecondaryLights']) then HandleLightStage(vehicle, 'secondary')
-                elseif IsDisabledControlJustPressed(1, Config.KeyBinds['MiscLights']) then HandleLightStage(vehicle, 'warning')
-                end
-
-                -- siren toggles
-                if IsDisabledControlJustPressed(1, Config.KeyBinds['ActivateSiren']) then HandleSiren(vehicle)
-                elseif IsDisabledControlJustPressed(1, Config.KeyBinds['NextSiren']) then
-                    local next = kjEnabledVehicles[vehicle].siren + 1
-                    if next > 4 then next = 1 end
-                    HandleSiren(vehicle, next)
-                elseif IsDisabledControlJustPressed(1, Config.KeyBinds['Siren1']) then HandleSiren(vehicle, 1)
-                elseif IsDisabledControlJustPressed(1, Config.KeyBinds['Siren2']) then HandleSiren(vehicle, 2)
-                elseif IsDisabledControlJustPressed(1, Config.KeyBinds['Siren3']) then HandleSiren(vehicle, 3)
-                elseif IsDisabledControlJustPressed(1, Config.KeyBinds['Siren4']) then HandleSiren(vehicle, 4)
-                end
-            else -- on controller
-                if IsDisabledControlJustPressed(1, 85 --[[ DPAD_LEFT ]]) then HandleLightStage(vehicle, 'primary')
-                elseif IsDisabledControlJustPressed(1, 170 --[[ B ]]) then
-                    local next = kjEnabledVehicles[vehicle].siren + 1
-                    if next > 4 then next = 1 end
-                    HandleSiren(vehicle, next)
-                elseif IsDisabledControlJustPressed(1, 173 --[[ DPAD_DOWN ]]) then HandleSiren(vehicle)
-                end
-            end
-        end
-
-        Citizen.Wait(0)
+AddEventHandler('onClientResourceStart', function(name)
+    if not Config then
+        CancelEvent()
+        return
     end
+
+    if name:lower() ~= GetCurrentResourceName():lower() then
+        CancelEvent()
+        return
+    end
+
+    Citizen.CreateThread(function()
+        while true do
+            if not kjxmlData then
+                -- request ELS data
+                TriggerServerEvent('kjELS:requestELSInformation')
+    
+                -- wait for the data to load
+                while not kjxmlData do Citizen.Wait(0) end
+            end
+    
+            -- wait untill the player is in a vehicle
+            while not IsPedInAnyVehicle(PlayerPedId(), false) do Citizen.Wait(0) end
+    
+            local ped = PlayerPedId()
+            local vehicle = GetVehiclePedIsUsing(ped)
+    
+            if IsUsingKeyboard(0) then
+                -- indicators are allowed on all vehicles
+                if Config.Indicators then HandleIndicators(vehicle) end
+            end
+    
+            -- only run if player is in an ELS enabled vehicle and can control the sirens
+            if IsELSVehicle(vehicle) and CanControlSirens(vehicle) then
+    
+                local controls = {
+                    58, -- INPUT_THROW_GRENADE
+                    73, -- INPUT_VEH_DUCK
+                    80, -- INPUT_VEH_CIN_CAM
+                    80, -- INPUT_VEH_CIN_CAM
+                    81, -- INPUT_VEH_NEXT_RADIO
+                    82, -- INPUT_VEH_PREV_RADIO
+                    83, -- INPUT_VEH_NEXT_RADIO_TRACK
+                    84, -- INPUT_VEH_PREV_RADIO_TRACK
+                    85, -- INPUT_VEH_RADIO_WHEEL
+                }
+    
+                -- disable all conflicting controls
+                for _, control in ipairs(controls) do
+                    DisableControlAction(0, control, true)
+                end
+    
+                -- set vehicle state
+                SetVehRadioStation(vehicle, 'OFF')
+                SetVehicleRadioEnabled(vehicle, false)
+                SetVehicleAutoRepairDisabled(vehicle, true)
+    
+                -- add vehicle to ELS table if not listed already
+                if kjEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
+    
+                -- handle the horn
+                HandleHorn(vehicle)
+    
+                if IsUsingKeyboard(0) then
+                    -- light stages
+                    if IsDisabledControlJustPressed(1, Config.KeyBinds['PrimaryLights']) then HandleLightStage(vehicle, 'primary')
+                    elseif IsDisabledControlJustPressed(1, Config.KeyBinds['SecondaryLights']) then HandleLightStage(vehicle, 'secondary')
+                    elseif IsDisabledControlJustPressed(1, Config.KeyBinds['MiscLights']) then HandleLightStage(vehicle, 'warning')
+                    end
+    
+                    -- siren toggles
+                    if IsDisabledControlJustPressed(1, Config.KeyBinds['ActivateSiren']) then HandleSiren(vehicle)
+                    elseif IsDisabledControlJustPressed(1, Config.KeyBinds['NextSiren']) then
+                        local next = kjEnabledVehicles[vehicle].siren + 1
+                        if next > 4 then next = 1 end
+                        HandleSiren(vehicle, next)
+                    elseif IsDisabledControlJustPressed(1, Config.KeyBinds['Siren1']) then HandleSiren(vehicle, 1)
+                    elseif IsDisabledControlJustPressed(1, Config.KeyBinds['Siren2']) then HandleSiren(vehicle, 2)
+                    elseif IsDisabledControlJustPressed(1, Config.KeyBinds['Siren3']) then HandleSiren(vehicle, 3)
+                    elseif IsDisabledControlJustPressed(1, Config.KeyBinds['Siren4']) then HandleSiren(vehicle, 4)
+                    end
+                else -- on controller
+                    if IsDisabledControlJustPressed(1, 85 --[[ DPAD_LEFT ]]) then HandleLightStage(vehicle, 'primary')
+                    elseif IsDisabledControlJustPressed(1, 170 --[[ B ]]) then
+                        local next = kjEnabledVehicles[vehicle].siren + 1
+                        if next > 4 then next = 1 end
+                        HandleSiren(vehicle, next)
+                    elseif IsDisabledControlJustPressed(1, 173 --[[ DPAD_DOWN ]]) then HandleSiren(vehicle)
+                    end
+                end
+            end
+    
+            Citizen.Wait(0)
+        end
+    end)
 end)
