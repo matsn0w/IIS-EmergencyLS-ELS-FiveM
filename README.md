@@ -38,6 +38,7 @@ The server-side element restricts controls to the driver and allows the driver t
 ### v2.0.0
 
 * Added configuration option to allow passengers to control the sirens
+* Added configuration option to customize indicator controls
 * VCF: Added `AllowUse` flag to enable or disable the main horn
 * VCF: Added `SoundSet` flag to specify a custom sound for the main horn
 * Added `/extra <extra>` command to quickly toggle a vehicle extra
