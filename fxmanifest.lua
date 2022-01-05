@@ -1,11 +1,13 @@
-resource_manifest_version '44febabe-d386-4d18-afbe-5e627f4af937'
-
-fx_version 'bodacious'
+fx_version 'cerulean'
 games { 'gta5' }
 
-author 'KJ Studios'
+author 'KJ Studios and matsn0w'
 description 'Server-Sided Emergency Lighting System for FiveM.'
-version '1.0.0'
+version '2.0.0'
+
+dependencies {
+    'baseevents'
+}
 
 ui_page 'html/index.html'
 
@@ -15,19 +17,22 @@ files {
     'html/sounds/Beep.ogg'
 }
 
-shared_script "config.lua"
+shared_scripts {
+    'config.lua',
+    'shared/funcs.lua'
+}
 
 client_scripts {
-    'client/vehInit.lua',
+    'client/init.lua',
     'client/main.lua',
-    'client/funcs.lua',
     'client/lights.lua',
-    'client/initVehicle.lua',
+    'client/commands.lua'
 }
 
 server_scripts {
-    'server/parseObjSet.lua',
-    'server/parseXML.lua',
-    'server/serverInit.lua',
-    'server/keypress.lua'
+    'lib/SLAXML.lua',
+
+    'server/init.lua',
+    'server/keypress.lua',
+    'server/parseVCF.lua'
 }
