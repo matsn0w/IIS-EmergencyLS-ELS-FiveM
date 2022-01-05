@@ -37,7 +37,7 @@ function GetCarHash(car)
     if not car then return false end
 
     for k, v in pairs(kjxmlData) do
-        if GetEntityModel(car) == GetHashKey(k) then return k end
+        if GetEntityModel(car) == GetHashKey(k) and v.primary ~= nil then return k end
     end
 
     return false
@@ -54,7 +54,7 @@ function AddVehicleToTable(vehicle)
 end
 
 function IsELSVehicle(vehicle)
-    return GetCarHash(vehicle) ~= nil
+    return GetCarHash(vehicle) ~= false
 end
 
 function PedIsDriver(vehicle)

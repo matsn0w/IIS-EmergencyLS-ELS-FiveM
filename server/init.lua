@@ -22,7 +22,8 @@ AddEventHandler('onResourceStart', function(name)
     for i = 1, #Config.ELSFiles do
         local data = LoadResourceFile(GetCurrentResourceName(), 'xmlFiles/' .. Config.ELSFiles[i])
 
-        if data then ParseObjSet(data, Config.ELSFiles[i]) end
+        if data then ParseObjSet(data, Config.ELSFiles[i])
+        else error('VCF file not found: ' .. Config.ELSFiles[i]) end
     end
 
     -- send the ELS data to all clients
