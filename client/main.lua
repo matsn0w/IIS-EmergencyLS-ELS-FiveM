@@ -11,10 +11,9 @@ local function HandleIndicators(vehicle)
 
     local type = nil
 
-    -- arrow left
-    if IsControlJustPressed(1, 173) then type = 'hazard'
-    elseif IsControlJustPressed(1, 174) then type = 'left'
-    elseif IsControlJustPressed(1, 175) then type = 'right' end
+    if IsControlJustPressed(1, Config.KeyBinds['IndicatorHazard']) then type = 'hazard'
+    elseif IsControlJustPressed(1, Config.KeyBinds['IndicatorLeft']) then type = 'left'
+    elseif IsControlJustPressed(1, Config.KeyBinds['IndicatorRight']) then type = 'right' end
 
     if not type then return end
 
@@ -122,25 +121,25 @@ AddEventHandler('onClientResourceStart', function(name)
             if not kjxmlData then
                 -- request ELS data
                 TriggerServerEvent('kjELS:requestELSInformation')
-    
+
                 -- wait for the data to load
                 while not kjxmlData do Citizen.Wait(0) end
             end
-    
+
             -- wait untill the player is in a vehicle
             while not IsPedInAnyVehicle(PlayerPedId(), false) do Citizen.Wait(0) end
-    
+
             local ped = PlayerPedId()
             local vehicle = GetVehiclePedIsUsing(ped)
-    
+
             if IsUsingKeyboard(0) then
                 -- indicators are allowed on all vehicles
                 if Config.Indicators then HandleIndicators(vehicle) end
             end
-    
+
             -- only run if player is in an ELS enabled vehicle and can control the sirens
             if IsELSVehicle(vehicle) and CanControlSirens(vehicle) then
-    
+
                 local controls = {
                     58, -- INPUT_THROW_GRENADE
                     73, -- INPUT_VEH_DUCK
@@ -152,30 +151,30 @@ AddEventHandler('onClientResourceStart', function(name)
                     84, -- INPUT_VEH_PREV_RADIO_TRACK
                     85, -- INPUT_VEH_RADIO_WHEEL
                 }
-    
+
                 -- disable all conflicting controls
                 for _, control in ipairs(controls) do
                     DisableControlAction(0, control, true)
                 end
-    
+
                 -- set vehicle state
                 SetVehRadioStation(vehicle, 'OFF')
                 SetVehicleRadioEnabled(vehicle, false)
                 SetVehicleAutoRepairDisabled(vehicle, true)
-    
+
                 -- add vehicle to ELS table if not listed already
                 if kjEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
-    
+
                 -- handle the horn
                 HandleHorn(vehicle)
-    
+
                 if IsUsingKeyboard(0) then
                     -- light stages
                     if IsDisabledControlJustPressed(1, Config.KeyBinds['PrimaryLights']) then HandleLightStage(vehicle, 'primary')
                     elseif IsDisabledControlJustPressed(1, Config.KeyBinds['SecondaryLights']) then HandleLightStage(vehicle, 'secondary')
                     elseif IsDisabledControlJustPressed(1, Config.KeyBinds['MiscLights']) then HandleLightStage(vehicle, 'warning')
                     end
-    
+
                     -- siren toggles
                     if IsDisabledControlJustPressed(1, Config.KeyBinds['ActivateSiren']) then HandleSiren(vehicle)
                     elseif IsDisabledControlJustPressed(1, Config.KeyBinds['NextSiren']) then
@@ -197,7 +196,7 @@ AddEventHandler('onClientResourceStart', function(name)
                     end
                 end
             end
-    
+
             Citizen.Wait(0)
         end
     end)
