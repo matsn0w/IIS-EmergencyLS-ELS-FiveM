@@ -45,4 +45,7 @@ Config.KeyBinds = {
     Siren2 = 158, -- 2
     Siren3 = 160, -- 3
     Siren4 = 164, -- 4
+    IndicatorLeft = 85, -- ARROW LEFT
+    IndicatorRight = 175, -- ARROW RIGHT
+    IndicatorHazard = 173, -- ARROW DOWN
 }
