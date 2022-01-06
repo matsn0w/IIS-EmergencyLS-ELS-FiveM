@@ -116,7 +116,7 @@ Example with native game sounds:
 
 ```xml
 <SOUNDS>
-    <MainHorn AllowUse="true" InterruptsSiren="true" AudioString="SIRENS_AIRHORN" />
+    <MainHorn AllowUse="true" AudioString="SIRENS_AIRHORN" />
     <NineMode AllowUse="true" />
     <SrnTone1 AllowUse="true" AudioString="VEHICLES_HORNS_SIREN_1" />
     <SrnTone2 AllowUse="true" AudioString="VEHICLES_HORNS_SIREN_2" />
