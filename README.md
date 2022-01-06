@@ -14,24 +14,17 @@ The server-side element restricts controls to the driver and allows the driver t
 * Support for 3 different light stages
 * Support for up to 4 different sirens per vehicle
 
-...and more!
+*...and more!*
 
-## Installation
+## Installation and Configuration
 
-1. Download the latest release
-2. Extract the zip archive somewhere
-3. Copy `config.example.lua` and name it `config.lua`
-4. Edit the configuration to fit to your needs
-5. Place the folder **IIS-EmergencyLS-ELS-FiveM** into your resources directory
-6. Enable the resource in your `server.cfg` file: `ensure IIS-EmergencyLS-ELS-FiveM` or start it manually
-7. Make sure the `baseevents` resource from FiveM is started **before** this resource is started
-8. Enjoy!
+See the instructions in the [documentation](docs/README.md)!
 
-## Video Demonstration (+ Installation)
+## Questions or problems?
 
-*Note that this video was made for version 1.x of this resource.*
+Please read the [documentation](docs/README.md) first and check the [Q&A section](https://github.com/matsn0w/IIS-EmergencyLS-ELS-FiveM/discussions/categories/q-a) on Github if your question has already been asked. It probably is!
 
-<https://www.youtube.com/watch?v=MZnO9eIjFWA&t=54s>
+Didn't find and answer? Then feel free to [start a new topic](https://github.com/matsn0w/IIS-EmergencyLS-ELS-FiveM/discussions/new?category=q-a). The community is here to help you!
 
 ## Changelog
 
@@ -39,6 +32,7 @@ The server-side element restricts controls to the driver and allows the driver t
 
 * Added configuration option to allow passengers to control the sirens
 * Added configuration option to customize indicator controls
+* Added new documentation
 * VCF: Added `AllowUse` flag to enable or disable the main horn
 * VCF: Added `SoundSet` flag to specify a custom sound for the main horn
 * Added `/extra <extra>` command to quickly toggle a vehicle extra
@@ -50,3 +44,9 @@ The server-side element restricts controls to the driver and allows the driver t
 ### v1.2.0 - v1.3.0
 
 Original releases from [Infinite Impact Solutions](https://github.com/InfImpSolutions)
+
+## Video Demonstration (+ Installation)
+
+*Note that this video was made for version 1.x of this resource.*
+
+[![EmergencyLS | FiveM Resource | Teaser/Trailer](https://res.cloudinary.com/marcomontalbano/image/upload/v1641479116/video_to_markdown/images/youtube--MZnO9eIjFWA-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://www.youtube.com/watch?v=MZnO9eIjFWA "EmergencyLS | FiveM Resource | Teaser/Trailer")
