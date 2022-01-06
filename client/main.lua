@@ -82,6 +82,9 @@ local function HandleSiren(vehicle, siren)
     local sirenOn = currentSiren ~= 0
 
     if (not sirenOn) or (sirenOn and siren and siren ~= currentSiren) then
+        -- siren only works if it is enabled
+        if siren and not kjxmlData[GetCarHash(vehicle)].sounds['srnTone' .. siren].allowUse then return end
+
         -- turn the (next) siren on
         TriggerServerEvent('kjELS:setSirenState', siren or 1)
 
@@ -103,6 +106,26 @@ local function HandleSiren(vehicle, siren)
     if Config.Beeps then
         SendNUIMessage({ transactionType = 'playSound', transactionFile = 'Beep', transactionVolume = 0.025 })
     end
+end
+
+local function NextSiren(vehicle)
+    -- get the next siren
+    local next = kjEnabledVehicles[vehicle].siren + 1
+
+    -- check if the next siren is allowed
+    while not kjxmlData[GetCarHash(vehicle)].sounds['srnTone' .. next].allowUse do
+        -- try the next siren
+        next = next + 1
+
+        -- go back to 1
+        if next > 4 then next = 1 end
+    end
+
+    -- go back to 1
+    if next > 4 then next = 1 end
+
+    -- turn the siren on
+    HandleSiren(vehicle, next)
 end
 
 AddEventHandler('onClientResourceStart', function(name)
@@ -177,10 +200,7 @@ AddEventHandler('onClientResourceStart', function(name)
 
                     -- siren toggles
                     if IsDisabledControlJustPressed(1, Config.KeyBinds['ActivateSiren']) then HandleSiren(vehicle)
-                    elseif IsDisabledControlJustPressed(1, Config.KeyBinds['NextSiren']) then
-                        local next = kjEnabledVehicles[vehicle].siren + 1
-                        if next > 4 then next = 1 end
-                        HandleSiren(vehicle, next)
+                    elseif IsDisabledControlJustPressed(1, Config.KeyBinds['NextSiren']) then NextSiren(vehicle)
                     elseif IsDisabledControlJustPressed(1, Config.KeyBinds['Siren1']) then HandleSiren(vehicle, 1)
                     elseif IsDisabledControlJustPressed(1, Config.KeyBinds['Siren2']) then HandleSiren(vehicle, 2)
                     elseif IsDisabledControlJustPressed(1, Config.KeyBinds['Siren3']) then HandleSiren(vehicle, 3)
@@ -188,10 +208,7 @@ AddEventHandler('onClientResourceStart', function(name)
                     end
                 else -- on controller
                     if IsDisabledControlJustPressed(1, 85 --[[ DPAD_LEFT ]]) then HandleLightStage(vehicle, 'primary')
-                    elseif IsDisabledControlJustPressed(1, 170 --[[ B ]]) then
-                        local next = kjEnabledVehicles[vehicle].siren + 1
-                        if next > 4 then next = 1 end
-                        HandleSiren(vehicle, next)
+                    elseif IsDisabledControlJustPressed(1, 170 --[[ B ]]) then NextSiren(vehicle)
                     elseif IsDisabledControlJustPressed(1, 173 --[[ DPAD_DOWN ]]) then HandleSiren(vehicle)
                     end
                 end
