@@ -69,7 +69,6 @@ function ParseVCF(xml, fileName)
                 if elem.name == 'MainHorn' then
                     vcf.sounds.mainHorn = {}
                     vcf.sounds.mainHorn.allowUse = elem.attr['AllowUse'] == 'true'
-                    vcf.sounds.mainHorn.interrupt = elem.attr['InterruptsSiren'] == 'true'
                     vcf.sounds.mainHorn.audioString = elem.attr['AudioString'] or 'SIRENS_AIRHORN'
                     vcf.sounds.mainHorn.soundSet = elem.attr['SoundSet']
                 end
