@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <!-- ELS VEHICLE CONFIGURATION FILE -->
-<vcfroot Description="EmergencyLS | xml Configuration" Author="Infinity Studios" >
+<vcfroot Description="EmergencyLS | VCF sample configuration with WMServerSirens" Author="Infinity Studios">
 	<!-- EXTRAS CONFIGURATION -->
 	<EOVERRIDE>	
 		<Extra01 IsElsControlled="true" AllowEnvLight="true" Color="blue" OffsetX="-0.70" OffsetY="-0.20" OffsetZ="0.50" /> 
@@ -18,23 +18,21 @@
 	</EOVERRIDE>
 	<!-- SOUNDS & SIREN CONFIG -->
 	<SOUNDS>
-		<MainHorn InterruptsSiren="true" AudioString="SIRENS_AIRHORN" />
-		<ManTone1 AllowUse="true" AudioString="SIREN_ALPHA" SoundSet="DLC_WMSIRENS_SOUNDSET" />
-		<ManTone2 AllowUse="true" AudioString="SIREN_BRAVO" SoundSet="DLC_WMSIRENS_SOUNDSET" />
+		<MainHorn AudioString="SIRENS_AIRHORN" />
+		<NineMode AllowUse="true" />
 		<SrnTone1 AllowUse="true" AudioString="SIREN_CHARLIE" SoundSet="DLC_WMSIRENS_SOUNDSET" />
 		<SrnTone2 AllowUse="true" AudioString="SIREN_DELTA" SoundSet="DLC_WMSIRENS_SOUNDSET" />
 		<SrnTone3 AllowUse="true" AudioString="SIREN_ECHO" SoundSet="DLC_WMSIRENS_SOUNDSET" />
 		<SrnTone4 AllowUse="true" AudioString="SIREN_FOXTROT" SoundSet="DLC_WMSIRENS_SOUNDSET" />
-		<NineMode  AllowUse="true" />
 	</SOUNDS>
 	<!-- CUSTOM PATTERN -->
 	<PATTERN>
 		<PRIMARY>
-			<Flash01 Duration="80" Extras="01,02" /> <!-- This is done, then waits 80ms and does... -->
-			<Flash02 Duration="80" Extras="01,02,03,04" /> <!-- This one. -->
-			<Flash03 Duration="80" Extras="03,04" /> <!-- e.t.c. -->
+			<Flash01 Duration="80" Extras="1,2" /> <!-- This is done, then waits 80ms and does... -->
+			<Flash02 Duration="80" Extras="1,2,3,4" /> <!-- This one. -->
+			<Flash03 Duration="80" Extras="3,4" /> <!-- e.t.c. -->
 			<Flash04 Duration="80" Extras="" />
-			<Flash05 Duration="80" Extras="01,02" />
+			<Flash05 Duration="80" Extras="1,2" />
 			<!-- Then it is looped back up to Flash01 here after 80ms -->
 		</PRIMARY>
 		<SECONDARY> <!-- Matrix Board / Beacon / Scene Lights e.t.c. -->
@@ -44,9 +42,9 @@
 			<Flash04 Duration="160" Extras="" />
 		</SECONDARY>
 		<REARREDS>
-			<Flash01 Duration="160" Extras="09" />
+			<Flash01 Duration="160" Extras="9" />
 			<Flash02 Duration="160" Extras="" />
-			<Flash03 Duration="160" Extras="07" />
+			<Flash03 Duration="160" Extras="7" />
 			<Flash04 Duration="160" Extras="" />
 		</REARREDS>
 	</PATTERN>
