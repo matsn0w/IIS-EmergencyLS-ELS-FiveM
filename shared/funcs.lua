@@ -1,7 +1,7 @@
 function SetContains(set, key) return set[key] ~= nil end
 
 function TableHasValue(table, value)
-    for i, v in ipairs(table) do
+    for i, v in pairs(table) do
         if v == value then return true end
     end
 

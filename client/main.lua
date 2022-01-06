@@ -11,9 +11,9 @@ local function HandleIndicators(vehicle)
 
     local type = nil
 
-    if IsControlJustPressed(1, Config.KeyBinds['IndicatorHazard']) then type = 'hazard'
-    elseif IsControlJustPressed(1, Config.KeyBinds['IndicatorLeft']) then type = 'left'
-    elseif IsControlJustPressed(1, Config.KeyBinds['IndicatorRight']) then type = 'right' end
+    if IsControlJustReleased(0, Config.KeyBinds['IndicatorHazard']) and IsUsingKeyboard(0) then type = 'hazard'
+    elseif IsControlJustReleased(0, Config.KeyBinds['IndicatorLeft']) and IsUsingKeyboard(0) then type = 'left'
+    elseif IsControlJustReleased(0, Config.KeyBinds['IndicatorRight']) and IsUsingKeyboard(0) then type = 'right' end
 
     if not type then return end
 
@@ -181,14 +181,14 @@ AddEventHandler('onClientResourceStart', function(name)
                     { 0, 82 }, -- INPUT_VEH_PREV_RADIO
                     { 0, 83 }, -- INPUT_VEH_NEXT_RADIO_TRACK
                     { 0, 84 }, -- INPUT_VEH_PREV_RADIO_TRACK
-                    { 0, 85 }, -- INPUT_VEH_RADIO_WHEEL
-                    { 0, 170 }, -- INPUT_SAVE_REPLAY_CLIP
-                    { 0, 173 }, -- INPUT_CELLPHONE_DOWN
                 }
 
                 -- disable all conflicting controls
                 for _, control in ipairs(controls) do
-                    DisableControlAction(control[1], control[2], true)
+                    -- do not disable if the control is in the key binds
+                    if not TableHasValue(Config.KeyBinds, control[2]) then
+                        DisableControlAction(control[1], control[2], true)
+                    end
                 end
 
                 -- set vehicle state
@@ -204,23 +204,23 @@ AddEventHandler('onClientResourceStart', function(name)
 
                 if IsUsingKeyboard(0) then
                     -- light stages
-                    if IsDisabledControlJustReleased(1, Config.KeyBinds['PrimaryLights']) then HandleLightStage(vehicle, 'primary')
-                    elseif IsDisabledControlJustReleased(1, Config.KeyBinds['SecondaryLights']) then HandleLightStage(vehicle, 'secondary')
-                    elseif IsDisabledControlJustReleased(1, Config.KeyBinds['MiscLights']) then HandleLightStage(vehicle, 'warning')
+                    if IsControlJustReleased(0, Config.KeyBinds['PrimaryLights']) then HandleLightStage(vehicle, 'primary')
+                    elseif IsControlJustReleased(0, Config.KeyBinds['SecondaryLights']) then HandleLightStage(vehicle, 'secondary')
+                    elseif IsControlJustReleased(0, Config.KeyBinds['MiscLights']) then HandleLightStage(vehicle, 'warning')
                     end
 
                     -- siren toggles
-                    if IsDisabledControlJustReleased(1, Config.KeyBinds['ActivateSiren']) then HandleSiren(vehicle)
-                    elseif IsDisabledControlJustReleased(1, Config.KeyBinds['NextSiren']) then NextSiren(vehicle)
-                    elseif IsDisabledControlJustReleased(1, Config.KeyBinds['Siren1']) then HandleSiren(vehicle, 1)
-                    elseif IsDisabledControlJustReleased(1, Config.KeyBinds['Siren2']) then HandleSiren(vehicle, 2)
-                    elseif IsDisabledControlJustReleased(1, Config.KeyBinds['Siren3']) then HandleSiren(vehicle, 3)
-                    elseif IsDisabledControlJustReleased(1, Config.KeyBinds['Siren4']) then HandleSiren(vehicle, 4)
+                    if IsControlJustReleased(0, Config.KeyBinds['ActivateSiren']) then HandleSiren(vehicle)
+                    elseif IsControlJustReleased(0, Config.KeyBinds['NextSiren']) then NextSiren(vehicle)
+                    elseif IsControlJustReleased(0, Config.KeyBinds['Siren1']) then HandleSiren(vehicle, 1)
+                    elseif IsControlJustReleased(0, Config.KeyBinds['Siren2']) then HandleSiren(vehicle, 2)
+                    elseif IsControlJustReleased(0, Config.KeyBinds['Siren3']) then HandleSiren(vehicle, 3)
+                    elseif IsControlJustReleased(0, Config.KeyBinds['Siren4']) then HandleSiren(vehicle, 4)
                     end
                 else -- on controller
-                    if IsDisabledControlJustReleased(1, 85 --[[ DPAD_LEFT ]]) then HandleLightStage(vehicle, 'primary')
-                    elseif IsDisabledControlJustReleased(1, 170 --[[ B ]]) then NextSiren(vehicle)
-                    elseif IsDisabledControlJustReleased(1, 173 --[[ DPAD_DOWN ]]) then HandleSiren(vehicle)
+                    if IsControlJustReleased(1, 85 --[[ DPAD_LEFT ]]) then HandleLightStage(vehicle, 'primary')
+                    elseif IsControlJustReleased(1, 170 --[[ B ]]) then NextSiren(vehicle)
+                    elseif IsControlJustReleased(1, 173 --[[ DPAD_DOWN ]]) then HandleSiren(vehicle)
                     end
                 end
             end
