@@ -112,13 +112,22 @@ local function NextSiren(vehicle)
     -- get the next siren
     local next = kjEnabledVehicles[vehicle].siren + 1
 
+    -- keep track of the amount of tries, there are a total of 4 sirens
+    local max = 4
+    local count = 0
+
     -- check if the next siren is allowed
     while not kjxmlData[GetCarHash(vehicle)].sounds['srnTone' .. next].allowUse do
+        -- check if the maximum is reached, not even one siren is allowed!
+        if count == max then return end
+
         -- try the next siren
         next = next + 1
 
         -- go back to 1
         if next > 4 then next = 1 end
+
+        count = count + 1
     end
 
     -- go back to 1
