@@ -91,30 +91,30 @@ function ParseVCF(xml, fileName)
         if rootElement.name == 'PATTERN' then
             for pid = 1, #rootElement.kids do
                 local elem = rootElement.kids[pid]
+                local type = string.lower(elem.name)
 
-                if TableHasValue({'primary', 'secondary', 'rearreds'}, string.lower(elem.name)) then
-                    for f = 1, #elem.kids do
+                if TableHasValue({'primary', 'secondary', 'rearreds'}, type) then
+                    local id = 1
 
-                        local type = string.lower(elem.name)
+                    for _, flash in ipairs(elem.kids) do
+                        -- backwards compatibility for VCF's with 'FlashXX' tags
+                        local tag = string.upper(string.sub(flash.name, 1, 5))
 
-                        if string.upper(string.sub(elem.kids[f].name, 1, -3)) == 'FLASH' then
-
-                            local flash = elem.kids[f]
-                            local fid = tonumber(string.sub(flash.name, -2))
-
-                            vcf.patterns[type][fid] = {}
-                            vcf.patterns[type][fid].extras = {}
-                            vcf.patterns[type][fid].duration = tonumber(flash.attr['Duration'] or '100')
+                        if tag == 'FLASH' then
+                            vcf.patterns[type][id] = {}
+                            vcf.patterns[type][id].extras = {}
+                            vcf.patterns[type][id].duration = tonumber(flash.attr['Duration'] or '100')
 
                             for extra in string.gmatch(flash.attr['Extras'], '([0-9]+)') do
                                 -- remove leading zero's
                                 extra = string.format('%u', extra)
 
                                 -- insert extra # in the table
-                                table.insert(vcf.patterns[type][fid].extras, tonumber(extra))
+                                table.insert(vcf.patterns[type][id].extras, tonumber(extra))
                             end
-                        end
 
+                            id = id + 1
+                        end
                     end
                 end
             end
