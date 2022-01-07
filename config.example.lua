@@ -14,6 +14,12 @@ Config.AudioBanks = {
     -- 'DLC_WMSIRENS\\SIRENPACK_ONE',
 }
 
+-- Change these values to tweak the light reflections around your vehicle
+Config.EnvironmentalLights = {
+    Range = 80.0, -- how far the light reaches
+    Intensity = 1.0, -- how intense the light source is
+}
+
 -- Whether vehicle passengers are allowed to control the lights and sirens
 Config.AllowPassengers = false
 

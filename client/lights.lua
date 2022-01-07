@@ -187,6 +187,31 @@ AddEventHandler('kjELS:updateIndicators', function(dir, toggle)
     end
 end)
 
+local function CreateEnviromentLight(vehicle, extra, offset, color)
+    local boneIndex = GetEntityBoneIndexByName(vehicle, 'extra_' .. extra)
+    local coords = GetWorldPositionOfEntityBone(vehicle, boneIndex)
+    local position = coords + offset
+
+    local rgb = { 0, 0, 0 }
+    local range = Config.EnvironmentalLights.Range or 50.0
+    local intensity = Config.EnvironmentalLights.Intensity or 1.0
+    local shadow = 1.0
+
+    if string.lower(color) == 'blue' then rgb = { 0, 0, 255 }
+    elseif string.lower(color) == 'red' then rgb = { 255, 0, 0 }
+    elseif string.lower(color) == 'green' then rgb = { 0, 255, 0 }
+    elseif string.lower(color) == 'white' then rgb = { 255, 255, 255 }
+    elseif string.lower(color) == 'amber' then rgb = { 255, 194, 0}
+    end
+
+    -- draw the light
+    DrawLightWithRangeAndShadow(
+        position.x, position.y, position.z,
+        rgb[1], rgb[2], rgb[3],
+        range, intensity, shadow
+    )
+end
+
 Citizen.CreateThread(function()
     while true do
         -- wait for VCF data to load
