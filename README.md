@@ -32,6 +32,7 @@ Didn't find and answer? Then feel free to [start a new topic](https://github.com
 
 * Added configuration option to allow passengers to control the sirens
 * Added configuration option to customize indicator controls
+* Added configuration option to customize environmental light reflections
 * Added new documentation
 * VCF: Added `AllowUse` flag to enable or disable the main horn
 * VCF: Added `SoundSet` flag to specify a custom sound for the main horn
