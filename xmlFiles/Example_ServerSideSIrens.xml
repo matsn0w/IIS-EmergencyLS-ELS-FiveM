@@ -19,7 +19,7 @@
 
 	<!-- SOUNDS & SIREN CONFIG -->
 	<SOUNDS>
-		<MainHorn AudioString="SIRENS_AIRHORN" />
+		<MainHorn AllowUse="true" AudioString="SIRENS_AIRHORN" />
 		<NineMode AllowUse="true" />
 		<SrnTone1 AllowUse="true" AudioString="SIREN_CHARLIE" SoundSet="DLC_WMSIRENS_SOUNDSET" />
 		<SrnTone2 AllowUse="true" AudioString="SIREN_DELTA" SoundSet="DLC_WMSIRENS_SOUNDSET" />
