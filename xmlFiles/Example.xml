@@ -16,6 +16,7 @@
 		<Extra11 IsElsControlled="false" />
 		<Extra12 IsElsControlled="false" />
 	</EOVERRIDE>
+
 	<!-- SOUNDS & SIREN CONFIG -->
 	<SOUNDS>
 		<MainHorn AudioString="SIRENS_AIRHORN" />
@@ -25,27 +26,30 @@
 		<SrnTone3 AllowUse="true" AudioString="VEHICLES_HORNS_POLICE_WARNING" />
 		<SrnTone4 AllowUse="true" AudioString="VEHICLES_HORNS_AMBULANCE_WARNING" />
 	</SOUNDS>
+
 	<!-- CUSTOM PATTERN -->
 	<PATTERN>
 		<PRIMARY>
 			<Flash01 Duration="80" Extras="1,2" /> <!-- This is done, then waits 80ms and does... -->
 			<Flash02 Duration="80" Extras="1,2,3,4" /> <!-- This one. -->
 			<Flash03 Duration="80" Extras="3,4" /> <!-- e.t.c. -->
-			<Flash04 Duration="80" Extras="" />
 			<Flash05 Duration="80" Extras="1,2" />
-			<!-- Then it is looped back up to Flash01 here after 80ms -->
+			<Flash04 Duration="80" />
+			<!-- Then it is looped back up to the first Flash here after 80ms -->
 		</PRIMARY>
+
 		<SECONDARY> <!-- Matrix Board / Beacon / Scene Lights e.t.c. -->
 			<Flash01 Duration="280" Extras="6" />
-			<Flash02 Duration="160" Extras="" />
+			<Flash02 Duration="160" />
 			<Flash03 Duration="280" Extras="5" />
-			<Flash04 Duration="160" Extras="" />
+			<Flash04 Duration="160" />
 		</SECONDARY>
+
 		<REARREDS>
 			<Flash01 Duration="160" Extras="9" />
-			<Flash02 Duration="160" Extras="" />
+			<Flash02 Duration="160" />
 			<Flash03 Duration="160" Extras="7" />
-			<Flash04 Duration="160" Extras="" />
+			<Flash04 Duration="160" />
 		</REARREDS>
 	</PATTERN>
 </vcfroot>

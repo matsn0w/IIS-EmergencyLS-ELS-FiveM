@@ -150,4 +150,44 @@ Options:
 
 ## Patterns: `PATTERN`
 
-**TODO**
+This section explains how to create a nice lighting pattern for the vehicle. There are three light stages that you can use: primary, secondary and 'rear reds' (also known as 'warning'). Each pattern goes into it's own section as you can see in the example below.
+
+Each pattern consists of one or more 'flashes'. For each flash, you can define how long it will be active and which extras light up. You can specify more than one extra per flash. Omitting or leaving the Extras key empty will be handled as 'waiting time'.
+
+The duration is measured in milliseconds. Flashes will be executed by appearance order and the entire pattern will be looped. Separate multiple extras with a comma.
+
+It's recommended to include an 'empty flash' at the bottom of each pattern to make the transition from last to first flash smooth.
+
+Pattern example:
+
+```xml
+<PATTERN>
+    <PRIMARY>
+        <Flash Duration="50" Extras="1,4" />
+        <Flash Duration="50" />
+        <Flash Duration="150" Extras="1,4" />
+        <Flash Duration="50" />
+        <Flash Duration="50" Extras="2,3" />
+        <Flash Duration="50" />
+        <Flash Duration="150" Extras="2,3" />
+        <Flash Duration="50" />
+    </PRIMARY>
+
+    <SECONDARY>
+        <Flash Duration="50" Extras="5" />
+        <Flash Duration="50" Extras="" />
+        <Flash Duration="150" Extras="5" />
+        <Flash Duration="50" Extras="" />
+        <Flash Duration="50" Extras="6" />
+        <Flash Duration="50" Extras="" />
+        <Flash Duration="150" Extras="6" />
+        <Flash Duration="50" Extras="" />
+    </SECONDARY>
+
+    <REARREDS>
+        <Flash Duration="1000" Extras="8" />
+        <Flash Duration="250" />
+        <Flash Duration="1000" Extras="7" />
+    </REARREDS>
+</PATTERN>
+```
