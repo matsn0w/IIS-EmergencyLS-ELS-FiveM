@@ -1,8 +1,12 @@
-# EmergencyLS - Emergency Lighting System for FiveM
+# MISS-ELS: Matsn0ws Incredible Server-Sided ELS
 
-EmergencyLS is an all-in-one configurable Emergency Lighting System (ELS) for the popular Grand Theft Auto V (GTA V) multiplayer client called FiveM.
+![MISS-ELS](assets/MISS-ELS_Logo.png)
 
-The server-side element restricts controls to the driver and allows the driver to activate primary, secondary & warning lighting each with individually configurable key-bindings. Welcome to the best server-sided Emergency Lighting System for FiveM!
+MISS-ELS is an all-in-one configurable Emergency Lighting System (ELS) for the popular Grand Theft Auto V (GTA V) multiplayer client called FiveM.
+
+The server-side element restricts controls to the driver (and optionally his passengers) and allows you to activate primary, secondary and warning lighting each with individually configurable key-bindings. Welcome to the best server-sided Emergency Lighting System for FiveM!
+
+Oh, and you might ask yourself where all the 'Els' or 'Miss Els' jokes come from. It's a [meme](https://youtu.be/X-PgamXIWRQ?t=75). Loes is calling her grandchild Els. Els? Els! ELS!
 
 ## Key Features
 
@@ -36,6 +40,7 @@ Didn't find and answer? Then feel free to [start a new topic](https://github.com
 * Added new documentation
 * VCF: Added `AllowUse` flag to enable or disable the main horn
 * VCF: Added `SoundSet` flag to specify a custom sound for the main horn
+* VCF: It's no longer needed to specify flash numbers within a pattern (Flash01, Flash02, etc. can now be Flash Flash Flash!)
 * Added `/extra <extra>` command to quickly toggle a vehicle extra
 * Fixed `AllowEnvLight` setting not doing anything
 * Fixed `AudioString` on MainHorn not doing anything
