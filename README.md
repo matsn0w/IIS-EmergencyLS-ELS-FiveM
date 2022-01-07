@@ -11,12 +11,14 @@ Oh, and you might ask yourself where all the 'Els' or 'Miss Els' jokes come from
 ## Key Features
 
 * Sirens and lights synced across the entire server
-* Easy configuration per vehicle
-* Create your own light patterns
+* Customizable light patterns per vehicle
 * Use native game sirens or use your own with [WMServerSirens](https://github.com/Walsheyy/WMServerSirens)
 * A simple yet comprehensive configuration
 * Support for 3 different light stages
 * Support for up to 4 different sirens per vehicle
+* Optional light reflections around the vehicle
+* Indicator controls
+* Customizable key binds
 
 *...and more!*
 
@@ -30,6 +32,8 @@ Please read the [documentation](docs/README.md) first and check the [Q&A section
 
 Didn't find and answer? Then feel free to [start a new topic](https://github.com/matsn0w/IIS-EmergencyLS-ELS-FiveM/discussions/new?category=q-a). The community is here to help you!
 
+Found a bug? Please [make an issue](https://github.com/matsn0w/MISS-ELS/issues/new)!
+
 ## Changelog
 
 ### v2.0.0
@@ -38,10 +42,10 @@ Didn't find and answer? Then feel free to [start a new topic](https://github.com
 * Added configuration option to customize indicator controls
 * Added configuration option to customize environmental light reflections
 * Added new documentation
+* Added `/extra <extra>` command to quickly toggle a vehicle extra
 * VCF: Added `AllowUse` flag to enable or disable the main horn
 * VCF: Added `SoundSet` flag to specify a custom sound for the main horn
 * VCF: It's no longer needed to specify flash numbers within a pattern (Flash01, Flash02, etc. can now be Flash Flash Flash!)
-* Added `/extra <extra>` command to quickly toggle a vehicle extra
 * Fixed `AllowEnvLight` setting not doing anything
 * Fixed `AudioString` on MainHorn not doing anything
 * Updated SLAXML parser to version 0.8
