@@ -10,25 +10,6 @@ function ParseVCF(xml, fileName)
     vcf.extras = {}
     vcf.sounds = {}
 
-    -- Default Primary Lights pattern
-    table.insert(vcf.patterns.primary, {duration = 80, extras = {1, 2}})
-    table.insert(vcf.patterns.primary, {duration = 80, extras = {1, 2, 3, 4}})
-    table.insert(vcf.patterns.primary, {duration = 80, extras = {3, 4}})
-    table.insert(vcf.patterns.primary, {duration = 80, extras = {}})
-    table.insert(vcf.patterns.primary, {duration = 80, extras = {1, 2}})
-
-    -- Default Secondary Lights pattern
-    table.insert(vcf.patterns.secondary, {duration = 280, extras = {6}})
-    table.insert(vcf.patterns.secondary, {duration = 160, extras = {}})
-    table.insert(vcf.patterns.secondary, {duration = 280, extras = {5}})
-    table.insert(vcf.patterns.secondary, {duration = 160, extras = {}})
-
-    -- Default Rear Red Lights pattern
-    table.insert(vcf.patterns.rearreds, {duration = 160, extras = {9}})
-    table.insert(vcf.patterns.rearreds, {duration = 160, extras = {}})
-    table.insert(vcf.patterns.rearreds, {duration = 160, extras = {7}})
-    table.insert(vcf.patterns.rearreds, {duration = 160, extras = {}})
-
     for i = 1, #xml.root.el do
 
         local rootElement = xml.root.el[i]
