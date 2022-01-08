@@ -105,7 +105,7 @@ function ParseVCF(xml, fileName)
                             vcf.patterns[type][id].extras = {}
                             vcf.patterns[type][id].duration = tonumber(flash.attr['Duration'] or '100')
 
-                            for extra in string.gmatch(flash.attr['Extras'], '([0-9]+)') do
+                            for extra in string.gmatch(flash.attr['Extras'] or '', '([0-9]+)') do
                                 -- remove leading zero's
                                 extra = string.format('%u', extra)
 
