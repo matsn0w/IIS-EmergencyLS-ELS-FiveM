@@ -76,7 +76,7 @@ end
 
 local function HandleSiren(vehicle, siren)
     -- siren only works in the primary light stage
-    if not kjEnabledVehicles[vehicle].primary then return end
+    if not kjEnabledVehicles[vehicle].primary and not Config.SirenAlwaysAllowed then return end
 
     local currentSiren = kjEnabledVehicles[vehicle].siren
     local sirenOn = currentSiren ~= 0

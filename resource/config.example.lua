@@ -23,6 +23,9 @@ Config.EnvironmentalLights = {
 -- Whether vehicle passengers are allowed to control the lights and sirens
 Config.AllowPassengers = false
 
+-- Whether you can toggle the siren, even when the lights are out
+Config.SirenAlwaysAllowed = false
+
 -- Whether vehicle indicator control should be enabled
 -- The indicators are controlled with arrow left, right and down on your keyboard
 Config.Indicators = true
