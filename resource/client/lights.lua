@@ -7,9 +7,17 @@ AddEventHandler('kjELS:resetExtras', function(vehicle)
 
     local model = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle))
 
-    if SetContains(kjxmlData, model) then
-        for e = 1, 14 do
-            SetVehicleExtra(vehicle, e, true)
+    if not SetContains(kjxmlData, model) then
+        CancelEvent()
+        return
+    end
+
+    -- loop through all extra's
+    for extra, info in pairs(kjxmlData[model].extras) do
+        -- check if we can control this extra
+        if info.enabled == true then
+            -- disable the extra
+            SetVehicleExtra(vehicle, extra, true)
         end
     end
 end)
