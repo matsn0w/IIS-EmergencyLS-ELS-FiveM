@@ -39,7 +39,7 @@ Config.Beeps = false
 -- B = activate next siren
 Config.ControllerSupport = true
 
--- Sets key binds for various actions
+-- Sets keybinds for various actions
 -- See https://docs.fivem.net/docs/game-references/controls for a list of codes
 Config.KeyBinds = {
     PrimaryLights = 85, -- Q

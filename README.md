@@ -18,7 +18,7 @@ Oh, and you might ask yourself where all the 'Els' or 'Miss Els' jokes come from
 * Support for up to 4 different sirens per vehicle
 * Optional light reflections around the vehicle
 * Indicator controls
-* Customizable key binds
+* Customizable keybinds
 
 *...and more!*
 
