@@ -1,3 +1,50 @@
+local function SetLightStage(vehicle, stage, toggle)
+    local ELSvehicle = kjEnabledVehicles[vehicle]
+    local VCFdata = kjxmlData[GetCarHash(vehicle)]
+
+    -- convert the given light stage to a pattern in the VCF
+    local pattern = ConvertStageToPattern(stage)
+
+    -- reset all extras
+    TriggerEvent('kjELS:resetExtras', vehicle)
+
+    -- set the light state
+    ELSvehicle[stage] = toggle
+
+    -- toggle the native siren ('emergency mode')
+    SetVehicleSiren(vehicle, toggle)
+
+    while ELSvehicle[stage] do
+        -- keep the engine on whilst the lights are activated
+        SetVehicleEngineOn(vehicle, true, true, false)
+
+        local lastFlash = {}
+
+        for _, flash in ipairs(VCFdata.patterns[pattern]) do
+            if ELSvehicle[stage] then
+                for _, extra in ipairs(flash['extras']) do
+                    -- turn the extra on
+                    SetVehicleExtra(vehicle, extra, 0)
+
+                    -- save the extra as last flashed
+                    table.insert(lastFlash, extra)
+                end
+
+                Citizen.Wait(flash.duration)
+            end
+
+            -- turn off the last flashed extras
+            for _, v in ipairs(lastFlash) do
+                SetVehicleExtra(vehicle, v, 1)
+            end
+
+            lastFlash = {}
+        end
+
+        Citizen.Wait(0)
+    end
+end
+
 RegisterNetEvent('kjELS:resetExtras')
 AddEventHandler('kjELS:resetExtras', function(vehicle)
     if not vehicle then
@@ -22,71 +69,16 @@ AddEventHandler('kjELS:resetExtras', function(vehicle)
     end
 end)
 
+-- run on kjELS:updateStatus
 RegisterNetEvent('kjELS:toggleLights')
-AddEventHandler('kjELS:toggleLights', function(playerid, type, status)
-    local vehicle = GetVehiclePedIsUsing(GetPlayerPed(GetPlayerFromServerId(playerid)))
-
+AddEventHandler('kjELS:toggleLights', function(vehicle, stage, toggle)
     if not vehicle then
         CancelEvent()
         return
     end
 
-    local ELSvehicle = kjEnabledVehicles[vehicle]
-
-    -- toggle the light state
-    ELSvehicle[type] = status
-
-    TriggerEvent('kjELS:lightStage', vehicle, type)
-end)
-
-RegisterNetEvent('kjELS:lightStage')
-AddEventHandler('kjELS:lightStage', function(vehicle, stage)
-    if not vehicle then
-        CancelEvent()
-        return
-    end
-
-    local pattern = stage
-
-    -- yeah...
-    if stage == 'secondary' then pattern = 'rearreds'
-    elseif stage == 'warning' then pattern = 'secondary' end
-
-    -- reset all extras
-    TriggerEvent('kjELS:resetExtras', vehicle)
-
-    local ELSvehicle = kjEnabledVehicles[vehicle]
-    local VCFdata = kjxmlData[GetCarHash(vehicle)]
-
-    while ELSvehicle[stage] do
-        -- keep the engine on whilst the lights are activated
-        SetVehicleEngineOn(vehicle, true, true, false)
-
-        local lastFlash = {}
-
-        for _, flash in pairs(VCFdata.patterns[pattern]) do
-            if ELSvehicle[stage] then
-                for _, extra in pairs(flash['extras']) do
-                    -- turn the extra on
-                    SetVehicleExtra(vehicle, extra, 0)
-
-                    -- save the extra as last flashed
-                    table.insert(lastFlash, extra)
-                end
-
-                Citizen.Wait(flash.duration)
-            end
-
-            -- turn off the last flash's extras...
-            for k, v in pairs(lastFlash) do
-                SetVehicleExtra(vehicle, v, 1)
-            end
-
-            lastFlash = {}
-        end
-
-        Citizen.Wait(0)
-    end
+    -- set the light stage
+    SetLightStage(vehicle, stage, toggle)
 end)
 
 RegisterNetEvent('kjELS:updateHorn')
@@ -133,6 +125,7 @@ AddEventHandler('kjELS:updateHorn', function(playerid, status)
     end
 end)
 
+-- run on kjELS:setSirenState
 RegisterNetEvent('kjELS:updateSiren')
 AddEventHandler('kjELS:updateSiren', function(playerid, status)
     local vehicle = GetVehiclePedIsUsing(GetPlayerPed(GetPlayerFromServerId(playerid)))
@@ -173,7 +166,7 @@ AddEventHandler('kjELS:updateSiren', function(playerid, status)
         )
     end
 
-    -- mute the original siren
+    -- mute the native siren
     SetVehicleHasMutedSirens(vehicle, true)
 end)
 

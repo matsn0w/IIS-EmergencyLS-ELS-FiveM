@@ -43,3 +43,13 @@ function CanControlSirens(vehicle)
     -- either true or false based on the config value
     return Config.AllowPassengers
 end
+
+function ConvertStageToPattern(stage)
+    local pattern = stage
+
+    -- yeah...
+    if stage == 'secondary' then pattern = 'rearreds'
+    elseif stage == 'warning' then pattern = 'secondary' end
+
+    return pattern
+end
