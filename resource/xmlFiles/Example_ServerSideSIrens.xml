@@ -45,7 +45,7 @@
 			<Flash Duration="160" />
 		</SECONDARY>
 
-		<REARREDS>
+		<REARREDS IsEmergency="false"> <!-- This stage won't make AI vehicles pull over -->
 			<Flash Duration="160" Extras="9" />
 			<Flash Duration="160" />
 			<Flash Duration="160" Extras="7" />

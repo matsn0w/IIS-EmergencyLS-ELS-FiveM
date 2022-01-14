@@ -11,8 +11,10 @@ local function SetLightStage(vehicle, stage, toggle)
     -- set the light state
     ELSvehicle[stage] = toggle
 
-    -- toggle the native siren ('emergency mode')
-    SetVehicleSiren(vehicle, toggle)
+    if VCFdata.patterns[pattern].isEmergency then
+        -- toggle the native siren ('emergency mode')
+        SetVehicleSiren(vehicle, toggle)
+    end
 
     while ELSvehicle[stage] do
         -- keep the engine on whilst the lights are activated
