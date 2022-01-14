@@ -77,6 +77,13 @@ function ParseVCF(xml, fileName)
                 if TableHasValue({'primary', 'secondary', 'rearreds'}, type) then
                     local id = 1
 
+                    -- whether the pattern toggles the 'emergency state', default is true
+                    if elem.attr['IsEmergency'] then
+                        vcf.patterns[type].isEmergency = elem.attr['IsEmergency'] == 'true'
+                    else
+                        vcf.patterns[type].isEmergency = true
+                    end
+
                     for _, flash in ipairs(elem.kids) do
                         -- backwards compatibility for VCF's with 'FlashXX' tags
                         local tag = string.upper(string.sub(flash.name, 1, 5))

@@ -56,15 +56,18 @@ end
 
 local function ToggleLights(vehicle, stage, toggle)
     -- turn light stage on or off based on the toggle
-    TriggerServerEvent('kjELS:updateStatus', stage, toggle)
-    SetVehicleSiren(vehicle, toggle)
+    TriggerServerEvent('kjELS:updateStatus', vehicle, stage, toggle)
+
+    -- the siren is always off when the lights are toggled
     TriggerServerEvent('kjELS:setSirenState', 0)
 end
 
 local function HandleLightStage(vehicle, stage)
     if kjEnabledVehicles[vehicle][stage] then
+        -- turn lights off
         ToggleLights(vehicle, stage, false)
     else
+        -- turn lights on
         ToggleLights(vehicle, stage, true)
 
         if stage == 'primary' and kjxmlData[GetCarHash(vehicle)].sounds.nineMode then
@@ -76,7 +79,7 @@ end
 
 local function HandleSiren(vehicle, siren)
     -- siren only works in the primary light stage
-    if not kjEnabledVehicles[vehicle].primary then return end
+    if not kjEnabledVehicles[vehicle].primary and not Config.SirenAlwaysAllowed then return end
 
     local currentSiren = kjEnabledVehicles[vehicle].siren
     local sirenOn = currentSiren ~= 0

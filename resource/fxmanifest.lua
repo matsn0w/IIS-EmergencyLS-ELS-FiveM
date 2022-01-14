@@ -12,27 +12,19 @@ dependencies {
 ui_page 'html/index.html'
 
 files {
-    'html/index.html',
-    'html/sounds/999mode.ogg',
-    'html/sounds/Beep.ogg'
+    'html/**.*'
 }
 
 shared_scripts {
     'config.lua',
-    'shared/funcs.lua'
+    'shared/*.lua'
 }
 
 client_scripts {
-    'client/init.lua',
-    'client/main.lua',
-    'client/lights.lua',
-    'client/commands.lua'
+    'client/*.lua',
 }
 
 server_scripts {
-    'lib/SLAXML.lua',
-
-    'server/init.lua',
-    'server/keypress.lua',
-    'server/parseVCF.lua'
+    'lib/*.lua',
+    'server/*.lua',
 }
