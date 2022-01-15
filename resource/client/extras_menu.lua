@@ -15,6 +15,7 @@ MenuPool:MouseControlsEnabled(false)
 
 -- store menu entries
 local extras = {}
+local currentVehicle = nil
 
 -- listen for changes
 mainMenu.OnCheckboxChange = function(sender, item, checked)
@@ -52,8 +53,9 @@ Citizen.CreateThread(function()
         if IsELSVehicle(vehicle) and CanControlSirens(vehicle) then
             MenuPool:ProcessMenus()
 
-            -- build menu if not done yet
-            if not SetContains(kjEnabledVehicles, vehicle) then
+            if vehicle ~= currentVehicle then
+                mainMenu:Clear()
+
                 for extra, info in spairs(kjxmlData[GetCarHash(vehicle)].statics) do
                     local newitem = NativeUI.CreateCheckboxItem(info.name or ('Extra ' .. extra), extras[extra], '~italic~Extra ' .. extra)
 
@@ -63,6 +65,9 @@ Citizen.CreateThread(function()
                     -- store the menu item
                     table.insert(extras, {newitem, extra})
                 end
+
+                -- store this as the current vehicle
+                currentVehicle = vehicle
 
                 MenuPool:RefreshIndex()
             end
