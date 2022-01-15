@@ -5,6 +5,7 @@ A Vehicle Configuration File, shortly VCF, is an XML file which contains all ELS
 A VCF consists of 3 main sections:
 
 - extras (`EOVERRIDE`)
+- statics (`STATIC`)
 - sounds (`SOUNDS`)
 - patterns (`PATTERN`)
 
