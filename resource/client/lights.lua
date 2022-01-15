@@ -225,7 +225,7 @@ Citizen.CreateThread(function()
 
             if data then
                 for extra, info in pairs(data.extras) do
-                    if IsVehicleExtraTurnedOn(vehicle, extra) and info.enabled and info.env_light then
+                    if IsVehicleExtraTurnedOn(vehicle, extra) and info.env_light then
                         local offset = vector3(info.env_pos.x, info.env_pos.y, info.env_pos.z)
 
                         -- flash on walls
