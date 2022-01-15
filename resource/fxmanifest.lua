@@ -1,12 +1,13 @@
 fx_version 'cerulean'
-games { 'gta5' }
+game 'gta5'
 
 author 'KJ Studios and matsn0w'
 description 'Server-Sided Emergency Lighting System for FiveM.'
 version '2.0.0'
 
 dependencies {
-    'baseevents'
+    'baseevents',
+    'NativeUI'
 }
 
 ui_page 'html/index.html'
@@ -20,11 +21,13 @@ shared_scripts {
     'shared/*.lua'
 }
 
+client_script '@NativeUI/NativeUI.lua'
+
 client_scripts {
-    'client/*.lua',
+    'client/*.lua'
 }
 
 server_scripts {
     'lib/*.lua',
-    'server/*.lua',
+    'server/*.lua'
 }

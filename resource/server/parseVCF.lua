@@ -8,6 +8,7 @@ function ParseVCF(xml, fileName)
     vcf.patterns.secondary = {}
     vcf.patterns.rearreds = {}
     vcf.extras = {}
+    vcf.statics = {}
     vcf.sounds = {}
 
     for i = 1, #xml.root.el do
@@ -37,6 +38,19 @@ function ParseVCF(xml, fileName)
                         vcf.extras[extra].env_pos['z'] = tonumber(elem.attr['OffsetZ'] or 0.0)
                         vcf.extras[extra].env_color = string.upper(elem.attr['Color'] or 'RED')
                     end
+                end
+            end
+        end
+
+        if rootElement.name == 'STATIC' then
+            for ex = 1, #rootElement.kids do
+                local elem = rootElement.kids[ex]
+
+                if string.upper(string.sub(elem.name, 1, -3)) == 'EXTRA' then
+                    local extra = tonumber(string.sub(elem.name, -2))
+
+                    vcf.statics[extra] = {}
+                    vcf.statics[extra].name = elem.attr['Name']
                 end
             end
         end

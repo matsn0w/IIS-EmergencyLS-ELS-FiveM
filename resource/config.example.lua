@@ -57,4 +57,5 @@ Config.KeyBinds = {
     IndicatorLeft = 174, -- ARROW LEFT
     IndicatorRight = 175, -- ARROW RIGHT
     IndicatorHazard = 173, -- ARROW DOWN
+    ExtrasMenu = 303, -- U
 }
