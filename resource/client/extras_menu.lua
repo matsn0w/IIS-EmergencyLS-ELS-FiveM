@@ -55,9 +55,15 @@ Citizen.CreateThread(function()
 
             if vehicle ~= currentVehicle then
                 mainMenu:Clear()
+                extras = {}
 
                 for extra, info in spairs(kjxmlData[GetCarHash(vehicle)].statics) do
-                    local newitem = NativeUI.CreateCheckboxItem(info.name or ('Extra ' .. extra), extras[extra], '~italic~Extra ' .. extra)
+                    local name = info.name or ('Extra ' .. extra)
+                    local checked = extras[extra] or IsVehicleExtraTurnedOn(vehicle, extra)
+                    local description = '~italic~Extra ' .. extra
+
+                    -- create the new menu item for the extra
+                    local newitem = NativeUI.CreateCheckboxItem(name, checked, description)
 
                     -- add the item to the menu
                     mainMenu:AddItem(newitem)
