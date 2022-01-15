@@ -49,8 +49,10 @@ function ParseVCF(xml, fileName)
                 if string.upper(string.sub(elem.name, 1, -3)) == 'EXTRA' then
                     local extra = tonumber(string.sub(elem.name, -2))
 
-                    vcf.statics[extra] = {}
-                    vcf.statics[extra].name = elem.attr['Name']
+                    if extra then
+                        vcf.statics[extra] = {}
+                        vcf.statics[extra].name = elem.attr['Name']
+                    end
                 end
             end
         end
