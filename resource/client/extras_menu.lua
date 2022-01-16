@@ -72,6 +72,18 @@ Citizen.CreateThread(function()
                     table.insert(extras, {newitem, extra})
                 end
 
+                -- check if there isn't any extra
+                if #extras == 0 then
+                    local nothing = NativeUI.CreateItem('No statics available...', 'Select to close the menu')
+                    mainMenu:AddItem(nothing)
+                    mainMenu.OnItemSelect = function(sender, item, index)
+                        if item == nothing then
+                            -- close the menu
+                            mainMenu:Visible(false)
+                        end
+                    end
+                end
+
                 -- store this as the current vehicle
                 currentVehicle = vehicle
 
