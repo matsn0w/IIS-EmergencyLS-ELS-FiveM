@@ -79,6 +79,8 @@ AddEventHandler('kjELS:toggleLights', function(vehicle, stage, toggle)
         return
     end
 
+    if kjEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
+
     -- set the light stage
     SetLightStage(vehicle, stage, toggle)
 end)
