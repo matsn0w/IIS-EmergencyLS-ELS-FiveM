@@ -5,6 +5,7 @@ A Vehicle Configuration File, shortly VCF, is an XML file which contains all ELS
 A VCF consists of 3 main sections:
 
 - extras (`EOVERRIDE`)
+- statics (`STATIC`)
 - sounds (`SOUNDS`)
 - patterns (`PATTERN`)
 
@@ -89,6 +90,29 @@ Options:
 | Color                     | string  | `red`, `green`, `blue`, `white`, `amber` | `red`   | Specifies the color of environment lights (reflections). Should be set when AllowEnvLight is set to true.                                                                 |
 | OffsetX, OffsetY, OffsetZ | float   | a positive or negative decimal number    | `0.0`   | Optionally specifies an offset for the environment light on the x, y or z-axis, relative to the origin of the light source. This will 'move' the reflection of the light. |
 
+## Static extras: `STATIC`
+
+This section allows you to specify which extras on your vehicle are static. All extras defined here are enabled in a special menu (`U` key by default). In this menu, you can quickly enable or disable the extra. You can also define a custom name for the extra to easily identify it. This will be visible in the menu.
+
+If you do not specify a Name, the menu will display it as 'Extra XX' (where XX is the ID of the extra).
+
+Note that you can still configure the extras in the `EOVERRIDE` section. Setting an environment light will still work for example. It's recommended to set IsElsControlled to `false`, so the extra won't be turned off when you activate a light stage.
+
+Example:
+
+```xml
+<STATIC>
+    <Extra11 Name="Bullbar" />
+    <Extra12 Name="Takedown lights" />
+</STATIC>
+```
+
+Options:
+
+| Name | Type   | Values            | Default    | Description                          |
+| ---- | ------ | ----------------- | ---------- | ------------------------------------ |
+| Name | string | any name you like | `Extra XX` | A human readable name for the extra. |
+
 ## Sounds: `SOUNDS`
 
 This section defines the sound for each siren on your vehicle. You can enable up to 4 different sirens for each vehicle. Also, you can optionally set a custom horn sound for the vehicle. This can be used to enable an airhorn for example. Enabling the NineMode setting will activate a '999 mode actived!' sound effect when you press Q (by default, or DPAD_LEFT on controllers).
@@ -128,11 +152,11 @@ Example with native game sounds:
 Options:
 
 **MainHorn**:
-| Name            | Type    | Values                    | Default          | Description                                                                                                                                        |
-| --------------- | ------- | ------------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AllowUse        | boolean | `true`, `false`           | `false`          | Whether the custom horn is enabled or not. The game's horn for the vehicle will be used (different depending on the `vehicles.meta` entry for it). |
-| AudioString     | string  | name hash of sound to use | `SIRENS_AIRHORN` | The name of an audio to play. Must be compatible with the [`PLAY_SOUND_FROM_ENTITY`](https://docs.fivem.net/natives/?_0xE65F427EB70AB1ED) native.  |
-| SoundSet        | string  | name of sound bank to use | -                | The name of the sound set if using WMServerSirens.                                                                                                 |
+| Name        | Type    | Values                    | Default          | Description                                                                                                                                        |
+| ----------- | ------- | ------------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AllowUse    | boolean | `true`, `false`           | `false`          | Whether the custom horn is enabled or not. The game's horn for the vehicle will be used (different depending on the `vehicles.meta` entry for it). |
+| AudioString | string  | name hash of sound to use | `SIRENS_AIRHORN` | The name of an audio to play. Must be compatible with the [`PLAY_SOUND_FROM_ENTITY`](https://docs.fivem.net/natives/?_0xE65F427EB70AB1ED) native.  |
+| SoundSet    | string  | name of sound bank to use | -                | The name of the sound set if using WMServerSirens.                                                                                                 |
 
 **NineMode**:
 

@@ -22,6 +22,13 @@ Oh, and you might ask yourself where all the 'Els' or 'Miss Els' jokes come from
 
 *...and more!*
 
+## Requirements
+
+You need to have the following resources installed on your server:
+
+* [FiveM baseevents](https://docs.fivem.net/docs/resources/baseevents) (shipped by default)
+* [NativeUILua](https://github.com/FrazzIe/NativeUILua/releases/latest)
+
 ## Installation and Configuration
 
 See the instructions in the [documentation](docs/README.md)!

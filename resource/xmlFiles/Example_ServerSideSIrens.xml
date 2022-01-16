@@ -14,8 +14,14 @@
 		<Extra09 IsElsControlled="true" AllowEnvLight="true" Color="red" OffsetX="0.40" OffsetY="-0.80" OffsetZ="0.40" />
 		<Extra10 IsElsControlled="false" />
 		<Extra11 IsElsControlled="false" />
-		<Extra12 IsElsControlled="false" />
+		<Extra12 IsElsControlled="false" AllowEnvLight="true" Color="white" />
 	</EOVERRIDE>
+
+	<!-- STATIC EXTRAS -->
+	<STATIC>
+		<Extra11 Name="Bullbar" />
+		<Extra12 Name="Takedown lights" />
+	</STATIC>
 
 	<!-- SOUNDS & SIREN CONFIG -->
 	<SOUNDS>
