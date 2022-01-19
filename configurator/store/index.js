@@ -19,7 +19,15 @@ export const state = () => ({
       { id: 12, enabled: false, allowEnv: false, color: null }
     ],
     statics: [],
-    sounds: [],
+    useServerSirens: false,
+    sounds: [
+      { name: 'MainHorn', allowUse: true, audioString: 'SIRENS_AIRHORN', soundSet: null },
+      { name: 'NineMode', allowUse: true },
+      { name: 'SrnTone1', allowUse: true, audioString: 'VEHICLES_HORNS_SIREN_1', soundSet: 'DLC_WMSIRENS_SOUNDSET' },
+      { name: 'SrnTone2', allowUse: true, audioString: 'VEHICLES_HORNS_SIREN_2', soundSet: 'DLC_WMSIRENS_SOUNDSET' },
+      { name: 'SrnTone3', allowUse: true, audioString: 'VEHICLES_HORNS_POLICE_WARNING', soundSet: 'DLC_WMSIRENS_SOUNDSET' },
+      { name: 'SrnTone4', allowUse: true, audioString: 'VEHICLES_HORNS_AMBULANCE_WARNING', soundSet: 'DLC_WMSIRENS_SOUNDSET' }
+    ],
     patterns: []
   }
 })

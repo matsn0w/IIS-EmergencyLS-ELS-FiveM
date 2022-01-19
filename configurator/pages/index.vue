@@ -79,7 +79,7 @@ tbody {
 }
 
 th, td {
-  @apply p-2;
+  @apply p-2 align-middle;
 }
 
 th {

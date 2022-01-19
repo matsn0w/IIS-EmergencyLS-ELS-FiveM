@@ -43,6 +43,25 @@ export default {
     vcfRoot.appendChild(statics)
 
     // sounds
+    const sounds = doc.createElement('SOUNDS')
+
+    data.sounds.forEach((option) => {
+      const o = doc.createElement(option.name)
+      o.setAttribute('AllowUse', option.allowUse)
+
+      if (option.audioString) {
+        o.setAttribute('AudioString', option.audioString)
+      }
+
+      if (data.useServerSirens && option.soundSet) {
+        o.setAttribute('SoundSet', option.soundSet)
+      }
+
+      sounds.appendChild(o)
+    })
+
+    vcfRoot.appendChild(sounds)
+
     // patterns
 
     console.log(doc)
