@@ -29,5 +29,14 @@ export const getters = {
 }
 
 export const mutations = {
-  updateField
+  updateField,
+
+  addStatic (state, value) {
+    state.configuration.statics.push(value)
+  },
+
+  removeStatic (state, value) {
+    const index = state.configuration.statics.map(item => item.extra).indexOf(value.extra)
+    state.configuration.statics.splice(index, 1)
+  }
 }

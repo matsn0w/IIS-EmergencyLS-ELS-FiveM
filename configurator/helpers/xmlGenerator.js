@@ -34,8 +34,8 @@ export default {
     const statics = doc.createElement('STATIC')
 
     data.statics.forEach((stat) => {
-      const s = doc.createElement(`Extra${stat.id}`)
-      s.setAttribute('Name', stat.name ?? `Extra${stat.id}`)
+      const s = doc.createElement(`Extra${stat.extra}`)
+      s.setAttribute('Name', stat.name ?? `Extra${stat.extra}`)
 
       statics.appendChild(s)
     })

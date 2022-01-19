@@ -79,7 +79,7 @@ tbody {
 }
 
 th, td {
-  @apply p-2 whitespace-nowrap;
+  @apply p-2;
 }
 
 th {
@@ -90,11 +90,11 @@ label {
   @apply block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4;
 }
 
-input[type=text] {
+input[type=text], input[type=number] {
   @apply bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full p-2 text-gray-700 leading-tight align-middle;
 }
 
-input[type=text]:focus {
+input[type=text]:focus, input[type=number]:focus {
   @apply focus:outline-none focus:bg-white focus:border-blue-500;
 }
 
