@@ -20,7 +20,9 @@
             <th>Option</th>
             <th>Allow use</th>
             <th>Audio string</th>
-            <th v-if="useServerSirens">Soundset</th>
+            <th v-if="useServerSirens">
+              Soundset
+            </th>
           </tr>
         </thead>
 
@@ -72,12 +74,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.checkbox {
-  display: flex;
-  flex-direction: row-reverse;
-  align-items: center;
-  gap: .25rem;
-}
-</style>

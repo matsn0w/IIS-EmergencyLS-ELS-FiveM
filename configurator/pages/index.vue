@@ -117,4 +117,11 @@ select {
   background-position: right .75rem center;
   background-size: 16px 12px;
 }
+
+.checkbox {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  gap: .25rem;
+}
 </style>

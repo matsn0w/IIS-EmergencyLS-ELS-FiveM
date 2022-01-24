@@ -28,7 +28,11 @@ export const state = () => ({
       { name: 'SrnTone3', allowUse: true, audioString: 'VEHICLES_HORNS_POLICE_WARNING', soundSet: 'DLC_WMSIRENS_SOUNDSET' },
       { name: 'SrnTone4', allowUse: true, audioString: 'VEHICLES_HORNS_AMBULANCE_WARNING', soundSet: 'DLC_WMSIRENS_SOUNDSET' }
     ],
-    patterns: []
+    patterns: [
+      { name: 'PRIMARY', isEmergency: true, flashes: [] },
+      { name: 'SECONDARY', isEmergency: true, flashes: [] },
+      { name: 'REARREDS', isEmergency: true, flashes: [] }
+    ]
   }
 })
 
@@ -46,5 +50,26 @@ export const mutations = {
   removeStatic (state, value) {
     const index = state.configuration.statics.map(item => item.extra).indexOf(value.extra)
     state.configuration.statics.splice(index, 1)
+  },
+
+  addFlash (state, value) {
+    state.configuration.patterns.forEach((p) => {
+      if (p.name === value.pattern) {
+        p.flashes.push(value.flash)
+      }
+    })
+  },
+
+  removeFlash (state, value) {
+    state.configuration.patterns.forEach((p) => {
+      if (p.name === value.pattern) {
+        const index = p.flashes.map(item => item).indexOf(value.flash)
+        p.flashes.splice(index, 1)
+      }
+    })
+  },
+
+  toggleExtra (state, value) {
+
   }
 }
