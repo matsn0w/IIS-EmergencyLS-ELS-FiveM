@@ -38,7 +38,7 @@ local function HandleHorn(vehicle)
     local mainHorn = kjxmlData[GetCarHash(vehicle)].sounds.mainHorn
 
     -- the custom horn is disabled
-    if not mainHorn.allowUse then return end
+    if not mainHorn or not mainHorn.allowUse then return end
 
     -- disable default honk sound (INPUT_VEH_HORN)
     DisableControlAction(0, 86, true)
