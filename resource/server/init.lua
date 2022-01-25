@@ -20,10 +20,20 @@ AddEventHandler('onResourceStart', function(name)
     end
 
     for i = 1, #Config.ELSFiles do
-        local data = LoadResourceFile(GetCurrentResourceName(), 'xmlFiles/' .. Config.ELSFiles[i])
+        local file = Config.ELSFiles[i]
+        local data = LoadResourceFile(GetCurrentResourceName(), 'xmlFiles/' .. file)
 
-        if data then ParseObjSet(data, Config.ELSFiles[i])
-        else print('VCF file not found: ' .. Config.ELSFiles[i]) end
+        if data then
+            if pcall(function() ParseObjSet(data, file) end) then
+                -- no errors
+                print('Parsed VCF for: ' .. file)
+            else
+                -- VCF is faulty, notify the user and continue
+                print('VCF file ' .. file .. ' could not be parsed: is your XML valid?')
+            end
+        else
+            print('VCF file ' .. file .. ' not found: does the file exist?')
+        end
     end
 
     -- send the ELS data to all clients
