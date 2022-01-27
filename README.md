@@ -67,3 +67,12 @@ Original releases from [Infinite Impact Solutions](https://github.com/InfImpSolu
 *Note that this video was made for version 1.x of this resource.*
 
 [![EmergencyLS | FiveM Resource | Teaser/Trailer](https://res.cloudinary.com/marcomontalbano/image/upload/v1641479116/video_to_markdown/images/youtube--MZnO9eIjFWA-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://www.youtube.com/watch?v=MZnO9eIjFWA "EmergencyLS | FiveM Resource | Teaser/Trailer")
+
+## Credits
+
+This resource wasn't possible without these libraries:
+
+* [semver.lua](https://github.com/kikito/semver.lua) by *kikito*
+* [SLAXML](https://github.com/Phrogz/SLAXML) by *Phrogz*
+
+*Special thanks to everyone who contributed to the development of this resource - it would never have been this good without you!*
