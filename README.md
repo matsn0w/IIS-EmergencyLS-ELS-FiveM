@@ -41,6 +41,12 @@ Didn't find and answer? Then feel free to [start a new topic](https://github.com
 
 Found a bug? Please [make an issue](https://github.com/matsn0w/MISS-ELS/issues/new)!
 
+## Roadmap
+
+You can take a look at the [Milestones](https://github.com/matsn0w/MISS-ELS/milestones) for this project to see what's coming to MISS ELS!
+
+Feel free to [create an issue](https://github.com/matsn0w/MISS-ELS/issues/new) if you have an idea.
+
 ## Changelog
 
 ### v2.0.0
