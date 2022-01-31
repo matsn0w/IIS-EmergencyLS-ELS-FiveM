@@ -35,6 +35,7 @@ local function HandleHorn(vehicle)
     if not PedIsDriver(vehicle) then return end
 
     -- get the horn info from the VCF
+    if kjxmlData[GetCarHash(vehicle)] == nil then return end
     local mainHorn = kjxmlData[GetCarHash(vehicle)].sounds.mainHorn
 
     -- the custom horn is disabled
