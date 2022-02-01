@@ -1,6 +1,7 @@
 import { getField, updateField } from 'vuex-map-fields'
 
 export const state = () => ({
+  flashID: 1,
   configuration: {
     author: null,
     description: null,
@@ -28,11 +29,11 @@ export const state = () => ({
       { name: 'SrnTone3', allowUse: true, audioString: 'VEHICLES_HORNS_POLICE_WARNING', soundSet: 'DLC_WMSIRENS_SOUNDSET' },
       { name: 'SrnTone4', allowUse: true, audioString: 'VEHICLES_HORNS_AMBULANCE_WARNING', soundSet: 'DLC_WMSIRENS_SOUNDSET' }
     ],
-    patterns: [
-      { name: 'PRIMARY', isEmergency: true, flashes: [] },
-      { name: 'SECONDARY', isEmergency: true, flashes: [] },
-      { name: 'REARREDS', isEmergency: true, flashes: [] }
-    ]
+    patterns: {
+      PRIMARY: { isEmergency: true, flashes: [] },
+      SECONDARY: { isEmergency: true, flashes: [] },
+      REARREDS: { isEmergency: true, flashes: [] }
+    }
   }
 })
 
@@ -53,23 +54,31 @@ export const mutations = {
   },
 
   addFlash (state, value) {
-    state.configuration.patterns.forEach((p) => {
-      if (p.name === value.pattern) {
-        p.flashes.push(value.flash)
-      }
-    })
+    // add flash to pattern
+    state.configuration.patterns[value.pattern].flashes.push(value.flash)
+
+    // increase flash ID
+    value.flash.id = state.flashID++
   },
 
   removeFlash (state, value) {
-    state.configuration.patterns.forEach((p) => {
-      if (p.name === value.pattern) {
-        const index = p.flashes.map(item => item).indexOf(value.flash)
-        p.flashes.splice(index, 1)
-      }
-    })
+    const p = state.configuration.patterns[value.pattern]
+    const index = p.flashes.map(f => f.id).indexOf(value.flash.id)
+
+    if (index !== -1) {
+      p.flashes.splice(index, 1)
+    }
   },
 
   toggleExtra (state, value) {
+    const p = state.configuration.patterns[value.pattern]
+    const index = p.flashes.map(f => f.id).indexOf(value.flash)
+    const extras = p.flashes[index].extras
 
+    if (extras.includes(value.extra)) {
+      extras.splice(extras.indexOf(value.extra), 1)
+    } else {
+      extras.push(value.extra)
+    }
   }
 }

@@ -4,13 +4,13 @@
       <h2>Patterns</h2>
     </header>
 
-    <div v-for="pattern, index in patterns" :key="index">
+    <div v-for="(pattern, name, index) in patterns" :key="index">
       <header class="px-5 pt-3 flex items-center gap-4">
         <h3 class="font-bold">
-          {{ pattern.name }}
+          {{ name }}
         </h3>
 
-        <button type="button" @click="addFlash(pattern)">
+        <button type="button" @click="addFlash(name)">
           Add flash
         </button>
 
@@ -24,6 +24,7 @@
         <table class="table-auto w-full">
           <thead class="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
             <tr>
+              <th>ID</th>
               <th>Duration</th>
               <th>Extras</th>
               <th />
@@ -32,16 +33,17 @@
 
           <tbody class="text-sm divide-y divide-gray-100">
             <tr v-for="flash, i in pattern.flashes" :key="i">
+              <td>{{ flash.id }}</td>
               <td>
                 <input v-model.number="flash.duration" type="number" min="0">
               </td>
               <td>
-                <span v-for="extra, j in enabledExtras" :key="j" class="extra" @click="toggleExtra(pattern, flash, extra)">
+                <span v-for="extra, j in enabledExtras" :key="j" class="extra" :class="isExtraToggled(name, flash, extra) ? getExtraColor(extra) : ''" @click="toggleExtra(name, flash, extra)">
                   {{ extra.id }}
                 </span>
               </td>
               <td>
-                <button type="button" class="bg-red-500" @click="removeFlash(pattern, flash)">
+                <button type="button" class="bg-red-500" @click="removeFlash(name, flash)">
                   &times;
                 </button>
               </td>
@@ -54,11 +56,11 @@
 </template>
 
 <script>
-import { mapMultiRowFields } from 'vuex-map-fields'
+import { mapFields } from 'vuex-map-fields'
 
 export default {
   computed: {
-    ...mapMultiRowFields(['configuration.patterns']),
+    ...mapFields(['configuration.patterns']),
 
     enabledExtras () {
       return this.$store.state.configuration.extras.filter(extra => extra.enabled)
@@ -67,16 +69,27 @@ export default {
 
   methods: {
     addFlash (pattern) {
-      this.$store.commit('addFlash', { pattern: pattern.name, flash: { duration: 100, extras: [] } })
+      this.$store.commit('addFlash', { pattern, flash: { duration: 100, extras: [] } })
     },
 
     removeFlash (pattern, flash) {
-      this.$store.commit('removeFlash', { pattern: pattern.name, flash })
+      this.$store.commit('removeFlash', { pattern, flash })
     },
 
     toggleExtra (pattern, flash, extra) {
-      console.log(pattern.name, flash, extra.id)
-      this.$store.commit('toggleExtra', { pattern: pattern.name, })
+      this.$store.commit('toggleExtra', { pattern, flash: flash.id, extra: extra.id })
+    },
+
+    isExtraToggled (pattern, flash, extra) {
+      const p = this.patterns[pattern]
+      const index = p.flashes.map(f => f.id).indexOf(flash.id)
+      const extras = p.flashes[index].extras
+
+      return extras.includes(extra.id)
+    },
+
+    getExtraColor (extra) {
+      return extra.color || 'nocolor'
     }
   }
 }
