@@ -124,4 +124,29 @@ select {
   align-items: center;
   gap: .25rem;
 }
+
+.blue {
+  background: blue !important;
+}
+
+.amber {
+  background: orange !important;
+}
+
+.red {
+  background: red !important;
+}
+
+.green {
+  background: green !important;
+}
+
+.white {
+  background: white !important;
+  border: solid 1px #ddd;
+}
+
+.nocolor {
+  background: slategray !important;
+}
 </style>

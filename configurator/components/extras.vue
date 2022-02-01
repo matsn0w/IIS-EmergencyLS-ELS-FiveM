@@ -64,25 +64,4 @@ export default {
   width: 20px;
   height: 20px;
 }
-
-.blue {
-  background: blue;
-}
-
-.amber {
-  background: orange;
-}
-
-.red {
-  background: red;
-}
-
-.green {
-  background: green;
-}
-
-.white {
-  background: white;
-  border: solid 1px #ddd;
-}
 </style>
