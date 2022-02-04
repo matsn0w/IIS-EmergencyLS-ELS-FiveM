@@ -127,26 +127,32 @@ select {
 
 .blue {
   background: blue !important;
+  color: white !important;
 }
 
 .amber {
   background: orange !important;
+  color: black !important;
 }
 
 .red {
   background: red !important;
+  color: white !important;
 }
 
 .green {
   background: green !important;
+  color: white !important;
 }
 
 .white {
   background: white !important;
+  color: black !important;
   border: solid 1px #ddd;
 }
 
 .nocolor {
   background: slategray !important;
+  color: white !important;
 }
 </style>

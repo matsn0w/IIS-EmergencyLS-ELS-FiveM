@@ -38,9 +38,13 @@
                 <input v-model.number="flash.duration" type="number" min="0">
               </td>
               <td>
-                <span v-for="extra, j in enabledExtras" :key="j" class="extra" :class="isExtraToggled(name, flash, extra) ? getExtraColor(extra) : ''" @click="toggleExtra(name, flash, extra)">
-                  {{ extra.id }}
-                </span>
+                <span
+                  v-for="extra, j in enabledExtras"
+                  :key="j"
+                  class="extra"
+                  :class="isExtraToggled(name, flash, extra) ? getExtraColor(extra) : ''"
+                  @click="toggleExtra(name, flash, extra)"
+                >{{ extra.id }}</span>
               </td>
               <td>
                 <button type="button" class="bg-red-500" @click="removeFlash(name, flash)">
@@ -97,6 +101,6 @@ export default {
 
 <style scoped>
 .extra {
-  @apply bg-gray-200 p-2 border-2 border-gray-200 rounded mr-3 select-none;
+  @apply bg-gray-200 px-3 py-2 border-2 border-gray-300 rounded mr-3 select-none text-center text-gray-500;
 }
 </style>
