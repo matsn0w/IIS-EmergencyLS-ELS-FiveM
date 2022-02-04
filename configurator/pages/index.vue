@@ -33,6 +33,8 @@
 
 <script>
 import { mapFields } from 'vuex-map-fields'
+import { saveAs } from 'file-saver'
+import formatXml from 'xml-formatter'
 import Extras from '~/components/extras'
 import Patterns from '~/components/patterns'
 import Sounds from '~/components/sounds'
@@ -51,7 +53,26 @@ export default {
 
   methods: {
     generateVCF () {
-      XMLGenerator.generateVCF(this.$store.state.configuration)
+      // generate the XML
+      const xml = XMLGenerator.generateVCF(this.$store.state.configuration)
+      let xmlString = new XMLSerializer().serializeToString(xml)
+
+      // add XML header
+      xmlString = '<?xml version="1.0" encoding="utf-8" ?>' + xmlString
+
+      // format the XML
+      const formattedXml = formatXml(xmlString, {
+        whiteSpaceAtEndOfSelfclosingTag: true
+      })
+
+      // create a blob
+      const blob = new Blob([formattedXml], {
+        type: 'application/xml'
+      })
+      const filename = this.$store.state.configuration.description ?? 'myVCF.xml'
+
+      // download the XML as file
+      saveAs(blob, filename)
     }
   }
 }

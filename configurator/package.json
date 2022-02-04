@@ -13,8 +13,10 @@
   },
   "dependencies": {
     "core-js": "^3.21.0",
+    "file-saver": "^2.0.5",
     "nuxt": "^2.15.7",
-    "vuex-map-fields": "^1.4.1"
+    "vuex-map-fields": "^1.4.1",
+    "xml-formatter": "^2.6.1"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.14.7",
