@@ -35,7 +35,7 @@ export default {
 
     data.statics.forEach((stat) => {
       const s = doc.createElement(`Extra${stat.extra}`)
-      s.setAttribute('Name', stat.name ?? `Extra${stat.extra}`)
+      s.setAttribute('Name', stat.name ?? `Extra ${stat.extra}`)
 
       statics.appendChild(s)
     })
@@ -49,11 +49,11 @@ export default {
       const o = doc.createElement(option.name)
       o.setAttribute('AllowUse', option.allowUse)
 
-      if (option.audioString) {
+      if (option.allowUse && option.audioString) {
         o.setAttribute('AudioString', option.audioString)
       }
 
-      if (data.useServerSirens && option.soundSet) {
+      if (option.allowUse && data.useServerSirens && option.soundSet) {
         o.setAttribute('SoundSet', option.soundSet)
       }
 
@@ -65,13 +65,22 @@ export default {
     // patterns
     const patterns = doc.createElement('PATTERN')
 
-    Object.keys(data.patterns).forEach((pattern) => {
-      const p = doc.createElement(pattern)
+    data.patterns.forEach((pattern) => {
+      const p = doc.createElement(pattern.name)
+      p.setAttribute('IsEmergency', pattern.isEmergency)
 
-      data.patterns[pattern].flashes.forEach((flash) => {
+      const flashes = data.flashes.filter(flash => flash.pattern === pattern.name)
+
+      flashes.forEach((flash) => {
         const f = doc.createElement('Flash')
-        f.setAttribute('Duration', flash.duration)
-        f.setAttribute('Extras', flash.extras.join(','))
+
+        if (flash.duration) {
+          f.setAttribute('Duration', flash.duration)
+        }
+
+        if (flash.extras.length) {
+          f.setAttribute('Extras', [...flash.extras].sort().join(','))
+        }
 
         p.appendChild(f)
       })
@@ -82,7 +91,6 @@ export default {
     vcfRoot.appendChild(patterns)
 
     // return the document
-    console.log(doc)
     return doc
   }
 }
