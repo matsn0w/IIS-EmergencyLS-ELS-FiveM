@@ -63,9 +63,26 @@ export default {
     vcfRoot.appendChild(sounds)
 
     // patterns
+    const patterns = doc.createElement('PATTERN')
 
+    Object.keys(data.patterns).forEach((pattern) => {
+      const p = doc.createElement(pattern)
+
+      data.patterns[pattern].flashes.forEach((flash) => {
+        const f = doc.createElement('Flash')
+        f.setAttribute('Duration', flash.duration)
+        f.setAttribute('Extras', flash.extras.join(','))
+
+        p.appendChild(f)
+      })
+
+      patterns.appendChild(p)
+    })
+
+    vcfRoot.appendChild(patterns)
+
+    // return the document
     console.log(doc)
-
     return doc
   }
 }
