@@ -58,6 +58,10 @@ Feel free to [create an issue](https://github.com/matsn0w/MISS-ELS/issues/new) i
 
 ## Changelog
 
+### v2.0.1
+
+* Fixed a bug in the update checking script
+
 ### v2.0.0
 
 * Added configuration option to allow passengers to control the sirens
