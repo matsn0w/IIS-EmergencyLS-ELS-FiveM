@@ -8,26 +8,8 @@ function ParseVCF(xml, fileName)
     vcf.patterns.secondary = {}
     vcf.patterns.rearreds = {}
     vcf.extras = {}
+    vcf.statics = {}
     vcf.sounds = {}
-
-    -- Default Primary Lights pattern
-    table.insert(vcf.patterns.primary, {duration = 80, extras = {1, 2}})
-    table.insert(vcf.patterns.primary, {duration = 80, extras = {1, 2, 3, 4}})
-    table.insert(vcf.patterns.primary, {duration = 80, extras = {3, 4}})
-    table.insert(vcf.patterns.primary, {duration = 80, extras = {}})
-    table.insert(vcf.patterns.primary, {duration = 80, extras = {1, 2}})
-
-    -- Default Secondary Lights pattern
-    table.insert(vcf.patterns.secondary, {duration = 280, extras = {6}})
-    table.insert(vcf.patterns.secondary, {duration = 160, extras = {}})
-    table.insert(vcf.patterns.secondary, {duration = 280, extras = {5}})
-    table.insert(vcf.patterns.secondary, {duration = 160, extras = {}})
-
-    -- Default Rear Red Lights pattern
-    table.insert(vcf.patterns.rearreds, {duration = 160, extras = {9}})
-    table.insert(vcf.patterns.rearreds, {duration = 160, extras = {}})
-    table.insert(vcf.patterns.rearreds, {duration = 160, extras = {7}})
-    table.insert(vcf.patterns.rearreds, {duration = 160, extras = {}})
 
     for i = 1, #xml.root.el do
 
@@ -55,6 +37,21 @@ function ParseVCF(xml, fileName)
                         vcf.extras[extra].env_pos['y'] = tonumber(elem.attr['OffsetY'] or 0.0)
                         vcf.extras[extra].env_pos['z'] = tonumber(elem.attr['OffsetZ'] or 0.0)
                         vcf.extras[extra].env_color = string.upper(elem.attr['Color'] or 'RED')
+                    end
+                end
+            end
+        end
+
+        if rootElement.name == 'STATIC' then
+            for ex = 1, #rootElement.kids do
+                local elem = rootElement.kids[ex]
+
+                if string.upper(string.sub(elem.name, 1, -3)) == 'EXTRA' then
+                    local extra = tonumber(string.sub(elem.name, -2))
+
+                    if extra then
+                        vcf.statics[extra] = {}
+                        vcf.statics[extra].name = elem.attr['Name']
                     end
                 end
             end
@@ -96,6 +93,13 @@ function ParseVCF(xml, fileName)
                 if TableHasValue({'primary', 'secondary', 'rearreds'}, type) then
                     local id = 1
 
+                    -- whether the pattern toggles the 'emergency state', default is true
+                    if elem.attr['IsEmergency'] then
+                        vcf.patterns[type].isEmergency = elem.attr['IsEmergency'] == 'true'
+                    else
+                        vcf.patterns[type].isEmergency = true
+                    end
+
                     for _, flash in ipairs(elem.kids) do
                         -- backwards compatibility for VCF's with 'FlashXX' tags
                         local tag = string.upper(string.sub(flash.name, 1, 5))
@@ -105,7 +109,7 @@ function ParseVCF(xml, fileName)
                             vcf.patterns[type][id].extras = {}
                             vcf.patterns[type][id].duration = tonumber(flash.attr['Duration'] or '100')
 
-                            for extra in string.gmatch(flash.attr['Extras'], '([0-9]+)') do
+                            for extra in string.gmatch(flash.attr['Extras'] or '', '([0-9]+)') do
                                 -- remove leading zero's
                                 extra = string.format('%u', extra)
 
@@ -123,6 +127,4 @@ function ParseVCF(xml, fileName)
     end
 
     kjxmlData[fileName] = vcf
-
-    print('ELS: Parsed VCF for ' .. fileName)
 end

@@ -1,2 +1,2 @@
-config.lua
-xmlFiles/*.xml
+resource/config.lua
+resource/xmlFiles/*.xml

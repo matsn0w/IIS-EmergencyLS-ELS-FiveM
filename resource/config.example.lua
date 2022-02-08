@@ -23,6 +23,9 @@ Config.EnvironmentalLights = {
 -- Whether vehicle passengers are allowed to control the lights and sirens
 Config.AllowPassengers = false
 
+-- Whether you can toggle the siren, even when the lights are out
+Config.SirenAlwaysAllowed = false
+
 -- Whether vehicle indicator control should be enabled
 -- The indicators are controlled with arrow left, right and down on your keyboard
 Config.Indicators = true
@@ -39,7 +42,7 @@ Config.Beeps = false
 -- B = activate next siren
 Config.ControllerSupport = true
 
--- Sets key binds for various actions
+-- Sets keybinds for various actions
 -- See https://docs.fivem.net/docs/game-references/controls for a list of codes
 Config.KeyBinds = {
     PrimaryLights = 85, -- Q
@@ -54,4 +57,5 @@ Config.KeyBinds = {
     IndicatorLeft = 174, -- ARROW LEFT
     IndicatorRight = 175, -- ARROW RIGHT
     IndicatorHazard = 173, -- ARROW DOWN
+    ExtrasMenu = 303, -- U
 }
