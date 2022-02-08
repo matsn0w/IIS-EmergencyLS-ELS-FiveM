@@ -14,10 +14,10 @@
           Add flash
         </button>
 
-        <div class="checkbox">
-          <label :for="`isEmergency[${index}]`">Is emergency</label>
+        <label :for="`isEmergency[${index}]`" class="cb-label">
           <input :id="`isEmergency[${index}]`" v-model="pattern.isEmergency" type="checkbox">
-        </div>
+          Is emergency
+        </label>
       </header>
 
       <div class="p-3 overflow-x-auto">
