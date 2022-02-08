@@ -22,7 +22,7 @@ local function checkForUpdate()
         print('>> Please report bugs and other problems via https://github.com/matsn0w/MISS-ELS/issues')
     end
 
-    PerformHttpRequest('https://api.github.com/repos/matsn0w/MISS-ELS/releases/latest"', function(status, response, headers)
+    PerformHttpRequest('https://api.github.com/repos/matsn0w/MISS-ELS/releases/latest', function(status, response, headers)
         if status ~= 200 then
             print('Something went wrong! Couldn\'t fetch latest version. Status: ' .. tostring(status))
             return
