@@ -11,6 +11,8 @@ A VCF consists of 3 main sections:
 
 All these three sections must be present, otherwise the file won't be valid. They live under the main `<vcfroot>` tag. You can use the bare configuration file below to start completely from scratch, or edit one of the configuration examples included in the `xmlFiles` directory.
 
+Alternatively, you can use [this convenient graphical interface](https://matsn0w.github.io/MISS-ELS)!
+
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <!-- ELS VEHICLE CONFIGURATION FILE -->
