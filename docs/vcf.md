@@ -219,6 +219,7 @@ Pattern example:
         <Flash Duration="1000" Extras="8" />
         <Flash Duration="250" />
         <Flash Duration="1000" Extras="7" />
+        <Flash Duration="250" />
     </REARREDS>
 </PATTERN>
 ```
