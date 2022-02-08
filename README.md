@@ -65,12 +65,22 @@ Feel free to [create an issue](https://github.com/matsn0w/MISS-ELS/issues/new) i
 * Added configuration option to customize environmental light reflections
 * Added new documentation
 * Added `/extra <extra>` command to quickly toggle a vehicle extra
+* Added an option to control the sirens regardless of the light stage
+* Added a in-game menu for static extra's
+* Added automatic check for updates
 * Added a VCF configuration GUI
+* Added some documentation
 * VCF: Added `AllowUse` flag to enable or disable the main horn
 * VCF: Added `SoundSet` flag to specify a custom sound for the main horn
+* VCF: Added new `STATIC` section
+* VCF: `IsElsControlled` is now actually respected
 * VCF: It's no longer needed to specify flash numbers within a pattern (Flash01, Flash02, etc. can now be Flash Flash Flash!)
 * Fixed `AllowEnvLight` setting not doing anything
 * Fixed `AudioString` on MainHorn not doing anything
+* Fixed some weird keybind behaviour
+* Fixed crash on invalid VCF syntax
+* Removed fallback to default patterns when no VCF is present for an ELS-enabled vehicle
+* Organized file structure
 * Updated SLAXML parser to version 0.8
 * Lots of code improvements and optimizations
 
