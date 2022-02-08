@@ -19,6 +19,7 @@ Oh, and you might ask yourself where all the 'Els' or 'Miss Els' jokes come from
 * Optional light reflections around the vehicle
 * Indicator controls
 * Customizable keybinds
+* [A simple VCF configuration wizard](https://matsn0w.github.io/MISS-ELS)
 
 *...and more!*
 
@@ -32,6 +33,14 @@ You need to have the following resources installed on your server:
 ## Installation and Configuration
 
 See the instructions in the [documentation](docs/README.md)!
+
+## Vehicle Configuration Files
+
+If you have any existing VCF files from the original author of this resource, then you'll probably be fine. The XML should be fully backwards compatible. If you have a VCF from any other resource, that'll most likely not work.
+
+In both cases, it's probably best to re-create them by either writing them yourself OR... use my convient configuration GUI! Using this tool, you can easily generate configuration files for your vehicles. You can find it here:
+
+[![Open VCF Configurator](https://dabuttonfactory.com/button.png?t=MISS+ELS+VCF+Configurator&f=Open+Sans-Bold&ts=16&tc=fff&hp=45&vp=20&c=10&bgt=unicolored&bgc=1a37a8&be=1&bs=1&bc=fff)](https://matsn0w.github.io/MISS-ELS)
 
 ## Questions or problems?
 
@@ -56,6 +65,7 @@ Feel free to [create an issue](https://github.com/matsn0w/MISS-ELS/issues/new) i
 * Added configuration option to customize environmental light reflections
 * Added new documentation
 * Added `/extra <extra>` command to quickly toggle a vehicle extra
+* Added a VCF configuration GUI
 * VCF: Added `AllowUse` flag to enable or disable the main horn
 * VCF: Added `SoundSet` flag to specify a custom sound for the main horn
 * VCF: It's no longer needed to specify flash numbers within a pattern (Flash01, Flash02, etc. can now be Flash Flash Flash!)
