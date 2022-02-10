@@ -14,6 +14,10 @@ jobs:
         os: [ubuntu-latest]
         node: [14]
 
+    defaults:
+      run:
+        working-directory: ./configurator
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
