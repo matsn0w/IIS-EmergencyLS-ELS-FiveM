@@ -5,12 +5,10 @@
         Sounds
       </h2>
 
-      <div class="checkbox">
-        <label for="useServerSirens">
-          Use <a href="https://github.com/Walsheyy/WMServerSirens" target="_blank">WMServerSirens</a>
-        </label>
+      <label for="useServerSirens" class="cb-label">
         <input id="useServerSirens" v-model="useServerSirens" type="checkbox">
-      </div>
+        Use <a href="https://github.com/Walsheyy/WMServerSirens" target="_blank">WMServerSirens</a>
+      </label>
     </header>
 
     <div class="p-3 overflow-x-auto">
@@ -32,7 +30,9 @@
               {{ option.name }}
             </td>
             <td>
-              <input v-model="option.allowUse" type="checkbox">
+              <label :for="`allowUse[${index}]`" class="cb-label">
+                <input :id="`allowUse[${index}]`" v-model="option.allowUse" type="checkbox">
+              </label>
             </td>
             <td>
               <input v-if="option.allowUse && option['audioString'] !== undefined" v-model="option.audioString" type="text">

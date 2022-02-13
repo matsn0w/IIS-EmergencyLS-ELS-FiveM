@@ -41,7 +41,9 @@
           </template>
 
           <tr v-else>
-            <td colspan="2"><em>You have not configured any static extras. Create one by clicking the '<strong>New</strong>' button.</em></td>
+            <td colspan="2">
+              <em>You have not configured any static extras. Create one by clicking the '<strong>New</strong>' button.</em>
+            </td>
           </tr>
         </tbody>
       </table>

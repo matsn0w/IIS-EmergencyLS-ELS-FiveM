@@ -21,10 +21,14 @@
               Extra {{ extra.id }}
             </td>
             <td>
-              <input v-model="extra.enabled" type="checkbox">
+              <label class="cb-label">
+                <input v-model="extra.enabled" type="checkbox">
+              </label>
             </td>
             <td>
-              <input v-model="extra.allowEnv" type="checkbox">
+              <label class="cb-label">
+                <input v-model="extra.allowEnv" type="checkbox">
+              </label>
             </td>
             <td class="flex items-center gap-4">
               <div class="color-block" :class="extra.color" />

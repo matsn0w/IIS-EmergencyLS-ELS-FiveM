@@ -127,6 +127,4 @@ function ParseVCF(xml, fileName)
     end
 
     kjxmlData[fileName] = vcf
-
-    print('ELS: Parsed VCF for ' .. fileName)
 end

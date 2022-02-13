@@ -1,5 +1,9 @@
 import { getField, updateField } from 'vuex-map-fields'
 
+function getFlashIndex (state, flash) {
+  return state.configuration.flashes.map(f => f.id).indexOf(flash.id)
+}
+
 export const state = () => ({
   flashID: 1,
   configuration: {
@@ -29,11 +33,12 @@ export const state = () => ({
       { name: 'SrnTone3', allowUse: true, audioString: 'VEHICLES_HORNS_POLICE_WARNING', soundSet: 'DLC_WMSIRENS_SOUNDSET' },
       { name: 'SrnTone4', allowUse: true, audioString: 'VEHICLES_HORNS_AMBULANCE_WARNING', soundSet: 'DLC_WMSIRENS_SOUNDSET' }
     ],
-    patterns: {
-      PRIMARY: { isEmergency: true, flashes: [] },
-      SECONDARY: { isEmergency: true, flashes: [] },
-      REARREDS: { isEmergency: true, flashes: [] }
-    }
+    patterns: [
+      { name: 'PRIMARY', isEmergency: true },
+      { name: 'SECONDARY', isEmergency: true },
+      { name: 'REARREDS', isEmergency: true }
+    ],
+    flashes: []
   }
 })
 
@@ -54,31 +59,29 @@ export const mutations = {
   },
 
   addFlash (state, value) {
-    // add flash to pattern
-    state.configuration.patterns[value.pattern].flashes.push(value.flash)
+    // create a flash
+    const flash = { id: state.flashID++, pattern: value.pattern.name, duration: 100, extras: [] }
 
-    // increase flash ID
-    value.flash.id = state.flashID++
+    // add flash to pattern
+    state.configuration.flashes.push(flash)
   },
 
   removeFlash (state, value) {
-    const p = state.configuration.patterns[value.pattern]
-    const index = p.flashes.map(f => f.id).indexOf(value.flash.id)
+    const flashIndex = getFlashIndex(state, value.flash)
 
-    if (index !== -1) {
-      p.flashes.splice(index, 1)
+    if (flashIndex !== -1) {
+      state.configuration.flashes.splice(flashIndex, 1)
     }
   },
 
   toggleExtra (state, value) {
-    const p = state.configuration.patterns[value.pattern]
-    const index = p.flashes.map(f => f.id).indexOf(value.flash)
-    const extras = p.flashes[index].extras
+    const flashIndex = getFlashIndex(state, value.flash)
+    const extras = state.configuration.flashes[flashIndex].extras
 
-    if (extras.includes(value.extra)) {
-      extras.splice(extras.indexOf(value.extra), 1)
+    if (extras.includes(value.extra.id)) {
+      extras.splice(extras.indexOf(value.extra.id), 1)
     } else {
-      extras.push(value.extra)
+      extras.push(value.extra.id)
     }
   }
 }

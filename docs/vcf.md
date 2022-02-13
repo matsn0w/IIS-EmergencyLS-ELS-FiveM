@@ -11,6 +11,8 @@ A VCF consists of 3 main sections:
 
 All these three sections must be present, otherwise the file won't be valid. They live under the main `<vcfroot>` tag. You can use the bare configuration file below to start completely from scratch, or edit one of the configuration examples included in the `xmlFiles` directory.
 
+Alternatively, you can use [this convenient graphical interface](https://matsn0w.github.io/MISS-ELS)!
+
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <!-- ELS VEHICLE CONFIGURATION FILE -->
@@ -30,6 +32,9 @@ All these three sections must be present, otherwise the file won't be valid. The
         <Extra11 />
         <Extra12 />
     </EOVERRIDE>
+
+    <!-- STATIC EXTRAS -->
+    <STATIC></STATIC>
 
     <!-- SOUNDS & SIREN CONFIG -->
     <SOUNDS>
@@ -182,6 +187,8 @@ The duration is measured in milliseconds. Flashes will be executed by appearance
 
 It's recommended to include an 'empty flash' at the bottom of each pattern to make the transition from last to first flash smooth.
 
+You can optionally set `IsEmergency` to `false` if you don't want vehicles to pull over when you have that light stage activated.
+
 Pattern example:
 
 ```xml
@@ -208,10 +215,11 @@ Pattern example:
         <Flash Duration="50" Extras="" />
     </SECONDARY>
 
-    <REARREDS>
+    <REARREDS IsEmergency="false">
         <Flash Duration="1000" Extras="8" />
         <Flash Duration="250" />
         <Flash Duration="1000" Extras="7" />
+        <Flash Duration="250" />
     </REARREDS>
 </PATTERN>
 ```
