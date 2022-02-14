@@ -18,8 +18,17 @@ function ParseVCF(xml, fileName)
         if rootElement.name == 'EOVERRIDE' then
             for ex = 1, #rootElement.kids do
                 local elem = rootElement.kids[ex]
-
-                if string.upper(string.sub(elem.name, 1, -3)) == 'EXTRA' then
+                
+                -- Better way to filter if the current element contains an extra
+                if string.find(elem.name, "Extra", 1) then
+                    -- If the string length is smaller then 7 chars. Assume we are missing a leading zero
+                    if(string.len(elem.name) < 7) then
+                        -- Use patternmatching to add a leading zero in front of the number.
+                        -- Could probably be written so the above if statement isn't necessary.
+                        -- Though lua pattern matching isn't as advanced as Regex.
+                    	elem.name = elem.name:gsub('(%d*%.?%d+)', '0%1')
+                    end
+                    -- Extra should always have a leading zero here.
                     local extra = tonumber(string.sub(elem.name, -2))
 
                     vcf.extras[extra] = {}
@@ -127,6 +136,4 @@ function ParseVCF(xml, fileName)
     end
 
     kjxmlData[fileName] = vcf
-
-    print('ELS: Parsed VCF for ' .. fileName)
 end
