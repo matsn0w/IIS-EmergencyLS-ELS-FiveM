@@ -1,9 +1,13 @@
 <template>
   <div class="container mx-auto">
-    <h1 class="my-4 text-2xl font-bold">
-      MISS ELS VCF Configurator
-    </h1>
-
+    <div class="grid grid-rows-1 grid-flow-col grid-cols-1 my-4">
+      <h1 class="text-2xl font-bold">
+        MISS ELS VCF Configurator
+      </h1>
+      <div class="float-right pr-3">
+        <importButton @load="importedVCF = $event" />
+      </div>
+    </div>
     <form @submit.prevent="generateVCF">
       <div>
         <div class="md:flex md:items-center mb-3">
@@ -39,18 +43,29 @@ import Extras from '~/components/extras'
 import Patterns from '~/components/patterns'
 import Sounds from '~/components/sounds'
 import Statics from '~/components/statics'
+import ImportButton from '~/components/importButton'
 import XMLGenerator from '~/helpers/xmlGenerator'
+import generateStoreAttributesFromExistingVCF from '~/helpers/transformImportedVCF'
 
 export default {
-  components: { Extras, Statics, Sounds, Patterns },
+  components: { Extras, Statics, Sounds, Patterns, ImportButton },
 
+  data: () => ({ importedVCF: '' }),
   computed: {
     ...mapFields([
       'configuration.author',
       'configuration.description'
     ])
   },
+  watch: {
+    importedVCF (newVCF, oldVCF) {
+      if (newVCF !== oldVCF) {
+        const parsedVCF = generateStoreAttributesFromExistingVCF(newVCF)
 
+        this.$store.commit('importExistingConfiguration', parsedVCF)
+      }
+    }
+  },
   methods: {
     generateVCF () {
       // generate the XML

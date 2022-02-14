@@ -83,5 +83,9 @@ export const mutations = {
     } else {
       extras.push(value.extra.id)
     }
+  },
+
+  importExistingConfiguration (state, value) {
+    state.configuration = value
   }
 }
