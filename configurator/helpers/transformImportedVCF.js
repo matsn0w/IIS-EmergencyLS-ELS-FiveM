@@ -27,6 +27,7 @@ export default function generateStoreAttributesFromExistingVCF (data) {
   const statics = DOMRegex(staticsObject, /(?<!t)EXTRA/) ?? null
 
   const vcf = {}
+  vcf.flashID = null;
   vcf.patterns = []
   vcf.extras = []
   vcf.statics = []
@@ -54,7 +55,7 @@ export default function generateStoreAttributesFromExistingVCF (data) {
 
   PRIMARY.childNodes.forEach((elem) => {
     if (elem.nodeName === 'Flash') {
-      const enabledExtras = elem.getAttribute('Extras').split(',')
+      const enabledExtras = elem.getAttribute('Extras')?.split(',') ?? []
       vcf.flashes.push({
         id: UniqueFlashId,
         duration: parseInt(elem.getAttribute('Duration')) ?? null,
@@ -67,7 +68,7 @@ export default function generateStoreAttributesFromExistingVCF (data) {
 
   SECONDARY.childNodes.forEach((elem) => {
     if (elem.nodeName === 'Flash') {
-      const enabledExtras = elem.getAttribute('Extras').split(',')
+      const enabledExtras = elem.getAttribute('Extras')?.split(',') ?? []
       vcf.flashes.push({
         id: UniqueFlashId,
         duration: parseInt(elem.getAttribute('Duration')) ?? null,
@@ -80,7 +81,7 @@ export default function generateStoreAttributesFromExistingVCF (data) {
 
   REARREDS.childNodes.forEach((elem) => {
     if (elem.nodeName === 'Flash') {
-      const enabledExtras = elem.getAttribute('Extras').split(',')
+      const enabledExtras = elem.getAttribute('Extras')?.split(',') ?? []
       vcf.flashes.push({
         id: UniqueFlashId,
         duration: parseInt(elem.getAttribute('Duration')) ?? null,
@@ -90,6 +91,8 @@ export default function generateStoreAttributesFromExistingVCF (data) {
       UniqueFlashId++
     }
   })
+
+  vcf.flashID = UniqueFlashId
 
   extras.forEach((extra) => {
     vcf.extras.push({
@@ -101,7 +104,7 @@ export default function generateStoreAttributesFromExistingVCF (data) {
   })
 
   statics.forEach((staticExtra) => {
-    vcf.extras.push({
+    vcf.statics.push({
       extra: staticExtra.getAttribute('extra'),
       name: staticExtra.getAttribute('name') ?? null
     })
