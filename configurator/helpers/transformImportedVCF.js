@@ -27,10 +27,7 @@ export default function generateStoreAttributesFromExistingVCF (data) {
   const statics = DOMRegex(staticsObject, /(?<!t)EXTRA/) ?? null
 
   const vcf = {}
-  vcf.patterns = {}
-  vcf.patterns.primary = []
-  vcf.patterns.secondary = []
-  vcf.patterns.rearreds = []
+  vcf.patterns = []
   vcf.extras = []
   vcf.statics = []
   vcf.sounds = []
@@ -38,17 +35,17 @@ export default function generateStoreAttributesFromExistingVCF (data) {
   vcf.description = description
   vcf.flashes = []
 
-  vcf.patterns.primary.push({
+  vcf.patterns.push({
     isEmergency: PRIMARY.getAttribute('isEmergengy') ?? true,
     name: PRIMARY.nodeName
   })
 
-  vcf.patterns.secondary.push({
+  vcf.patterns.push({
     isEmergency: SECONDARY.getAttribute('isEmergengy') ?? true,
     name: SECONDARY.nodeName
   })
 
-  vcf.patterns.rearreds.push({
+  vcf.patterns.push({
     isEmergency: REARREDS.getAttribute('isEmergengy') ?? true,
     name: REARREDS.nodeName
   })
@@ -60,7 +57,7 @@ export default function generateStoreAttributesFromExistingVCF (data) {
       const enabledExtras = elem.getAttribute('Extras').split(',')
       vcf.flashes.push({
         id: UniqueFlashId,
-        duration: elem.getAttribute('Duration') ?? null,
+        duration: parseInt(elem.getAttribute('Duration')) ?? null,
         extras: enabledExtras.map(extra => parseInt(extra)) ?? [],
         pattern: 'PRIMARY'
       })
@@ -73,7 +70,7 @@ export default function generateStoreAttributesFromExistingVCF (data) {
       const enabledExtras = elem.getAttribute('Extras').split(',')
       vcf.flashes.push({
         id: UniqueFlashId,
-        duration: elem.getAttribute('Duration') ?? null,
+        duration: parseInt(elem.getAttribute('Duration')) ?? null,
         extras: enabledExtras.map(extra => parseInt(extra)) ?? [],
         pattern: 'SECONDARY'
       })
@@ -86,7 +83,7 @@ export default function generateStoreAttributesFromExistingVCF (data) {
       const enabledExtras = elem.getAttribute('Extras').split(',')
       vcf.flashes.push({
         id: UniqueFlashId,
-        duration: elem.getAttribute('Duration') ?? null,
+        duration: parseInt(elem.getAttribute('Duration')) ?? null,
         extras: enabledExtras.map(extra => parseInt(extra)) ?? [],
         pattern: 'REARREDS'
       })
