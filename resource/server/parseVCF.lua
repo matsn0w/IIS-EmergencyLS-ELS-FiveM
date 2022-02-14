@@ -19,7 +19,15 @@ function ParseVCF(xml, fileName)
             for ex = 1, #rootElement.kids do
                 local elem = rootElement.kids[ex]
 
-                if string.upper(string.sub(elem.name, 1, -3)) == 'EXTRA' then
+                -- better way to filter if the current element contains an extra
+                if string.find(elem.name, 'Extra', 1) then
+                    -- if the string length is less then 7 chars, we assume a leading zero is missing
+                    if (string.len(elem.name) < 7) then
+                        -- use patternmatching to add a leading zero in front of the number
+                    	elem.name = elem.name:gsub('(%d*%.?%d+)', '0%1')
+                    end
+
+                    -- extra should always have a leading zero here
                     local extra = tonumber(string.sub(elem.name, -2))
 
                     vcf.extras[extra] = {}
