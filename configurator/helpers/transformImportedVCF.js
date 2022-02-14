@@ -105,8 +105,8 @@ export default function generateStoreAttributesFromExistingVCF (data) {
 
   statics.forEach((staticExtra) => {
     vcf.statics.push({
-      extra: staticExtra.getAttribute('extra'),
-      name: staticExtra.getAttribute('name') ?? null
+      extra: staticExtra.nodeName.match(/([0-9]|[1-9][0-9])$/g)[0],
+      name: staticExtra.getAttribute('Name') ?? null
     })
   })
 
