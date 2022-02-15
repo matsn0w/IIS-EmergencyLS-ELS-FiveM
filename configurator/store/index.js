@@ -83,5 +83,12 @@ export const mutations = {
     } else {
       extras.push(value.extra.id)
     }
+  },
+
+  importExistingConfiguration (state, value) {
+    state.flashID = value.flashID
+    delete value.flashID
+
+    state.configuration = value
   }
 }

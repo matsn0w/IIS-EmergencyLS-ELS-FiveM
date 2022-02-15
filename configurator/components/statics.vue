@@ -58,7 +58,6 @@ export default {
   computed: {
     ...mapMultiRowFields(['configuration.statics'])
   },
-
   methods: {
     addStatic () {
       const highest = this.statics.at(-1)?.extra ?? 0
