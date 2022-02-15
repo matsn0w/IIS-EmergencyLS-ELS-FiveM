@@ -96,7 +96,7 @@ export default function generateStoreAttributesFromExistingVCF (data) {
 
   extras.forEach((extra) => {
     vcf.extras.push({
-      id: extra.nodeName.match(/([0-9]|[1-9][0-9])$/g)[0],
+      id: parseInt(extra.nodeName.match(/([0-9]|[1-9][0-9])$/g)[0]),
       enabled: extra.getAttribute('IsElsControlled') ?? false,
       allowEnv: extra.getAttribute('AllowEnvLight') ?? false,
       color: extra.getAttribute('Color') ?? null
@@ -105,7 +105,7 @@ export default function generateStoreAttributesFromExistingVCF (data) {
 
   statics.forEach((staticExtra) => {
     vcf.statics.push({
-      extra: staticExtra.nodeName.match(/([0-9]|[1-9][0-9])$/g)[0],
+      extra: parseInt(staticExtra.nodeName.match(/([0-9]|[1-9][0-9])$/g)[0]),
       name: staticExtra.getAttribute('Name') ?? null
     })
   })
