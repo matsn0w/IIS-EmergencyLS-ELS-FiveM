@@ -27,7 +27,7 @@ export default function generateStoreAttributesFromExistingVCF (data) {
   const statics = DOMRegex(staticsObject, /(?<!t)EXTRA/) ?? null
 
   const vcf = {}
-  vcf.flashID = null;
+  vcf.flashID = null
   vcf.patterns = []
   vcf.extras = []
   vcf.statics = []
@@ -51,7 +51,7 @@ export default function generateStoreAttributesFromExistingVCF (data) {
     name: REARREDS.nodeName
   })
 
-  let UniqueFlashId = 1;
+  let UniqueFlashId = 1
 
   PRIMARY.childNodes.forEach((elem) => {
     if (elem.nodeName === 'Flash') {
