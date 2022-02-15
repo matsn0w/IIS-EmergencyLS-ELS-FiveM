@@ -1,123 +1,92 @@
+/**
+ * This method takes in an existing VCF file (as XML string), parses the XML
+ * and maps it to an expected format for the VueX store.
+ *
+*/
 export default function generateStoreAttributesFromExistingVCF (data) {
-  const parsedVCF = new DOMParser().parseFromString(data, 'text/xml')
-
-  const DOMRegex = (subject, regex) => {
-    const output = []
-    for (const i of subject.querySelectorAll('*')) {
-      output.push(i)
-    }
-    return output
+  const vcf = {
+    flashID: 1,
+    author: null,
+    description: null,
+    extras: [],
+    statics: [],
+    useServerSirens: false,
+    sounds: [],
+    patterns: [],
+    flashes: []
   }
 
-  const description = parsedVCF.querySelector('vcfroot').getAttribute('Description')
-  const author = parsedVCF.querySelector('vcfroot').getAttribute('Author')
+  // parse the XML string
+  const parsedVCF = new DOMParser().parseFromString(data, 'text/xml')
 
+  // get basic document info
+  vcf.description = parsedVCF.querySelector('vcfroot').getAttribute('Description')
+  vcf.author = parsedVCF.querySelector('vcfroot').getAttribute('Author')
+
+  // EOVERRIDE section
   const eoverride = parsedVCF.querySelector('EOVERRIDE')
-  const extras = DOMRegex(eoverride, /(?<!t)EXTRA/)
-
-  const patternsObject = parsedVCF.querySelector('PATTERN')
-  const PRIMARY = patternsObject.querySelector('PRIMARY')
-  const SECONDARY = patternsObject.querySelector('SECONDARY')
-  const REARREDS = patternsObject.querySelector('REARREDS')
-
-  const soundsObject = parsedVCF.querySelector('SOUNDS')
-  const sounds = DOMRegex(soundsObject, /\b(?:MainHorn|NineMode|SrnTone1|SrnTone2|SrnTone3|SrnTone4)\b/g)
-
-  const staticsObject = parsedVCF.querySelector('STATIC')
-  const statics = DOMRegex(staticsObject, /(?<!t)EXTRA/) ?? null
-
-  const vcf = {}
-  vcf.flashID = null
-  vcf.patterns = []
-  vcf.extras = []
-  vcf.statics = []
-  vcf.sounds = []
-  vcf.author = author
-  vcf.description = description
-  vcf.flashes = []
-
-  vcf.patterns.push({
-    isEmergency: PRIMARY.getAttribute('isEmergengy') ?? true,
-    name: PRIMARY.nodeName
-  })
-
-  vcf.patterns.push({
-    isEmergency: SECONDARY.getAttribute('isEmergengy') ?? true,
-    name: SECONDARY.nodeName
-  })
-
-  vcf.patterns.push({
-    isEmergency: REARREDS.getAttribute('isEmergengy') ?? true,
-    name: REARREDS.nodeName
-  })
-
-  let UniqueFlashId = 1
-
-  PRIMARY.childNodes.forEach((elem) => {
-    if (elem.nodeName === 'Flash') {
-      const enabledExtras = elem.getAttribute('Extras')?.split(',') ?? []
-      vcf.flashes.push({
-        id: UniqueFlashId,
-        duration: parseInt(elem.getAttribute('Duration')) ?? null,
-        extras: enabledExtras.map(extra => parseInt(extra)) ?? [],
-        pattern: 'PRIMARY'
-      })
-      UniqueFlashId++
-    }
-  })
-
-  SECONDARY.childNodes.forEach((elem) => {
-    if (elem.nodeName === 'Flash') {
-      const enabledExtras = elem.getAttribute('Extras')?.split(',') ?? []
-      vcf.flashes.push({
-        id: UniqueFlashId,
-        duration: parseInt(elem.getAttribute('Duration')) ?? null,
-        extras: enabledExtras.map(extra => parseInt(extra)) ?? [],
-        pattern: 'SECONDARY'
-      })
-      UniqueFlashId++
-    }
-  })
-
-  REARREDS.childNodes.forEach((elem) => {
-    if (elem.nodeName === 'Flash') {
-      const enabledExtras = elem.getAttribute('Extras')?.split(',') ?? []
-      vcf.flashes.push({
-        id: UniqueFlashId,
-        duration: parseInt(elem.getAttribute('Duration')) ?? null,
-        extras: enabledExtras.map(extra => parseInt(extra)) ?? [],
-        pattern: 'REARREDS'
-      })
-      UniqueFlashId++
-    }
-  })
-
-  vcf.flashID = UniqueFlashId
+  const extras = eoverride.querySelectorAll('*')
 
   extras.forEach((extra) => {
     vcf.extras.push({
       id: parseInt(extra.nodeName.match(/([0-9]|[1-9][0-9])$/g)[0]),
-      enabled: extra.getAttribute('IsElsControlled') ?? false,
-      allowEnv: extra.getAttribute('AllowEnvLight') ?? false,
+      enabled: extra.getAttribute('IsElsControlled') === 'true',
+      allowEnv: extra.getAttribute('AllowEnvLight') === 'true',
       color: extra.getAttribute('Color') ?? null
     })
   })
 
+  // STATICS section
+  const staticsObject = parsedVCF.querySelector('STATIC')
+  const statics = staticsObject.querySelectorAll('*')
+
   statics.forEach((staticExtra) => {
     vcf.statics.push({
       extra: parseInt(staticExtra.nodeName.match(/([0-9]|[1-9][0-9])$/g)[0]),
-      name: staticExtra.getAttribute('Name') ?? null
+      name: staticExtra.getAttribute('Name') ?? staticExtra.nodeName
     })
   })
 
+  // SOUNDS section
+  const soundsObject = parsedVCF.querySelector('SOUNDS')
+  const sounds = soundsObject.querySelectorAll('*')
+
   sounds.forEach((sound) => {
     vcf.sounds.push({
-      allowUse: sound.getAttribute('AllowUse') ?? false,
-      audioString: sound.getAttribute('AudioString') ?? null,
       name: sound.nodeName,
-      soundset: sound.getAttribute('Soundset') ?? null
+      allowUse: sound.getAttribute('AllowUse') === 'true',
+      audioString: sound.getAttribute('AudioString') ?? null,
+      soundSet: sound.getAttribute('SoundSet') ?? null
     })
   })
+
+  // determine whether a SoundSet is present
+  sounds.forEach((sound) => {
+    if (sound.getAttribute('SoundSet') !== null) {
+      vcf.useServerSirens = true
+    }
+  })
+
+  // PATTERN section
+  const patternsObject = parsedVCF.querySelector('PATTERN')
+
+  for (const pattern of patternsObject.children) {
+    vcf.patterns.push({
+      name: pattern.nodeName,
+      isEmergency: pattern.getAttribute('IsEmergency') === 'true'
+    })
+
+    for (const flash of pattern.children) {
+      const enabledExtras = flash.getAttribute('Extras')?.split(',') ?? []
+
+      vcf.flashes.push({
+        id: vcf.flashID++,
+        duration: parseInt(flash.getAttribute('Duration')) ?? 100,
+        extras: enabledExtras.map(extra => parseInt(extra)) ?? [],
+        pattern: pattern.nodeName
+      })
+    }
+  }
 
   return vcf
 }
