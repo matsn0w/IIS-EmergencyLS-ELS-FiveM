@@ -16,6 +16,7 @@
     "core-js": "^3.21.0",
     "file-saver": "^2.0.5",
     "nuxt": "^2.15.7",
+    "vuedraggable": "^2.24.3",
     "vuex-map-fields": "^1.4.1",
     "xml-formatter": "^2.6.1"
   },

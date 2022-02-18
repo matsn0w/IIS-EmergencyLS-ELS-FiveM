@@ -31,25 +31,27 @@
           </thead>
 
           <tbody class="text-sm divide-y divide-gray-100">
-            <tr v-for="flash, i in getFlashesForPattern(pattern)" :key="i">
-              <td>
-                <input v-model.number="flash.duration" type="number" min="0">
-              </td>
-              <td>
-                <span
-                  v-for="extra, j in enabledExtras"
-                  :key="j"
-                  class="extra"
-                  :class="isExtraToggled(pattern, flash, extra) ? getExtraColor(extra) : ''"
-                  @click="toggleExtra(pattern, flash, extra)"
-                >{{ extra.id }}</span>
-              </td>
-              <td>
-                <button type="button" class="bg-red-500" @click="removeFlash(pattern, flash)">
-                  &times;
-                </button>
-              </td>
-            </tr>
+            <draggable v-model="flashes">
+              <tr v-for="flash, i in getFlashesForPattern(pattern)" :key="i">
+                <td>
+                  <input v-model.number="flash.duration" type="number" min="0">
+                </td>
+                <td>
+                  <span
+                    v-for="extra, j in enabledExtras"
+                    :key="j"
+                    class="extra"
+                    :class="isExtraToggled(pattern, flash, extra) ? getExtraColor(extra) : ''"
+                    @click="toggleExtra(pattern, flash, extra)"
+                  >{{ extra.id }}</span>
+                </td>
+                <td>
+                  <button type="button" class="bg-red-500" @click="removeFlash(pattern, flash)">
+                    &times;
+                  </button>
+                </td>
+              </tr>
+            </draggable>
           </tbody>
         </table>
       </div>
@@ -59,13 +61,27 @@
 
 <script>
 import { mapMultiRowFields } from 'vuex-map-fields'
+import draggable from 'vuedraggable'
 
 export default {
+  components: {
+    draggable
+  },
+
   computed: {
     ...mapMultiRowFields([
-      'configuration.patterns',
-      'configuration.flashes'
+      'configuration.patterns'
     ]),
+
+    flashes: {
+      get () {
+        return this.$store.state.configuration.flashes
+      },
+
+      set (value) {
+        this.$store.commit('updateFlashesOrder', value)
+      }
+    },
 
     enabledExtras () {
       return this.$store.state.configuration.extras.filter(extra => extra.enabled)

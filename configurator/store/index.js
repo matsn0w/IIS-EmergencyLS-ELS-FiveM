@@ -90,5 +90,9 @@ export const mutations = {
     delete value.flashID
 
     state.configuration = value
+  },
+
+  updateFlashesOrder (state, value) {
+    state.configuration.flashes = value
   }
 }
