@@ -22,21 +22,25 @@
 
       <div class="p-3 overflow-x-auto">
         <table class="table-auto w-full">
-          <thead class="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
+          <thead class="text-xs font-semibold uppercase text-gray-400 bg-gray-50 text-left">
             <tr>
-              <th>Duration</th>
-              <th>Extras</th>
+              <th class="text-left" />
+              <th class="text-left">Duration</th>
+              <th class="text-left">Extras</th>
               <th />
             </tr>
           </thead>
 
-          <tbody class="text-sm divide-y divide-gray-100">
+          <tbody class="text-sm divide-gray-100">
             <draggable v-model="flashes">
-              <tr v-for="flash, i in getFlashesForPattern(pattern)" :key="i">
-                <td>
+              <tr v-for="flash, i in getFlashesForPattern(pattern)" :key="i" class="cursor-move">
+                <td class="text-left">
+                  <i class="fa-solid fa-grip-vertical" />
+                </td>
+                <td class="text-left">
                   <input v-model.number="flash.duration" type="number" min="0">
                 </td>
-                <td>
+                <td class="text-left">
                   <span
                     v-for="extra, j in enabledExtras"
                     :key="j"
@@ -45,7 +49,7 @@
                     @click="toggleExtra(pattern, flash, extra)"
                   >{{ extra.id }}</span>
                 </td>
-                <td>
+                <td class="text-left">
                   <button type="button" class="bg-red-500" @click="removeFlash(pattern, flash)">
                     &times;
                   </button>
