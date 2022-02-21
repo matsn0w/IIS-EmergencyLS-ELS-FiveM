@@ -42,6 +42,29 @@ local function checkForUpdate()
     end)
 end
 
+local function scanDir(folder)
+    local resourcePath = GetResourcePath(GetCurrentResourceName())
+    local directory = resourcePath .. '/' .. folder
+    local i, t, popen = 0, {}, io.popen
+    local pfile = popen('ls -A "' .. directory .. '"')
+
+    for filename in pfile:lines() do
+        i = i + 1
+        t[i] = filename
+    end
+
+    if #t == 0 then
+        error('Couldn\'t find any VCF files. Are they in the correct directory?')
+    end
+
+    pfile:close()
+    return t
+end
+
+local function loadFile(file)
+    return LoadResourceFile(GetCurrentResourceName(), file)
+end
+
 AddEventHandler('onResourceStart', function(name)
     if not Config then
         error('You probably forgot to copy the example configuration file. Please see the installation instructions for further details.')
@@ -59,9 +82,10 @@ AddEventHandler('onResourceStart', function(name)
         checkForUpdate()
     end)
 
-    for i = 1, #Config.ELSFiles do
-        local file = Config.ELSFiles[i]
-        local data = LoadResourceFile(GetCurrentResourceName(), 'xmlFiles/' .. file)
+    local folder = 'xmlFiles'
+
+    for _, file in pairs(scanDir(folder)) do
+        local data = loadFile(folder .. '/' .. file)
 
         if data then
             if pcall(function() parseObjSet(data, file) end) then
