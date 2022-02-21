@@ -1,13 +1,5 @@
 Config = {}
 
--- Add your VCF files here
-Config.ELSFiles = {
-    'police.xml',
-    'police2.xml',
-    'ambulance.xml',
-    'someothervcf.xml',
-}
-
 -- If you are using WM Server Sirens, uncomment below
 -- See https://github.com/Walsheyy/WMServerSirens
 Config.AudioBanks = {
