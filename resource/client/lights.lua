@@ -71,7 +71,6 @@ AddEventHandler('kjELS:resetExtras', function(vehicle)
     end
 end)
 
--- run on kjELS:updateStatus
 RegisterNetEvent('kjELS:toggleLights')
 AddEventHandler('kjELS:toggleLights', function(vehicle, stage, toggle)
     if not vehicle then
