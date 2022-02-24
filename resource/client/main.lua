@@ -56,7 +56,7 @@ end
 
 local function ToggleLights(vehicle, stage, toggle)
     -- turn light stage on or off based on the toggle
-    TriggerServerEvent('kjELS:updateStatus', vehicle, stage, toggle)
+    TriggerEvent('kjELS:toggleLights', vehicle, stage, toggle)
 
     -- the siren is always off when the lights are toggled
     TriggerServerEvent('kjELS:setSirenState', 0)
