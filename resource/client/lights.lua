@@ -27,7 +27,7 @@ local function SetLightStage(vehicle, stage, toggle)
             -- flash the high beam
             while ELSvehicle[stage] do
                 SetVehicleFullbeam(vehicle, true)
-                SetVehicleLightMultiplier(vehicle, 5.0)
+                SetVehicleLightMultiplier(vehicle, Config.HighBeamIntensity or 5.0)
 
                 Wait(500)
 

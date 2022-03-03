@@ -12,6 +12,9 @@ Config.EnvironmentalLights = {
     Intensity = 1.0, -- how intense the light source is
 }
 
+-- You can make the flashing high beams brighter. Set to 1.0 for GTA default
+Config.HighBeamIntensity = 5.0
+
 -- Whether vehicle passengers are allowed to control the lights and sirens
 Config.AllowPassengers = false
 
