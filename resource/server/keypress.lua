@@ -8,11 +8,6 @@ AddEventHandler('kjELS:toggleHorn', function(state)
     TriggerClientEvent('kjELS:updateHorn', -1, source, state)
 end)
 
-RegisterNetEvent('kjELS:updateStatus')
-AddEventHandler('kjELS:updateStatus', function(vehicle, stage, toggle)
-    TriggerClientEvent('kjELS:toggleLights', -1, vehicle, stage, toggle)
-end)
-
 RegisterNetEvent('kjELS:sv_Indicator')
 AddEventHandler('kjELS:sv_Indicator', function(direction, toggle)
     TriggerClientEvent('kjELS:updateIndicators', source, direction, toggle)

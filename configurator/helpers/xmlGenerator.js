@@ -22,7 +22,9 @@ export default {
     const extras = doc.createElement('EOVERRIDE')
 
     data.extras.forEach((extra) => {
-      const e = doc.createElement(`Extra${extra.id}`)
+      let extraId = `${extra.id}`
+      extraId = extraId.replace(/(^[^\d\n]*\d[^\d\n]*$)/gm, '0$1')
+      const e = doc.createElement(`Extra${extraId}`)
       e.setAttribute('IsElsControlled', extra.enabled)
 
       if (extra.allowEnv) {
