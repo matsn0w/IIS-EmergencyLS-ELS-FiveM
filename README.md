@@ -58,6 +58,19 @@ Feel free to [create an issue](https://github.com/matsn0w/MISS-ELS/issues/new) i
 
 ## Changelog
 
+### v2.1.0
+
+#### Resource
+
+* Added automatic scanning for VCF's
+* Added 'missing zero' detection in the XML parser
+* Fixed a bunch of errors thrown in the console when 'others' activated their lights 
+
+#### Configurator
+
+* Added importing of existing VCF's
+* Fixed missing zeros in XML output
+
 ### v2.0.1
 
 * Fixed a bug in the update checking script
