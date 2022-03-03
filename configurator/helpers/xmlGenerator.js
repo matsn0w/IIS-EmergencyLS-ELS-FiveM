@@ -78,6 +78,7 @@ export default {
     data.patterns.forEach((pattern) => {
       const p = doc.createElement(pattern.name)
       p.setAttribute('IsEmergency', pattern.isEmergency)
+      p.setAttribute('FlashHighBeam', pattern.flashHighBeam)
 
       const flashes = data.flashes.filter(flash => flash.pattern === pattern.name)
 

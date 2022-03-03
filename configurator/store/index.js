@@ -34,9 +34,9 @@ export const state = () => ({
       { name: 'SrnTone4', allowUse: true, audioString: 'VEHICLES_HORNS_AMBULANCE_WARNING', soundSet: 'DLC_WMSIRENS_SOUNDSET' }
     ],
     patterns: [
-      { name: 'PRIMARY', isEmergency: true },
-      { name: 'SECONDARY', isEmergency: true },
-      { name: 'REARREDS', isEmergency: true }
+      { name: 'PRIMARY', isEmergency: true, flashHighBeam: false },
+      { name: 'SECONDARY', isEmergency: true, flashHighBeam: false },
+      { name: 'REARREDS', isEmergency: true, flashHighBeam: false }
     ],
     flashes: []
   }
