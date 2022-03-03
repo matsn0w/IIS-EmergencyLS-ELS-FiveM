@@ -108,6 +108,13 @@ function ParseVCF(xml, fileName)
                         vcf.patterns[type].isEmergency = true
                     end
 
+                    -- whether the pattern toggles flashing the high beam, default is false
+                    if elem.attr['FlashHighBeam'] then
+                        vcf.patterns[type].flashHighBeam = elem.attr['FlashHighBeam'] == 'true'
+                    else
+                        vcf.patterns[type].flashHighBeam = false
+                    end
+
                     for _, flash in ipairs(elem.kids) do
                         -- backwards compatibility for VCF's with 'FlashXX' tags
                         local tag = string.upper(string.sub(flash.name, 1, 5))

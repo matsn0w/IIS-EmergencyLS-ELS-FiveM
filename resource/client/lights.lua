@@ -16,35 +16,68 @@ local function SetLightStage(vehicle, stage, toggle)
         SetVehicleSiren(vehicle, toggle)
     end
 
-    while ELSvehicle[stage] do
-        -- keep the engine on whilst the lights are activated
-        SetVehicleEngineOn(vehicle, true, true, false)
+    if (VCFdata.patterns[pattern].flashHighBeam) then
+        Citizen.CreateThread(function()
+            -- get the current vehicle lights state
+            local _, lightsOn, highbeamsOn = GetVehicleLightsState(vehicle)
 
-        local lastFlash = {}
+            -- turn the lights on to avoid flashing tail lights
+            if lightsOn == 0 then SetVehicleLights(vehicle, 2) end
 
-        for _, flash in ipairs(VCFdata.patterns[pattern]) do
-            if ELSvehicle[stage] then
-                for _, extra in ipairs(flash['extras']) do
-                    -- turn the extra on
-                    SetVehicleExtra(vehicle, extra, 0)
+            -- flash the high beam
+            while ELSvehicle[stage] do
+                SetVehicleFullbeam(vehicle, true)
+                SetVehicleLightMultiplier(vehicle, 5.0)
 
-                    -- save the extra as last flashed
-                    table.insert(lastFlash, extra)
+                Wait(500)
+
+                SetVehicleFullbeam(vehicle, false)
+                SetVehicleLightMultiplier(vehicle, 1.0)
+
+                Wait(500)
+            end
+
+            -- reset initial vehicle state
+            if lightsOn == 0 then SetVehicleLights(vehicle, 0) end
+            if highbeamsOn == 1 then SetVehicleFullbeam(vehicle, true) end
+
+            Wait(0)
+        end)
+    end
+
+    Citizen.CreateThread(function()
+        while ELSvehicle[stage] do
+            -- keep the engine on whilst the lights are activated
+            SetVehicleEngineOn(vehicle, true, true, false)
+    
+            local lastFlash = {}
+    
+            for _, flash in ipairs(VCFdata.patterns[pattern]) do
+                if ELSvehicle[stage] then
+                    for _, extra in ipairs(flash['extras']) do
+                        -- turn the extra on
+                        SetVehicleExtra(vehicle, extra, 0)
+    
+                        -- save the extra as last flashed
+                        table.insert(lastFlash, extra)
+                    end
+    
+                    Citizen.Wait(flash.duration)
                 end
-
-                Citizen.Wait(flash.duration)
+    
+                -- turn off the last flashed extras
+                for _, v in ipairs(lastFlash) do
+                    SetVehicleExtra(vehicle, v, 1)
+                end
+    
+                lastFlash = {}
             end
-
-            -- turn off the last flashed extras
-            for _, v in ipairs(lastFlash) do
-                SetVehicleExtra(vehicle, v, 1)
-            end
-
-            lastFlash = {}
+    
+            Citizen.Wait(0)
         end
 
-        Citizen.Wait(0)
-    end
+        Wait(0)
+    end)
 end
 
 RegisterNetEvent('kjELS:resetExtras')
