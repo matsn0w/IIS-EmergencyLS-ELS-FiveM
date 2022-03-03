@@ -35,7 +35,7 @@
 
 	<!-- CUSTOM PATTERN -->
 	<PATTERN>
-		<PRIMARY>
+		<PRIMARY FlashHighBeam="true"> <!-- This makes your headlights flash -->
 			<Flash Duration="80" Extras="1,2" /> <!-- This is done, then waits 80ms and does... -->
 			<Flash Duration="80" Extras="1,2,3,4" /> <!-- This one. -->
 			<Flash Duration="80" Extras="3,4" /> <!-- e.t.c. -->
