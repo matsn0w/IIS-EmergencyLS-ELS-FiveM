@@ -18,6 +18,11 @@
           <input :id="`isEmergency[${index}]`" v-model="pattern.isEmergency" type="checkbox">
           Is emergency
         </label>
+
+        <label :for="`flashHighBeam[${index}]`" class="cb-label">
+          <input :id="`flashHighBeam[${index}]`" v-model="pattern.flashHighBeam" type="checkbox">
+          Flash high beam
+        </label>
       </header>
 
       <div class="p-3 overflow-x-auto">

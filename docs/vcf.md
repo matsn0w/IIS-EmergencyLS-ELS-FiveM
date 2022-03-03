@@ -187,13 +187,17 @@ The duration is measured in milliseconds. Flashes will be executed by appearance
 
 It's recommended to include an 'empty flash' at the bottom of each pattern to make the transition from last to first flash smooth.
 
+### Extra options
+
 You can optionally set `IsEmergency` to `false` if you don't want vehicles to pull over when you have that light stage activated.
+
+Also, you can set `FlashHighBeam` to `true` if you want your head lights to flash every .5 seconds. This is disabled by default. You can tweak the flash intensity in `config.lua`. By default, the intensity is set to `5.0`. The game default is `1.0`.
 
 Pattern example:
 
 ```xml
 <PATTERN>
-    <PRIMARY>
+    <PRIMARY FlashHighBeam="true">
         <Flash Duration="50" Extras="1,4" />
         <Flash Duration="50" />
         <Flash Duration="150" Extras="1,4" />
@@ -215,7 +219,7 @@ Pattern example:
         <Flash Duration="50" Extras="" />
     </SECONDARY>
 
-    <REARREDS IsEmergency="false">
+    <REARREDS IsEmergency="false" FlashHighBeam="false">
         <Flash Duration="1000" Extras="8" />
         <Flash Duration="250" />
         <Flash Duration="1000" Extras="7" />
