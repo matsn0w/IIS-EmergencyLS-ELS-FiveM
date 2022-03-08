@@ -58,6 +58,12 @@ Feel free to [create an issue](https://github.com/matsn0w/MISS-ELS/issues/new) i
 
 ## Changelog
 
+### v2.1.1
+
+#### Resource
+
+* Fixed the automatic directory scanner not working on Windows based servers
+
 ### v2.1.0
 
 #### Resource
@@ -73,9 +79,13 @@ Feel free to [create an issue](https://github.com/matsn0w/MISS-ELS/issues/new) i
 
 ### v2.0.1
 
+#### Resource
+
 * Fixed a bug in the update checking script
 
 ### v2.0.0
+
+#### Resource
 
 * Added configuration option to allow passengers to control the sirens
 * Added configuration option to customize indicator controls
@@ -85,7 +95,6 @@ Feel free to [create an issue](https://github.com/matsn0w/MISS-ELS/issues/new) i
 * Added an option to control the sirens regardless of the light stage
 * Added a in-game menu for static extra's
 * Added automatic check for updates
-* Added a VCF configuration GUI
 * Added some documentation
 * VCF: Added `AllowUse` flag to enable or disable the main horn
 * VCF: Added `SoundSet` flag to specify a custom sound for the main horn
@@ -100,6 +109,10 @@ Feel free to [create an issue](https://github.com/matsn0w/MISS-ELS/issues/new) i
 * Organized file structure
 * Updated SLAXML parser to version 0.8
 * Lots of code improvements and optimizations
+
+#### Configurator
+
+* Added a VCF configuration GUI
 
 ### v1.2.0 - v1.3.0
 
