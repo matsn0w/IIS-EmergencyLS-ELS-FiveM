@@ -1,4 +1,5 @@
 kjxmlData = {}
+local systemOS = nil
 
 local function parseObjSet(data, fileName)
     local xml = SLAXML:dom(data)
@@ -42,11 +43,34 @@ local function checkForUpdate()
     end)
 end
 
+local function determineOS()
+    local system = nil
+
+    local unix = os.getenv('HOME')
+    local windows = os.getenv('HOMEPATH')
+
+    if unix then system = 'unix' end
+    if windows then system = 'windows' end
+
+    -- this guy probably has some custom ENV var set...
+    if unix and windows then error('Couldn\'t identify the OS unambiguously.') end
+
+    return system
+end
+
 local function scanDir(folder)
+    local pathSeparator = '/'
+    local command = 'ls -A'
+
+    if systemOS == 'windows' then
+        pathSeparator = '\\'
+        command = 'dir /R /B'
+    end
+
     local resourcePath = GetResourcePath(GetCurrentResourceName())
-    local directory = resourcePath .. '/' .. folder
+    local directory = resourcePath .. pathSeparator .. folder
     local i, t, popen = 0, {}, io.popen
-    local pfile = popen('ls -A "' .. directory .. '"')
+    local pfile = popen(command .. ' "' .. directory .. '"')
 
     for filename in pfile:lines() do
         i = i + 1
@@ -83,6 +107,13 @@ AddEventHandler('onResourceStart', function(name)
     end)
 
     local folder = 'xmlFiles'
+
+    -- determine the server OS
+    systemOS = determineOS()
+
+    if not systemOS then
+        error('Couldn\'t determine your OS! Are your running on steroids??')
+    end
 
     for _, file in pairs(scanDir(folder)) do
         local data = loadFile(folder .. '/' .. file)
