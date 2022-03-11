@@ -79,6 +79,7 @@ export default {
       const p = doc.createElement(pattern.name)
       p.setAttribute('IsEmergency', pattern.isEmergency)
       p.setAttribute('FlashHighBeam', pattern.flashHighBeam)
+      p.setAttribute('EnableWarningBeep', pattern.enableWarningBeep)
 
       const flashes = data.flashes.filter(flash => flash.pattern === pattern.name)
 
