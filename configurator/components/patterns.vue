@@ -23,6 +23,11 @@
           <input :id="`flashHighBeam[${index}]`" v-model="pattern.flashHighBeam" type="checkbox">
           Flash high beam
         </label>
+
+        <label :for="`enableWarningBeep[${index}]`" class="cb-label">
+          <input :id="`enableWarningBeep[${index}]`" v-model="pattern.enableWarningBeep" type="checkbox">
+          Enable warning beep
+        </label>
       </header>
 
       <div class="p-3 overflow-x-auto">

@@ -45,6 +45,18 @@ local function SetLightStage(vehicle, stage, toggle)
         end)
     end
 
+    if VCFdata.patterns[pattern].enableWarningBeep then
+        Citizen.CreateThread(function()
+            while ELSvehicle[stage] do
+                -- play warning sound
+                SendNUIMessage({ transactionType = 'playSound', transactionFile = 'WarningBeep', transactionVolume = 0.2 })
+
+                -- this should be equal to the length of the audio file
+                Citizen.Wait((Config.WarningBeepDuration or 0) * 1000)
+            end
+        end)
+    end
+
     Citizen.CreateThread(function()
         while ELSvehicle[stage] do
             -- keep the engine on whilst the lights are activated

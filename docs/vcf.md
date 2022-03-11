@@ -193,11 +193,13 @@ You can optionally set `IsEmergency` to `false` if you don't want vehicles to pu
 
 Also, you can set `FlashHighBeam` to `true` if you want your head lights to flash every .5 seconds. This is disabled by default. You can tweak the flash intensity in `config.lua`. By default, the intensity is set to `5.0`. The game default is `1.0`.
 
+Finally, you can toggle `EnableWarningBeep` to `true` to add a subtile warning beep sound to indicate that, for example, your stop sign is turned on. By default, this is `false`. You can tweak the length of the beep by editing `Config.WarningBeepDuration`. The length of the default sound is 2 seconds. If you replace the audio file, make sure to set the duration to the exact length of the beep (or even longer to add a delay).
+
 Pattern example:
 
 ```xml
 <PATTERN>
-    <PRIMARY FlashHighBeam="true">
+    <PRIMARY IsEmergency="true" FlashHighBeam="true" EnableWarningBeep="true">
         <Flash Duration="50" Extras="1,4" />
         <Flash Duration="50" />
         <Flash Duration="150" Extras="1,4" />
@@ -219,7 +221,7 @@ Pattern example:
         <Flash Duration="50" Extras="" />
     </SECONDARY>
 
-    <REARREDS IsEmergency="false" FlashHighBeam="false">
+    <REARREDS IsEmergency="false" FlashHighBeam="false" EnableWarningBeep="false">
         <Flash Duration="1000" Extras="8" />
         <Flash Duration="250" />
         <Flash Duration="1000" Extras="7" />

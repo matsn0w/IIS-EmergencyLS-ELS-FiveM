@@ -74,7 +74,8 @@ export default function generateStoreAttributesFromExistingVCF (data) {
     vcf.patterns.push({
       name: pattern.nodeName,
       isEmergency: pattern.getAttribute('IsEmergency') === 'true',
-      flashHighBeam: pattern.getAttribute('FlashHighBeam') === 'true'
+      flashHighBeam: pattern.getAttribute('FlashHighBeam') === 'true',
+      enableWarningBeep: pattern.getAttribute('EnableWarningBeep') === 'true'
     })
 
     for (const flash of pattern.children) {

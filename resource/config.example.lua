@@ -31,6 +31,11 @@ Config.HornBlip = true
 -- Enables a short beep when a light stage or siren is activated
 Config.Beeps = false
 
+-- Duration for the warning beep (in seconds)
+-- Should be equal to the WarningBeep.ogg file
+-- Only change this if you replace the audio file with your own
+Config.WarningBeepDuration = 2.0
+
 -- Enables controller support for controlling the primary light stage and the sirens
 -- DPAD_LEFT = toggle primary lights
 -- DPAD_DOWN = toggle siren 1

@@ -115,6 +115,13 @@ function ParseVCF(xml, fileName)
                         vcf.patterns[type].flashHighBeam = false
                     end
 
+                    -- whether the pattern enables a warning beep, default is false
+                    if elem.attr['EnableWarningBeep'] then
+                        vcf.patterns[type].enableWarningBeep = elem.attr['EnableWarningBeep'] == 'true'
+                    else
+                        vcf.patterns[type].enableWarningBeep = false
+                    end
+
                     for _, flash in ipairs(elem.kids) do
                         -- backwards compatibility for VCF's with 'FlashXX' tags
                         local tag = string.upper(string.sub(flash.name, 1, 5))
