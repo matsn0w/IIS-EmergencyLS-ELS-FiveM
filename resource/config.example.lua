@@ -22,7 +22,6 @@ Config.AllowPassengers = false
 Config.SirenAlwaysAllowed = false
 
 -- Whether vehicle indicator control should be enabled
--- The indicators are controlled with arrow left, right and down on your keyboard
 Config.Indicators = true
 
 -- Enables a short honk when a siren is activated
@@ -41,21 +40,3 @@ Config.WarningBeepDuration = 2.0
 -- DPAD_DOWN = toggle siren 1
 -- B = activate next siren
 Config.ControllerSupport = true
-
--- Sets keybinds for various actions
--- See https://docs.fivem.net/docs/game-references/controls for a list of codes
-Config.KeyBinds = {
-    PrimaryLights = 85, -- Q
-    SecondaryLights = 311, -- K
-    MiscLights = 182, -- L
-    ActivateSiren = 19, -- LEFT ALT
-    NextSiren = 45, -- R
-    Siren1 = 157, -- 1
-    Siren2 = 158, -- 2
-    Siren3 = 160, -- 3
-    Siren4 = 164, -- 4
-    IndicatorLeft = 174, -- ARROW LEFT
-    IndicatorRight = 175, -- ARROW RIGHT
-    IndicatorHazard = 173, -- ARROW DOWN
-    ExtrasMenu = 303, -- U
-}
