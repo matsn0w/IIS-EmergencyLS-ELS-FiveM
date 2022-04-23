@@ -22,7 +22,6 @@ Config.AllowPassengers = false
 Config.SirenAlwaysAllowed = false
 
 -- Whether vehicle indicator control should be enabled
--- The indicators are controlled with arrow left, right and down on your keyboard
 Config.Indicators = true
 
 -- Enables a short honk when a siren is activated
