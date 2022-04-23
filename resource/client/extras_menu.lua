@@ -37,6 +37,11 @@ mainMenu.OnCheckboxChange = function(sender, item, checked)
     end
 end
 
+RegisterCommand('MISS-ELS:open-statics-menu', function ()
+    -- toggle the menu visibility
+    mainMenu:Visible(not mainMenu:Visible())
+end)
+
 Citizen.CreateThread(function()
     while true do
         if not kjxmlData then
@@ -88,11 +93,6 @@ Citizen.CreateThread(function()
                 currentVehicle = vehicle
 
                 MenuPool:RefreshIndex()
-            end
-
-            if IsDisabledControlJustPressed(0, Config.KeyBinds.ExtrasMenu) then
-                -- toggle the menu visibility
-                mainMenu:Visible(not mainMenu:Visible())
             end
         end
 
