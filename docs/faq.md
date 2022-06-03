@@ -2,7 +2,7 @@
 
 ## 1. Why don't other cars pull over?
 
-You have to set a `sirenSetting` in a `carvariations.meta` file. This will make the game think your vehicle has a 'siren'. The ELS will trigger the emergency state when you toggle the sirens, and BOOM! They move over!
+You have to set a `sirenSetting` in a `carvariations.meta` file. This will make the game think your vehicle has a 'siren'. Also make sure the vehicle has the flag `FLAG_EMERGENCY_SERVICE` or `FLAG_LAW_ENFORCEMENT` in the `vehicles.meta`. The ELS will trigger the emergency state when you toggle the sirens, and BOOM! They move over!
 
 See [#2](#2-why-are-my-tail-lights-flashing)
 
