@@ -5,13 +5,13 @@ local function ShowNotification(text)
 end
 
 -- create a menu
-MenuPool = NativeUI.CreatePool()
+local menuPool = NativeUI.CreatePool()
 local mainMenu = NativeUI.CreateMenu('MISS ELS', '~b~Static extras menu')
-MenuPool:Add(mainMenu)
+menuPool:Add(mainMenu)
 
 -- disable mouse input
-MenuPool:ControlDisablingEnabled(false)
-MenuPool:MouseControlsEnabled(false)
+menuPool:ControlDisablingEnabled(false)
+menuPool:MouseControlsEnabled(false)
 
 -- store menu entries
 local extras = {}
@@ -59,7 +59,7 @@ Citizen.CreateThread(function()
         while not IsPedInAnyVehicle(ped, false) do Citizen.Wait(0) end
 
         if IsELSVehicle(vehicle) and CanControlSirens(vehicle) then
-            MenuPool:ProcessMenus()
+            menuPool:ProcessMenus()
 
             if vehicle ~= currentVehicle then
                 mainMenu:Clear()
@@ -95,7 +95,7 @@ Citizen.CreateThread(function()
                 -- store this as the current vehicle
                 currentVehicle = vehicle
 
-                MenuPool:RefreshIndex()
+                menuPool:RefreshIndex()
             end
         end
 
