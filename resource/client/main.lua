@@ -70,7 +70,7 @@ local function HandleHorn()
 end
 
 local function ToggleLights(vehicle, stage, toggle)
-    local ELSvehicle = kjEnabledVehicles[vehicle].primary
+    local ELSvehicle = kjEnabledVehicles[vehicle]
 
     -- turn light stage on or off based on the toggle
     TriggerEvent('kjELS:toggleLights', vehicle, stage, toggle)
