@@ -2,8 +2,8 @@ local function SetLightStage(vehicle, stage, toggle)
     local ELSvehicle = kjEnabledVehicles[vehicle]
     local VCFdata = kjxmlData[GetCarHash(vehicle)]
 
-    -- convert the given light stage to a pattern in the VCF
-    local pattern = ConvertStageToPattern(stage)
+    -- get the pattern data
+    local patternData = VCFdata.patterns[ConvertStageToPattern(stage)]
 
     -- reset all extras
     TriggerEvent('kjELS:resetExtras', vehicle)
@@ -11,12 +11,12 @@ local function SetLightStage(vehicle, stage, toggle)
     -- set the light state
     ELSvehicle[stage] = toggle
 
-    if VCFdata.patterns[pattern].isEmergency then
+    if patternData.isEmergency then
         -- toggle the native siren ('emergency mode')
         SetVehicleSiren(vehicle, toggle)
     end
 
-    if (VCFdata.patterns[pattern].flashHighBeam) then
+    if (patternData.flashHighBeam) then
         Citizen.CreateThread(function()
             -- get the current vehicle lights state
             local _, lightsOn, highbeamsOn = GetVehicleLightsState(vehicle)
@@ -45,7 +45,7 @@ local function SetLightStage(vehicle, stage, toggle)
         end)
     end
 
-    if VCFdata.patterns[pattern].enableWarningBeep then
+    if patternData.enableWarningBeep then
         Citizen.CreateThread(function()
             while ELSvehicle[stage] do
                 -- play warning sound
@@ -64,7 +64,7 @@ local function SetLightStage(vehicle, stage, toggle)
 
             local lastFlash = {}
 
-            for _, flash in ipairs(VCFdata.patterns[pattern]) do
+            for _, flash in ipairs(patternData) do
                 if ELSvehicle[stage] then
                     for _, extra in ipairs(flash['extras']) do
                         -- disable auto repairs
