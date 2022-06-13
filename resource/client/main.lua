@@ -70,11 +70,15 @@ local function HandleHorn()
 end
 
 local function ToggleLights(vehicle, stage, toggle)
+    local ELSvehicle = kjEnabledVehicles[vehicle].primary
+
     -- turn light stage on or off based on the toggle
     TriggerEvent('kjELS:toggleLights', vehicle, stage, toggle)
 
-    -- the siren is always off when the lights are toggled
-    TriggerServerEvent('kjELS:setSirenState', 0)
+    -- turn siren off when all lights are off
+    if not ELSvehicle.primary and not ELSvehicle.secondary and not ELSvehicle.warning then
+        TriggerServerEvent('kjELS:setSirenState', 0)
+    end
 end
 
 local function HandleLightStage(stage)
