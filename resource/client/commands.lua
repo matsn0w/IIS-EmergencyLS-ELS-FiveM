@@ -17,6 +17,9 @@ AddEventHandler('kjELS:toggleExtra', function(vehicle, extra)
     -- see if the extra is currently on or off
     local toggle = IsVehicleExtraTurnedOn(vehicle, extra)
 
+    -- disable auto repairs
+    SetVehicleAutoRepairDisabled(vehicle, true)
+
     -- toggle the extra
     SetVehicleExtra(vehicle, extra, toggle)
 end)

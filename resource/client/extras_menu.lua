@@ -31,6 +31,9 @@ mainMenu.OnCheckboxChange = function(sender, item, checked)
                 return
             end
 
+            -- disable auto repairs
+            SetVehicleAutoRepairDisabled(vehicle, true)
+
             -- toggle the extra
             SetVehicleExtra(vehicle, v[2], checked and 0 or 1)
         end

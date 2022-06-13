@@ -61,30 +61,36 @@ local function SetLightStage(vehicle, stage, toggle)
         while ELSvehicle[stage] do
             -- keep the engine on whilst the lights are activated
             SetVehicleEngineOn(vehicle, true, true, false)
-    
+
             local lastFlash = {}
-    
+
             for _, flash in ipairs(VCFdata.patterns[pattern]) do
                 if ELSvehicle[stage] then
                     for _, extra in ipairs(flash['extras']) do
+                        -- disable auto repairs
+                        SetVehicleAutoRepairDisabled(vehicle, true)
+
                         -- turn the extra on
                         SetVehicleExtra(vehicle, extra, 0)
-    
+
                         -- save the extra as last flashed
                         table.insert(lastFlash, extra)
                     end
-    
+
                     Citizen.Wait(flash.duration)
                 end
-    
+
                 -- turn off the last flashed extras
                 for _, v in ipairs(lastFlash) do
+                    -- disable auto repairs
+                    SetVehicleAutoRepairDisabled(vehicle, true)
+
                     SetVehicleExtra(vehicle, v, 1)
                 end
-    
+
                 lastFlash = {}
             end
-    
+
             Citizen.Wait(0)
         end
 
@@ -110,6 +116,9 @@ AddEventHandler('kjELS:resetExtras', function(vehicle)
     for extra, info in pairs(kjxmlData[model].extras) do
         -- check if we can control this extra
         if info.enabled == true then
+            -- disable auto repairs
+            SetVehicleAutoRepairDisabled(vehicle, true)
+
             -- disable the extra
             SetVehicleExtra(vehicle, extra, true)
         end
