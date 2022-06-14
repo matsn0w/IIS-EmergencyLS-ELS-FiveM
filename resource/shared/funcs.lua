@@ -51,7 +51,8 @@ function AddVehicleToTable(vehicle)
         secondary = false,
         warning = false,
         siren = 0,
-        sound = nil
+        sound = nil,
+        highBeamEnabled = true,
     }
 end
 
