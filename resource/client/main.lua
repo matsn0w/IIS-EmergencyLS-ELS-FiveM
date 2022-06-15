@@ -169,38 +169,56 @@ local function NextSiren()
 end
 
 RegisterCommand('MISS-ELS:toggle-stage-primary', function ()
+    if not CanControlELS() then return end
+
     HandleLightStage('primary')
 end)
 
 RegisterCommand('MISS-ELS:toggle-stage-secondary', function ()
+    if not CanControlELS() then return end
+
     HandleLightStage('secondary')
 end)
 
 RegisterCommand('MISS-ELS:toggle-stage-warning', function ()
+    if not CanControlELS() then return end
+
     HandleLightStage('warning')
 end)
 
 RegisterCommand('MISS-ELS:toggle-siren', function ()
+    if not CanControlELS() then return end
+
     HandleSiren()
 end)
 
 RegisterCommand('MISS-ELS:toggle-siren-next', function ()
+    if not CanControlELS() then return end
+
     NextSiren()
 end)
 
 RegisterCommand('MISS-ELS:toggle-siren-one', function ()
+    if not CanControlELS() then return end
+
     HandleSiren(1)
 end)
 
 RegisterCommand('MISS-ELS:toggle-siren-two', function ()
+    if not CanControlELS() then return end
+
     HandleSiren(2)
 end)
 
 RegisterCommand('MISS-ELS:toggle-siren-three', function ()
+    if not CanControlELS() then return end
+
     HandleSiren(3)
 end)
 
 RegisterCommand('MISS-ELS:toggle-siren-four', function ()
+    if not CanControlELS() then return end
+
     HandleSiren(4)
 end)
 
