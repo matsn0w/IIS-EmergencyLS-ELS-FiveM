@@ -40,3 +40,12 @@ Config.WarningBeepDuration = 2.0
 -- DPAD_DOWN = toggle siren 1
 -- B = activate next siren
 Config.ControllerSupport = true
+
+-- Customize various strings to your own liking
+Config.Translations = {
+    VehicleControlMenu = {
+        MenuTitle = 'Vehicle Control Menu',
+        ExtraDoesNotExist = 'This extra does not exist on your vehicle!',
+        FlashingHighBeam = 'Flashing high beam',
+    }
+}

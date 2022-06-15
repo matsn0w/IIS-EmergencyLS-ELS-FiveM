@@ -81,3 +81,24 @@ function ConvertStageToPattern(stage)
 
     return pattern
 end
+
+function CanControlELS()
+    if not kjxmlData then
+        -- wait for the data to load
+        while not kjxmlData do Citizen.Wait(0) end
+    end
+
+    local ped = PlayerPedId()
+    local vehicle = GetVehiclePedIsIn(ped)
+
+    -- player must be in a vehicle
+    if not IsPedInAnyVehicle(ped, false) then return false end
+
+    -- player must be in an ELS vehicle
+    if not IsELSVehicle(vehicle) then return false end
+
+    -- player must be in a position to control the sirens
+    if not CanControlSirens(vehicle) then return false end
+
+    return true
+end
