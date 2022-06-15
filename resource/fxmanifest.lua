@@ -7,7 +7,7 @@ version '2.1.1'
 
 dependencies {
     'baseevents',
-    'NativeUI'
+    'warmenu'
 }
 
 ui_page 'html/index.html'
@@ -21,7 +21,7 @@ shared_scripts {
     'shared/*.lua'
 }
 
-client_script '@NativeUI/NativeUI.lua'
+client_script '@warmenu/warmenu.lua'
 
 client_scripts {
     'client/*.lua'
