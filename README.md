@@ -11,11 +11,12 @@ Oh, and you might ask yourself where all the 'Els' or 'Miss Els' jokes come from
 ## Key Features
 
 * Sirens and lights synced across the entire server
-* Customizable light patterns per vehicle
+* Fully customizable light patterns per vehicle
 * Use native game sirens or use your own with [WMServerSirens](https://github.com/Walsheyy/WMServerSirens)
 * A simple yet comprehensive configuration
 * Support for 3 different light stages
 * Support for up to 4 different sirens per vehicle
+* Support for up to 36 independent light sources (12 extras + 26 miscs)
 * Optional light reflections around the vehicle
 * Indicator controls
 * Customizable keybinds (client side!)
@@ -36,7 +37,7 @@ See the instructions in the [documentation](docs/README.md)!
 
 ## Vehicle Configuration Files
 
-If you have any existing VCF files from the original author of this resource, then you'll probably be fine. The XML should be fully backwards compatible. If you have a VCF from any other resource, that'll most likely not work.
+If you have any existing VCF files from the [original author](https://github.com/InfImpSolutions) of this resource, then you'll probably be fine. The XML should be fully backwards compatible. If you have a VCF from any other resource, that'll most likely not work.
 
 In both cases, it's probably best to re-create them by either writing them yourself OR... use my convient configuration GUI! Using this tool, you can easily generate configuration files for your vehicles. You can find it here:
 
@@ -46,7 +47,7 @@ In both cases, it's probably best to re-create them by either writing them yours
 
 Please read the [documentation](docs/README.md) first and check the [Q&A section](https://github.com/matsn0w/IIS-EmergencyLS-ELS-FiveM/discussions/categories/q-a) on Github if your question has already been asked. It probably is!
 
-Didn't find and answer? Then feel free to [start a new topic](https://github.com/matsn0w/IIS-EmergencyLS-ELS-FiveM/discussions/new?category=q-a). The community is here to help you!
+Didn't find and answer? Then feel free to [start a new topic](https://github.com/matsn0w/IIS-EmergencyLS-ELS-FiveM/discussions/new?category=q-a). The community is here to help you! You can also join the official [MISS ELS Discord server](https://matsn0w.dev/discord).
 
 Found a bug? Please [make an issue](https://github.com/matsn0w/MISS-ELS/issues/new)!
 
