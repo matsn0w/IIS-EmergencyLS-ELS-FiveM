@@ -46,6 +46,7 @@ Config.Translations = {
     VehicleControlMenu = {
         MenuTitle = 'Vehicle Control Menu',
         ExtraDoesNotExist = 'This extra does not exist on your vehicle!',
+        MiscDoesNotExist = 'This misc does not exist on your vehicle!',
         FlashingHighBeam = 'Flashing high beam',
     }
 }
