@@ -7,67 +7,56 @@ body {
 }
 
 .card {
-  @apply px-3 py-1 my-6 bg-white rounded-md shadow-lg;
-}
+  @apply p-2 my-6 bg-white rounded-md shadow-lg;
 
-.card h2 {
-  @apply font-semibold text-gray-800;
+  h2 {
+    @apply font-semibold text-gray-800;
+  }
 }
 
 button {
-  @apply px-2 py-1 bg-blue-500 text-white rounded-md shadow;
+  @apply px-2 py-1 rounded-md shadow;
 }
 
-thead {
-  @apply font-semibold uppercase text-gray-400 bg-gray-50;
-}
+table {
+  thead {
+    @apply font-semibold uppercase text-gray-400 bg-gray-50;
+  }
 
-tbody {
-  @apply divide-y divide-gray-100;
-}
+  tbody {
+    @apply divide-y divide-gray-100;
+  }
 
-th, td {
-  @apply p-2 align-middle;
-}
+  th,
+  td {
+    @apply p-2 align-middle;
+  }
 
-th {
-  @apply font-semibold text-left;
+  th {
+    @apply font-semibold text-left;
+  }
 }
 
 label {
   @apply block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4;
 }
 
-input[type=text], input[type=number] {
-  @apply bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full p-2 text-gray-700 leading-tight align-middle;
-}
-
-input[type=text]:focus, input[type=number]:focus {
-  @apply focus:outline-none focus:bg-white focus:border-blue-500;
+input[type="text"],
+input[type="number"],
+select {
+  @apply form-input block w-full px-2 py-1 rounded bg-gray-200 text-gray-700 border-2 border-gray-200 focus:bg-white focus:border-blue-500 focus:outline-none;
 }
 
 select {
-  @apply
-    form-select appearance-none
-    block w-full
-    px-3 py-1.5
-    text-base font-normal text-gray-700
-    bg-white bg-clip-padding bg-no-repeat
-    border border-solid border-gray-300 rounded
-    transition ease-in-out
-    m-0
-    focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none;
-}
-
-.form-select {
-  -moz-padding-start: calc(.75rem - 3px);
+  @extend select;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
-  background-position: right .75rem center;
+  background-position: right 0.75rem center;
   background-size: 16px 12px;
+  background-repeat: no-repeat;
 }
 
-input[type='checkbox'] {
-  @apply form-checkbox h-5 w-5 mr-2 text-blue-500 rounded;
+input[type="checkbox"] {
+  @apply form-checkbox h-5 w-5 text-blue-500 rounded;
 }
 
 .cb-label {
@@ -108,11 +97,12 @@ input[type='checkbox'] {
   border-radius: 5px;
   padding: 8px 12px;
   cursor: pointer;
-}
-.import-button input {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  opacity: 0;
+
+  input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    opacity: 0;
+  }
 }

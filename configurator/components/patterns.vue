@@ -4,35 +4,52 @@
       <h2>Patterns</h2>
     </header>
 
-    <div v-for="(pattern, index) in patterns" :key="index">
+    <div v-for="(pattern, index) in VCF.configuration.patterns" :key="index">
       <header class="px-5 pt-3 flex items-center gap-4">
         <h3 class="font-bold">
           {{ pattern.name }}
         </h3>
 
-        <button type="button" @click="addFlash(pattern)">
+        <button class="blue" type="button" @click="addFlash(pattern)">
           Add flash
         </button>
 
         <label :for="`isEmergency[${index}]`" class="cb-label">
-          <input :id="`isEmergency[${index}]`" v-model="pattern.isEmergency" type="checkbox">
+          <input
+            class="mr-2"
+            :id="`isEmergency[${index}]`"
+            v-model="pattern.isEmergency"
+            type="checkbox"
+          />
           Is emergency
         </label>
 
         <label :for="`flashHighBeam[${index}]`" class="cb-label">
-          <input :id="`flashHighBeam[${index}]`" v-model="pattern.flashHighBeam" type="checkbox">
+          <input
+            class="mr-2"
+            :id="`flashHighBeam[${index}]`"
+            v-model="pattern.flashHighBeam"
+            type="checkbox"
+          />
           Flash high beam
         </label>
 
         <label :for="`enableWarningBeep[${index}]`" class="cb-label">
-          <input :id="`enableWarningBeep[${index}]`" v-model="pattern.enableWarningBeep" type="checkbox">
+          <input
+            class="mr-2"
+            :id="`enableWarningBeep[${index}]`"
+            v-model="pattern.enableWarningBeep"
+            type="checkbox"
+          />
           Enable warning beep
         </label>
       </header>
 
       <div class="p-3 overflow-x-auto">
         <table class="table-auto w-full">
-          <thead class="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
+          <thead
+            class="text-xs font-semibold uppercase text-gray-400 bg-gray-50"
+          >
             <tr>
               <th>Duration</th>
               <th>Extras</th>
@@ -41,21 +58,30 @@
           </thead>
 
           <tbody class="text-sm divide-y divide-gray-100">
-            <tr v-for="flash, i in getFlashesForPattern(pattern)" :key="i">
+            <tr v-for="(flash, i) in getFlashesForPattern(pattern)" :key="i">
               <td>
-                <input v-model.number="flash.duration" type="number" min="0">
+                <input v-model.number="flash.duration" type="number" min="0" />
               </td>
               <td>
                 <span
-                  v-for="extra, j in enabledExtras"
+                  v-for="(extra, j) in enabledExtras"
                   :key="j"
                   class="extra"
-                  :class="isExtraToggled(pattern, flash, extra) ? getExtraColor(extra) : ''"
+                  :class="
+                    isExtraToggled(pattern, flash, extra)
+                      ? getExtraColor(extra)
+                      : ''
+                  "
                   @click="toggleExtra(pattern, flash, extra)"
-                >{{ extra.id }}</span>
+                  >{{ extra.id }}</span
+                >
               </td>
               <td>
-                <button type="button" class="bg-red-500" @click="removeFlash(pattern, flash)">
+                <button
+                  type="button"
+                  class="red"
+                  @click="removeFlash(pattern, flash)"
+                >
                   &times;
                 </button>
               </td>
@@ -67,50 +93,43 @@
   </div>
 </template>
 
-<script>
-import { mapMultiRowFields } from 'vuex-map-fields'
+<script setup>
+const VCF = useVcfConfiguration();
 
-export default {
-  computed: {
-    ...mapMultiRowFields([
-      'configuration.patterns',
-      'configuration.flashes'
-    ]),
+const enabledExtras = computed(() =>
+  VCF.value.configuration.extras.filter((extra) => extra.enabled)
+);
 
-    enabledExtras () {
-      return this.$store.state.configuration.extras.filter(extra => extra.enabled)
-    }
-  },
+const addFlash = (pattern) => {
+  useAddFlash({ pattern });
+};
 
-  methods: {
-    addFlash (pattern) {
-      this.$store.commit('addFlash', { pattern })
-    },
+const removeFlash = (pattern, flash) => {
+  useRemoveFlash({ pattern, flash });
+};
 
-    removeFlash (pattern, flash) {
-      this.$store.commit('removeFlash', { pattern, flash })
-    },
+const toggleExtra = (pattern, flash, extra) => {
+  useToggleExtra({ pattern, flash, extra });
+};
 
-    toggleExtra (pattern, flash, extra) {
-      this.$store.commit('toggleExtra', { pattern, flash, extra })
-    },
+const isExtraToggled = (pattern, flash, extra) => {
+  const flashIndex = VCF.value.configuration.flashes
+    .map((f) => f.id)
+    .indexOf(flash.id);
+  const extras = VCF.value.configuration.flashes[flashIndex].extras;
 
-    isExtraToggled (pattern, flash, extra) {
-      const flashIndex = this.flashes.map(f => f.id).indexOf(flash.id)
-      const extras = this.flashes[flashIndex].extras
+  return extras.includes(extra.id);
+};
 
-      return extras.includes(extra.id)
-    },
+const getExtraColor = (extra) => {
+  return extra.color || "nocolor";
+};
 
-    getExtraColor (extra) {
-      return extra.color || 'nocolor'
-    },
-
-    getFlashesForPattern (pattern) {
-      return this.flashes.filter(flash => flash.pattern === pattern.name)
-    }
-  }
-}
+const getFlashesForPattern = (pattern) => {
+  return VCF.value.configuration.flashes.filter(
+    (flash) => flash.pattern === pattern.name
+  );
+};
 </script>
 
 <style scoped>

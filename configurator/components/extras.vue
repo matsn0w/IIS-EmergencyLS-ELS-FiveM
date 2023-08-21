@@ -16,26 +16,22 @@
         </thead>
 
         <tbody class="text-sm divide-y divide-gray-100">
-          <tr v-for="extra in extras" :key="extra.id">
-            <td class="font-bold">
-              Extra {{ extra.id }}
-            </td>
+          <tr v-for="extra in VCF.configuration.extras" :key="extra.id">
+            <td class="font-bold">Extra {{ extra.id }}</td>
             <td>
               <label class="cb-label">
-                <input v-model="extra.enabled" type="checkbox">
+                <input v-model="extra.enabled" type="checkbox" />
               </label>
             </td>
             <td>
               <label class="cb-label">
-                <input v-model="extra.allowEnv" type="checkbox">
+                <input v-model="extra.allowEnv" type="checkbox" />
               </label>
             </td>
             <td class="flex items-center gap-4">
               <div class="color-block" :class="extra.color" />
               <select v-model="extra.color" :disabled="!extra.allowEnv">
-                <option :value="null">
-                  Choose...
-                </option>
+                <option :value="null">Choose...</option>
                 <option v-for="color in colors" :key="color" :value="color">
                   {{ color }}
                 </option>
@@ -48,18 +44,10 @@
   </div>
 </template>
 
-<script>
-import { mapMultiRowFields } from 'vuex-map-fields'
+<script setup>
+const colors = ["blue", "amber", "red", "green", "white"];
 
-export default {
-  data: () => ({
-    colors: ['blue', 'amber', 'red', 'green', 'white']
-  }),
-
-  computed: {
-    ...mapMultiRowFields(['configuration.extras'])
-  }
-}
+const VCF = useVcfConfiguration();
 </script>
 
 <style scoped>
