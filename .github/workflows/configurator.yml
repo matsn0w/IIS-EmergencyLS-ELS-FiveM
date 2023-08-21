@@ -2,17 +2,17 @@ name: Configurator deployer
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-    
+
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: [14]
+        node: [20]
 
     defaults:
       run:
@@ -20,10 +20,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup node env
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
 
@@ -34,7 +34,6 @@ jobs:
         run: npm run generate
 
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./configurator/dist
+          folder: ./configurator/.output/public
