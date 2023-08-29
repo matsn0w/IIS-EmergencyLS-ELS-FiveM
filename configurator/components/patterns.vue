@@ -53,6 +53,7 @@
             <tr>
               <th>Duration</th>
               <th>Extras</th>
+              <th>Miscs</th>
               <th />
             </tr>
           </thead>
@@ -66,14 +67,24 @@
                 <span
                   v-for="(extra, j) in enabledExtras"
                   :key="j"
-                  class="extra"
+                  class="light"
                   :class="
-                    isExtraToggled(pattern, flash, extra)
-                      ? getExtraColor(extra)
-                      : ''
+                    isLightToggled(flash, extra) ? getLightColor(extra) : ''
                   "
-                  @click="toggleExtra(pattern, flash, extra)"
+                  @click="toggleLight(pattern, flash, extra)"
                   >{{ extra.id }}</span
+                >
+              </td>
+              <td>
+                <span
+                  v-for="(misc, j) in enabledMiscs"
+                  :key="j"
+                  class="light"
+                  :class="
+                    isLightToggled(flash, misc) ? getLightColor(misc) : ''
+                  "
+                  @click="toggleLight(pattern, flash, misc)"
+                  >{{ misc.id }}</span
                 >
               </td>
               <td>
@@ -100,6 +111,10 @@ const enabledExtras = computed(() =>
   VCF.value.configuration.extras.filter((extra) => extra.enabled)
 );
 
+const enabledMiscs = computed(() =>
+  VCF.value.configuration.miscs.filter((misc) => misc.enabled)
+);
+
 const addFlash = (pattern) => {
   useAddFlash({ pattern });
 };
@@ -108,21 +123,24 @@ const removeFlash = (pattern, flash) => {
   useRemoveFlash({ pattern, flash });
 };
 
-const toggleExtra = (pattern, flash, extra) => {
-  useToggleExtra({ pattern, flash, extra });
+const toggleLight = (pattern, flash, light) => {
+  useToggleLight({ pattern, flash, light });
 };
 
-const isExtraToggled = (pattern, flash, extra) => {
+const isLightToggled = (flash, light) => {
   const flashIndex = VCF.value.configuration.flashes
     .map((f) => f.id)
     .indexOf(flash.id);
   const extras = VCF.value.configuration.flashes[flashIndex].extras;
+  const miscs = VCF.value.configuration.flashes[flashIndex].miscs;
 
-  return extras.includes(extra.id);
+  return isNaN(light.id)
+    ? miscs.includes(light.id.toLowerCase())
+    : extras.includes(light.id);
 };
 
-const getExtraColor = (extra) => {
-  return extra.color || "nocolor";
+const getLightColor = (light) => {
+  return light.color || "nocolor";
 };
 
 const getFlashesForPattern = (pattern) => {
@@ -133,7 +151,7 @@ const getFlashesForPattern = (pattern) => {
 </script>
 
 <style scoped>
-.extra {
+.light {
   @apply bg-gray-200 px-3 py-2 border-2 border-gray-300 rounded mr-3 select-none text-center text-gray-500;
 }
 </style>

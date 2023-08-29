@@ -9,7 +9,11 @@ export const generateStoreAttributesFromExistingVCF = (data) => {
     author: null,
     description: null,
     extras: [],
-    statics: [],
+    miscs: [],
+    statics: {
+      extras: [],
+      miscs: [],
+    },
     useServerSirens: false,
     sounds: [],
     patterns: [],
@@ -27,7 +31,15 @@ export const generateStoreAttributesFromExistingVCF = (data) => {
 
   // EOVERRIDE section
   const eoverride = parsedVCF.querySelector("EOVERRIDE");
-  const extras = eoverride.querySelectorAll("*");
+  const lights = Array.from(eoverride.querySelectorAll("*"));
+
+  const extras = lights.filter((light) => {
+    return light.nodeName.startsWith("Extra");
+  });
+
+  const miscs = lights.filter((light) => {
+    return light.nodeName.startsWith("Misc");
+  });
 
   extras.forEach((extra) => {
     vcf.extras.push({
@@ -38,14 +50,38 @@ export const generateStoreAttributesFromExistingVCF = (data) => {
     });
   });
 
+  miscs.forEach((misc) => {
+    vcf.miscs.push({
+      id: misc.nodeName.match(/([A-Z])$/g)[0],
+      enabled: misc.getAttribute("IsElsControlled") === "true",
+      allowEnv: misc.getAttribute("AllowEnvLight") === "true",
+      color: misc.getAttribute("Color") ?? null,
+    });
+  });
+
   // STATICS section
   const staticsObject = parsedVCF.querySelector("STATIC");
-  const statics = staticsObject.querySelectorAll("*");
+  const statics = Array.from(staticsObject.querySelectorAll("*"));
 
-  statics.forEach((staticExtra) => {
-    vcf.statics.push({
+  const staticExtras = statics.filter((s) => {
+    return s.nodeName.startsWith("Extra");
+  });
+
+  const staticMiscs = statics.filter((s) => {
+    return s.nodeName.startsWith("Misc");
+  });
+
+  staticExtras.forEach((staticExtra) => {
+    vcf.statics.extras.push({
       extra: parseInt(staticExtra.nodeName.match(/([0-9]|[1-9][0-9])$/g)[0]),
       name: staticExtra.getAttribute("Name") ?? staticExtra.nodeName,
+    });
+  });
+
+  staticMiscs.forEach((staticMisc) => {
+    vcf.statics.miscs.push({
+      misc: staticMisc.nodeName.match(/([A-Z])$/g)[0],
+      name: staticMisc.getAttribute("Name") ?? staticMisc.nodeName,
     });
   });
 
@@ -82,11 +118,13 @@ export const generateStoreAttributesFromExistingVCF = (data) => {
 
     for (const flash of pattern.children) {
       const enabledExtras = flash.getAttribute("Extras")?.split(",") ?? [];
+      const enabledMiscs = flash.getAttribute("Miscs")?.split(",") ?? [];
 
       vcf.flashes.push({
         id: vcf.flashID++,
         duration: parseInt(flash.getAttribute("Duration")) ?? 100,
         extras: enabledExtras.map((extra) => parseInt(extra)) ?? [],
+        miscs: enabledMiscs ?? [],
         pattern: pattern.nodeName,
       });
     }

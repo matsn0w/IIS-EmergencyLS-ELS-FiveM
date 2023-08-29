@@ -18,6 +18,12 @@ export const useVcfConfiguration = () => {
         { id: 11, enabled: false, allowEnv: false, color: null },
         { id: 12, enabled: false, allowEnv: false, color: null },
       ],
+      miscs: [
+        { id: "A", enabled: false, allowEnv: false, color: null },
+        { id: "B", enabled: false, allowEnv: false, color: null },
+        { id: "C", enabled: false, allowEnv: false, color: null },
+        { id: "D", enabled: false, allowEnv: false, color: null },
+      ],
       statics: [],
       useServerSirens: false,
       sounds: [
@@ -104,10 +110,11 @@ export const useAddFlash = (value) => {
   const VCF = useVcfConfiguration();
 
   const flash = {
-    id: state.flashID++,
+    id: VCF.value.flashID++,
     pattern: value.pattern.name,
     duration: 100,
     extras: [],
+    miscs: [],
   };
 
   VCF.value.configuration.flashes.push(flash);
@@ -123,16 +130,25 @@ export const useRemoveFlash = (value) => {
   }
 };
 
-export const useToggleExtra = (value) => {
+export const useToggleLight = (value) => {
   const VCF = useVcfConfiguration();
 
   const flashIndex = getFlashIndex(value.flash);
   const extras = VCF.value.configuration.flashes[flashIndex].extras;
+  const miscs = VCF.value.configuration.flashes[flashIndex].miscs;
 
-  if (extras.includes(value.extra.id)) {
-    extras.splice(extras.indexOf(value.extra.id), 1);
+  if (!isNaN(value.light.id)) {
+    if (extras.includes(value.light.id)) {
+      extras.splice(extras.indexOf(value.light.id), 1);
+    } else {
+      extras.push(value.light.id);
+    }
   } else {
-    extras.push(value.extra.id);
+    if (miscs.includes(value.light.id)) {
+      miscs.splice(miscs.indexOf(value.light.id), 1);
+    } else {
+      miscs.push(value.light.id);
+    }
   }
 };
 

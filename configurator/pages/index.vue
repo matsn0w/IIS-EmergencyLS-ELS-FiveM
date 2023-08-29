@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <extras class="card" />
+    <lights class="card" />
     <statics class="card" />
     <sounds class="card" />
     <patterns class="card" />

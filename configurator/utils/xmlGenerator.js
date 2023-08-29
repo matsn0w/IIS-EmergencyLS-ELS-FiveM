@@ -19,8 +19,8 @@ export const generateVcfDocument = (data) => {
 
   doc.appendChild(vcfRoot);
 
-  // extras
-  const extras = doc.createElement("EOVERRIDE");
+  // lights
+  const lights = doc.createElement("EOVERRIDE");
 
   data.extras.forEach((extra) => {
     let extraId = `${extra.id}`;
@@ -36,10 +36,27 @@ export const generateVcfDocument = (data) => {
       }
     }
 
-    extras.appendChild(e);
+    lights.appendChild(e);
   });
 
-  vcfRoot.appendChild(extras);
+  data.miscs.forEach((misc) => {
+    let miscId = `${misc.id}`;
+    miscId = miscId.replace(/(^[^\d\n]*\d[^\d\n]*$)/gm, "0$1");
+    const m = doc.createElement(`Misc${miscId}`);
+    m.setAttribute("IsElsControlled", misc.enabled);
+
+    if (misc.allowEnv) {
+      m.setAttribute("AllowEnvLight", misc.allowEnv);
+
+      if (misc.color) {
+        m.setAttribute("Color", misc.color);
+      }
+    }
+
+    lights.appendChild(m);
+  });
+
+  vcfRoot.appendChild(lights);
 
   // statics
   const statics = doc.createElement("STATIC");
@@ -95,6 +112,10 @@ export const generateVcfDocument = (data) => {
 
       if (flash.extras.length) {
         f.setAttribute("Extras", [...flash.extras].sort().join(","));
+      }
+
+      if (flash.miscs.length) {
+        f.setAttribute("Miscs", [...flash.miscs].sort().join(","));
       }
 
       p.appendChild(f);
