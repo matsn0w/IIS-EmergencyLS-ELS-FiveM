@@ -2,9 +2,7 @@
   <div class="flex justify-between items-center my-4">
     <h1 class="text-2xl font-bold">MISS ELS VCF Configurator</h1>
 
-    <div class="float-right pr-3">
-      <importButton @load="importedVCF = $event" />
-    </div>
+    <importButton @load="importedVCF = $event" />
   </div>
 
   <form @submit.prevent="generateVCF">
