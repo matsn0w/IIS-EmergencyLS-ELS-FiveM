@@ -22,7 +22,7 @@ export const generateVcfDocument = (data) => {
   // lights
   const lights = doc.createElement("EOVERRIDE");
 
-  data.extras.forEach((extra) => {
+  data.lightables.filter((lightable) => lightable.type === 'extra').forEach((extra) => {
     let extraId = `${extra.id}`;
     extraId = extraId.replace(/(^[^\d\n]*\d[^\d\n]*$)/gm, "0$1");
     const e = doc.createElement(`Extra${extraId}`);
@@ -39,7 +39,7 @@ export const generateVcfDocument = (data) => {
     lights.appendChild(e);
   });
 
-  data.miscs.forEach((misc) => {
+  data.lightables.filter((lightable) => lightable.type === 'misc').forEach((misc) => {
     let miscId = `${misc.id}`;
     miscId = miscId.replace(/(^[^\d\n]*\d[^\d\n]*$)/gm, "0$1");
     const m = doc.createElement(`Misc${miscId}`);

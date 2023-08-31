@@ -8,8 +8,7 @@ export const generateStoreAttributesFromExistingVCF = (data) => {
     flashID: 1,
     author: null,
     description: null,
-    extras: [],
-    miscs: [],
+    lightables: [],
     statics: {
       extras: [],
       miscs: [],
@@ -42,8 +41,9 @@ export const generateStoreAttributesFromExistingVCF = (data) => {
   });
 
   extras.forEach((extra) => {
-    vcf.extras.push({
+    vcf.lightables.push({
       id: parseInt(extra.nodeName.match(/([0-9]|[1-9][0-9])$/g)[0]),
+      type: 'extra',
       enabled: extra.getAttribute("IsElsControlled") === "true",
       allowEnv: extra.getAttribute("AllowEnvLight") === "true",
       color: extra.getAttribute("Color") ?? null,
@@ -51,8 +51,9 @@ export const generateStoreAttributesFromExistingVCF = (data) => {
   });
 
   miscs.forEach((misc) => {
-    vcf.miscs.push({
+    vcf.lightables.push({
       id: misc.nodeName.match(/([A-Z])$/g)[0],
+      type: 'misc',
       enabled: misc.getAttribute("IsElsControlled") === "true",
       allowEnv: misc.getAttribute("AllowEnvLight") === "true",
       color: misc.getAttribute("Color") ?? null,

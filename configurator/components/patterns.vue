@@ -59,6 +59,48 @@
           </thead>
 
           <tbody class="text-sm divide-y divide-gray-100">
+            <tr>
+              <td class="font-bold">
+                Preview
+              </td>
+              <td>
+                  <span
+                      v-for="(extra, j) in enabledExtras"
+                      :key="j"
+                      :id="`${pattern.name}_extra_${extra.id}`"
+                      class="light"
+                  >{{ extra?.id }}</span>
+              </td>
+              <td>
+                  <span
+                      v-for="(misc, j) in enabledMiscs"
+                      :key="j"
+                      class="light"
+                      :id="`${pattern.name}_misc_${misc.id}`"
+                  >{{ misc.id }}</span>
+              </td>
+              <td class="flex gap-4">
+                <button
+                    type="button"
+                    class="green"
+                    @click="playPreview(pattern)"
+                >
+                  <PlayIcon class="w-4 h-4" />
+                </button>
+                <button
+                    type="button"
+                    :class="pattern.loopPreview ? 'blue' : ''"
+                    @click="pattern.loopPreview = !pattern.loopPreview"
+                >
+                  <ArrowPathRoundedSquareIcon class="w-4 h-4" />
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <!-- This is very ugly, but we don't care. We need the whitespace -->
+              </td>
+            </tr>
             <tr v-for="(flash, i) in getFlashesForPattern(pattern)" :key="i">
               <td>
                 <input v-model.number="flash.duration" type="number" min="0" />
@@ -93,7 +135,7 @@
                   class="red"
                   @click="removeFlash(pattern, flash)"
                 >
-                  &times;
+                  <XMarkIcon class="w-4 h-4" />
                 </button>
               </td>
             </tr>
@@ -105,14 +147,16 @@
 </template>
 
 <script setup>
+import {XMarkIcon, PlayIcon, ArrowPathRoundedSquareIcon} from "@heroicons/vue/24/solid";
+
 const VCF = useVcfConfiguration();
 
 const enabledExtras = computed(() =>
-  VCF.value.configuration.extras.filter((extra) => extra.enabled)
+  VCF.value.configuration.lightables.filter((lightable) => lightable.enabled && lightable.type === 'extra')
 );
 
 const enabledMiscs = computed(() =>
-  VCF.value.configuration.miscs.filter((misc) => misc.enabled)
+  VCF.value.configuration.lightables.filter((lightable) => lightable.enabled && lightable.type === 'misc')
 );
 
 const addFlash = (pattern) => {
@@ -122,6 +166,46 @@ const addFlash = (pattern) => {
 const removeFlash = (pattern, flash) => {
   useRemoveFlash({ pattern, flash });
 };
+
+const playPreview = async (pattern) => {
+  const flashes = getFlashesForPattern(pattern)
+
+  for (const flash of flashes) {
+    for (const extraId of flash.extras) {
+      const extra = enabledExtras.value.find((extra) => extra.id === extraId);
+      const color = getLightColor(extra);
+
+      document.querySelector(`#${pattern.name}_extra_${extraId}`).classList.toggle(color);
+    }
+
+    for (const miscId of flash.miscs) {
+      const color = getLightColor(enabledMiscs.value.filter((misc) => misc.id === miscId));
+      document.querySelector(`#${pattern.name}_misc_${miscId}`).classList.toggle(color);
+    }
+
+    await new Promise((resolve) => {
+      setTimeout(resolve, flash.duration);
+    });
+
+    for (const extraId of flash.extras) {
+      const extra = enabledExtras.value.find((extra) => extra.id === extraId);
+      const color = getLightColor(extra);
+
+      document.querySelector(`#${pattern.name}_extra_${extraId}`).classList.toggle(color);
+    }
+
+    for (const miscId of flash.miscs) {
+      const misc = enabledMiscs.value.find((misc) => misc.id === miscId)
+      const color = getLightColor(misc);
+
+      document.querySelector(`#${pattern.name}_misc_${miscId}`).classList.toggle(color);
+    }
+  }
+
+  if (VCF.value.configuration.patterns.find((vcfPattern) => vcfPattern.name === pattern.name)?.loopPreview) {
+    return await playPreview(pattern)
+  }
+}
 
 const toggleLight = (pattern, flash, light) => {
   useToggleLight({ pattern, flash, light });
@@ -140,7 +224,7 @@ const isLightToggled = (flash, light) => {
 };
 
 const getLightColor = (light) => {
-  return light.color || "nocolor";
+  return light.color ?? "nocolor";
 };
 
 const getFlashesForPattern = (pattern) => {
