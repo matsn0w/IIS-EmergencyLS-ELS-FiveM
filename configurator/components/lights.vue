@@ -48,7 +48,7 @@
               </label>
             </td>
             <td class="flex items-center gap-4">
-              <div class="w-8 h-8 rounded-md inline-block" :class="lightable.color" />
+              <div class="w-8 h-8 px-2 py-1 rounded-md inline-block" :class="lightable.color" />
 
               <select
                 :class="!lightable.allowEnv ? 'cursor-not-allowed' : ''"

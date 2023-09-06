@@ -3,33 +3,41 @@
 @tailwind utilities;
 
 body {
-  @apply bg-gray-100;
+  @apply bg-gray-100 dark:bg-gray-900; // Set background color for light and dark modes
+
+  h1 {
+    @apply dark:text-gray-300
+  }
 }
 
 .card {
-  @apply p-2 my-6 bg-white rounded-md shadow-lg;
+  @apply p-2 my-6 bg-white rounded-md shadow-lg dark:bg-gray-800; // Adjust card background for dark mode
 
   h2 {
-    @apply font-semibold text-gray-800;
+    @apply font-semibold text-gray-800 dark:text-gray-300; // Adjust text color for dark mode
+  }
+
+  h3 {
+    @apply font-semibold text-gray-800 dark:text-gray-300; // Adjust text color for dark mode
   }
 }
 
 button {
-  @apply px-2 py-1 rounded-md shadow;
+  @apply px-2 py-1 rounded-md shadow dark:bg-gray-800 dark:text-gray-300; // Adjust button styles for dark mode
 }
 
 table {
   thead {
-    @apply font-semibold uppercase text-gray-400 bg-gray-50;
+    @apply font-semibold uppercase text-gray-400 bg-gray-50 dark:bg-gray-700; // Adjust table header for dark mode
   }
 
   tbody {
-    @apply divide-y divide-gray-100;
+    @apply divide-y divide-gray-100 dark:divide-gray-700; // Adjust table body for dark mode
   }
 
   th,
   td {
-    @apply p-2 align-middle;
+    @apply p-2 align-middle dark:text-gray-300;
   }
 
   th {
@@ -38,13 +46,17 @@ table {
 }
 
 label {
-  @apply block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4;
+  @apply block text-gray-500 dark:text-gray-300 font-bold md:text-right mb-1 md:mb-0 pr-4;
 }
 
 input[type="text"],
 input[type="number"],
 select {
   @apply form-input block w-full px-2 py-1 rounded bg-gray-200 text-gray-700 border-2 border-gray-200 focus:bg-white focus:border-blue-500 focus:outline-none;
+
+  &.dark {
+    @apply bg-gray-800 text-white border-gray-700; // Adjust input styles for dark mode
+  }
 }
 
 select {
@@ -57,6 +69,10 @@ select {
 
 input[type="checkbox"] {
   @apply form-checkbox h-5 w-5 text-blue-500 rounded;
+
+  &.dark {
+    @apply text-white border-gray-700; // Adjust checkbox styles for dark mode
+  }
 }
 
 .cb-label {
@@ -88,16 +104,10 @@ input[type="checkbox"] {
 }
 
 .import-button {
-  position: relative;
-  overflow: hidden;
-  display: inline-block;
+  @apply relative overflow-hidden inline-block border-2 border-black rounded-md p-2 cursor-pointer
+}
 
-  /* Fancy button looking */
-  border: 2px solid black;
-  border-radius: 5px;
-  padding: 8px 12px;
-  cursor: pointer;
-
+.import-button {
   input {
     position: absolute;
     top: 0;
