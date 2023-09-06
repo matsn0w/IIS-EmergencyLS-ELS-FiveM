@@ -218,9 +218,7 @@ const isLightToggled = (flash, light) => {
   const extras = VCF.value.configuration.flashes[flashIndex].extras;
   const miscs = VCF.value.configuration.flashes[flashIndex].miscs;
 
-  return isNaN(light.id)
-    ? miscs.includes(light.id.toLowerCase())
-    : extras.includes(light.id);
+  return isNaN(light.id) ? miscs.includes(light.id) : extras.includes(light.id);
 };
 
 const getLightColor = (light) => {
