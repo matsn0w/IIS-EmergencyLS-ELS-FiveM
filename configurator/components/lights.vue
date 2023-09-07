@@ -2,8 +2,8 @@
   <div class="flex flex-col justify-center h-full">
     <header class="px-5 pt-3 flex items-center gap-4">
       <h2>Lightables</h2>
-      <button class="disabled:!bg-gray-300 disabled:!text-gray-500 disabled:!cursor-not-allowed blue" type="button" @click="addLightable('extra')" :disabled="!canAddNewLightableOfType('extra')">New extra</button>
-      <button class="disabled:!bg-gray-300 disabled:!text-gray-500 disabled:!cursor-not-allowed blue" type="button" @click="addLightable('misc')" :disabled="!canAddNewLightableOfType('misc')">New misc</button>
+      <button class="disabled:!bg-gray-300 disabled:!text-gray-500 disabled:!cursor-not-allowed blue" type="button" @click="addLightable('extra')" :disabled="availableExtraIds.length === 0">New extra</button>
+      <button class="disabled:!bg-gray-300 disabled:!text-gray-500 disabled:!cursor-not-allowed blue" type="button" @click="addLightable('misc')" :disabled="availableMiscIds.length === 0">New misc</button>
     </header>
 
     <div class="p-3 overflow-x-auto">
@@ -27,8 +27,8 @@
                   v-model="lightable.type"
                   @change="lightable.id = getNewLightableId(lightable)"
               >
-                <option value="extra">Extra</option>
-                <option value="misc">Misc</option>
+                <option value="extra" :disabled="availableExtraIds.length === 0">Extra</option>
+                <option value="misc" :disabled="availableMiscIds.length === 0">Misc</option>
               </select>
             </td>
             <td>
@@ -83,45 +83,24 @@ import {letterLightableId, Lightable, lightableType, numericalLightableId} from 
 const colors = ["blue", "amber", "red", "green", "white"];
 
 const VCF = useVcfConfiguration();
-const miscIds = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-const extraIds = [1,2,3,4,5,6,7,8,9,10,11,12]
+const miscIds: letterLightableId[] = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+const extraIds: numericalLightableId[] = [1,2,3,4,5,6,7,8,9,10,11,12]
 
 const removeLightable = (index: number) => {
   return VCF.value.configuration.lightables.splice(index, 1)
 }
 
-const canAddNewLightableOfType = (type: lightableType) => {
-  const ids = type === 'extra' ? extraIds : miscIds;
-  return VCF.value.configuration.lightables.filter((lightable) => lightable.type === type).length < ids.length
-}
-
 const isLightableIdInUse = (id: letterLightableId|numericalLightableId) => VCF.value.configuration.lightables.map((lightable) => lightable.id).includes(id)
 
+const availableMiscIds = computed(() => miscIds.filter(miscId => !isLightableIdInUse(miscId)))
+const availableExtraIds = computed(() => extraIds.filter(extraId => !isLightableIdInUse(extraId)))
+
 const getNewLightableId = (lightable: Lightable|null = null, type: lightableType|null = null) => {
-  const extras = VCF.value.configuration.lightables.filter((lightable) => lightable.type === 'extra')
-  const miscs = VCF.value.configuration.lightables.filter((lightable) => lightable.type === 'misc')
-  const lastExtra = extras.sort((a, b) => a.id - b.id).at(-1)
-  const lastMisc = miscs.sort((a, b) => a.id - b.id).at(-1)
-
-  if (!lightable) {
-    if (type === 'extra') {
-      const lastExtraId = lastExtra?.id ?? 0
-
-      if (lastExtraId < 26) {
-        return lastExtraId + 1
-      }
-    } else if (type === 'misc') {
-      const lastMiscId = lastMisc?.id ?? null
-      return lastMiscId === null ? 'a' : miscIds[miscIds.findIndex((id) => id === lastMiscId) + 1]
+    if (type === 'extra' || lightable?.type === 'extra') {
+      return availableExtraIds.value[0] ?? null;
+    } else if (type === 'misc' || lightable?.type === 'misc') {
+      return availableMiscIds.value[0] ?? null;
     }
-  }
-
-  if (lightable?.type === 'extra') {
-
-  } else if (lightable?.type === 'misc') {
-    const lastMiscId = lastMisc?.id ?? null
-    return lastMiscId === null ? 'a' : miscIds[miscIds.findIndex((id) => id === lastMiscId) + 1]
-  }
 }
 
 const addLightable = (type: lightableType = 'extra') => {
