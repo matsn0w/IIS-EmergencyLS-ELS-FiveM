@@ -1,4 +1,11 @@
-export const useVcfConfiguration = () => {
+import {letterLightableId, Lightable, numericalLightableId} from "~/types/lights";
+import {vcfConfig} from "~/types/vcfConfig";
+import {flashType} from "~/types/flash";
+import {staticType} from "~/types/static";
+import {patternType} from "~/types/patterns";
+import {Ref} from "vue";
+
+export const useVcfConfiguration = (): Ref<vcfConfig> => {
   return useState("vcfConfiguration", () => ({
     flashID: 1,
     configuration: {
@@ -14,7 +21,10 @@ export const useVcfConfiguration = () => {
           audioString: "SIRENS_AIRHORN",
           soundSet: null,
         },
-        { name: "NineMode", allowUse: true },
+        {
+          name: "NineMode",
+          allowUse: false,
+        },
         {
           name: "SrnTone1",
           allowUse: true,
@@ -46,7 +56,7 @@ export const useVcfConfiguration = () => {
           isEmergency: true,
           flashHighBeam: false,
           enableWarningBeep: false,
-          loopPreview: true,
+          loopPreview: false,
         },
         {
           name: "SECONDARY",
@@ -65,37 +75,44 @@ export const useVcfConfiguration = () => {
       ],
       flashes: [],
     },
-  }));
+  } as vcfConfig));
 };
 
-const getFlashIndex = (flash) => {
+const getFlashIndex = (flash: flashType) => {
   const VCF = useVcfConfiguration();
 
   return VCF.value.configuration.flashes.map((f) => f.id).indexOf(flash.id);
 };
 
-export const useAddStatic = (value) => {
+export const miscIds: letterLightableId[] = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+export const extraIds: numericalLightableId[] = [1,2,3,4,5,6,7,8,9,10,11,12]
+
+export const isLightableIdInUse = (id: letterLightableId|numericalLightableId) => useVcfConfiguration().value.configuration.lightables.map((lightable: Lightable) => lightable.id).includes(id)
+export const availableMiscIds = computed(() => miscIds.filter(miscId => !isLightableIdInUse(miscId)))
+export const availableExtraIds = computed(() => extraIds.filter(extraId => !isLightableIdInUse(extraId)))
+
+export const useAddStatic = (value: staticType) => {
   const VCF = useVcfConfiguration();
 
   VCF.value.configuration.statics.push(value);
 };
 
-export const useRemoveStatic = (value) => {
+export const useRemoveStatic = (value: staticType) => {
   const VCF = useVcfConfiguration();
 
   const index = VCF.value.configuration.statics
-    .map((item) => item.extra)
-    .indexOf(value.extra);
+    .map((item) => item.id)
+    .indexOf(value.id);
 
   VCF.value.configuration.statics.splice(index, 1);
 };
 
-export const useAddFlash = (value) => {
+export const useAddFlash = (pattern: patternType) => {
   const VCF = useVcfConfiguration();
 
-  const flash = {
+  const flash: flashType = {
     id: VCF.value.flashID++,
-    pattern: value.pattern.name,
+    pattern: pattern.name,
     duration: 100,
     extras: [],
     miscs: [],
@@ -104,43 +121,42 @@ export const useAddFlash = (value) => {
   VCF.value.configuration.flashes.push(flash);
 };
 
-export const useRemoveFlash = (value) => {
+export const useRemoveFlash = (pattern: patternType, flash: flashType) => {
   const VCF = useVcfConfiguration();
 
-  const flashIndex = getFlashIndex(value.flash);
+  const flashIndex = getFlashIndex(flash);
 
   if (flashIndex !== -1) {
     VCF.value.configuration.flashes.splice(flashIndex, 1);
   }
 };
 
-export const useToggleLight = (value) => {
+export const useToggleLight = (pattern: patternType, flash: flashType, lightable: Lightable) => {
   const VCF = useVcfConfiguration();
 
-  const flashIndex = getFlashIndex(value.flash);
+  const flashIndex: number = getFlashIndex(flash);
   const extras = VCF.value.configuration.flashes[flashIndex].extras;
   const miscs = VCF.value.configuration.flashes[flashIndex].miscs;
 
-  if (!isNaN(value.light.id)) {
-    if (extras.includes(value.light.id)) {
-      extras.splice(extras.indexOf(value.light.id), 1);
+  if (typeof lightable.id === "number") {
+    if (extras.includes(lightable.id)) {
+      extras.splice(extras.indexOf(lightable.id), 1);
     } else {
-      extras.push(value.light.id);
+      extras.push(lightable.id);
     }
   } else {
-    if (miscs.includes(value.light.id)) {
-      miscs.splice(miscs.indexOf(value.light.id), 1);
-    } else {
-      miscs.push(value.light.id);
+    if (miscs.includes(lightable.id)) {
+      miscs.splice(miscs.indexOf(lightable.id), 1);
+    } else if (typeof lightable.id === "string") {
+      miscs.push(lightable.id);
     }
   }
 };
 
-export const useImportExistingConfiguration = (value) => {
+export const useImportExistingConfiguration = (value: vcfConfig) => {
   const VCF = useVcfConfiguration();
+  console.log(value)
 
   VCF.value.flashID = value.flashID;
-  delete value.flashID;
-
-  VCF.value.configuration = value;
+  VCF.value.configuration = value.configuration;
 };

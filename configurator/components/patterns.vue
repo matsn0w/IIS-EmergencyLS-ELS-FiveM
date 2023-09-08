@@ -96,11 +96,6 @@
                 </button>
               </td>
             </tr>
-            <tr>
-              <td>
-                <!-- This is very ugly, but we don't care. We need the whitespace -->
-              </td>
-            </tr>
             <tr v-for="(flash, i) in getFlashesForPattern(pattern)" :key="i">
               <td>
                 <input v-model.number="flash.duration" type="number" min="0" />
@@ -146,8 +141,11 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {XMarkIcon, PlayIcon, ArrowPathRoundedSquareIcon} from "@heroicons/vue/24/solid";
+import {Lightable} from "~/types/lights";
+import {patternType} from "~/types/patterns";
+import {flashType} from "~/types/flash";
 
 const VCF = useVcfConfiguration();
 
@@ -159,15 +157,15 @@ const enabledMiscs = computed(() =>
   VCF.value.configuration.lightables.filter((lightable) => lightable.enabled && lightable.type === 'misc')
 );
 
-const addFlash = (pattern) => {
-  useAddFlash({ pattern });
+const addFlash = (pattern: patternType) => {
+  useAddFlash(pattern);
 };
 
-const removeFlash = (pattern, flash) => {
-  useRemoveFlash({ pattern, flash });
+const removeFlash = (pattern: patternType, flash: flashType) => {
+  useRemoveFlash(pattern, flash);
 };
 
-const playPreview = async (pattern) => {
+const playPreview = async (pattern: patternType) => {
   const flashes = getFlashesForPattern(pattern)
 
   for (const flash of flashes) {
@@ -179,7 +177,8 @@ const playPreview = async (pattern) => {
     }
 
     for (const miscId of flash.miscs) {
-      const color = getLightColor(enabledMiscs.value.filter((misc) => misc.id === miscId));
+      const misc = enabledMiscs.value.find((misc) => misc.id === miscId)
+      const color = getLightColor(misc);
       document.querySelector(`#${pattern.name}_misc_${miscId}`).classList.toggle(color);
     }
 
@@ -195,9 +194,8 @@ const playPreview = async (pattern) => {
     }
 
     for (const miscId of flash.miscs) {
-      const misc = enabledMiscs.value.find((misc) => misc.id === miscId)
+      const misc = await enabledMiscs.value.find((misc) => misc.id === miscId)
       const color = getLightColor(misc);
-
       document.querySelector(`#${pattern.name}_misc_${miscId}`).classList.toggle(color);
     }
   }
@@ -207,25 +205,25 @@ const playPreview = async (pattern) => {
   }
 }
 
-const toggleLight = (pattern, flash, light) => {
-  useToggleLight({ pattern, flash, light });
+const toggleLight = (pattern: patternType, flash: flashType, light: Lightable) => {
+  useToggleLight(pattern, flash, light);
 };
 
-const isLightToggled = (flash, light) => {
+const isLightToggled = (flash: flashType, light: Lightable) => {
   const flashIndex = VCF.value.configuration.flashes
     .map((f) => f.id)
     .indexOf(flash.id);
   const extras = VCF.value.configuration.flashes[flashIndex].extras;
   const miscs = VCF.value.configuration.flashes[flashIndex].miscs;
 
-  return isNaN(light.id) ? miscs.includes(light.id) : extras.includes(light.id);
+  return Number(light.id) ? extras.includes(light.id as numericalLightableId) : miscs.includes(light.id as letterLightableId);
 };
 
-const getLightColor = (light) => {
+const getLightColor = (light: Lightable) => {
   return light.color ?? "nocolor";
 };
 
-const getFlashesForPattern = (pattern) => {
+const getFlashesForPattern = (pattern: patternType) => {
   return VCF.value.configuration.flashes.filter(
     (flash) => flash.pattern === pattern.name
   );

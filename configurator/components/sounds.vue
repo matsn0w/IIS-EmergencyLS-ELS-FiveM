@@ -68,13 +68,4 @@
 
 <script setup>
 const VCF = useVcfConfiguration();
-
-const addStatic = () => {
-  const highest = VCF.value.configuration.statics.at(-1)?.extra ?? 0;
-  useAddStatic({ extra: highest + 1, name: null });
-};
-
-const removeStatic = (s) => {
-  useRemoveStatic(s);
-};
 </script>

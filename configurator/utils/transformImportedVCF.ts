@@ -1,32 +1,34 @@
+import {vcfConfig} from "~/types/vcfConfig";
+import {letterLightableId, numericalLightableId} from "~/types/lights";
+
 /**
  * This method takes in an existing VCF file (as XML string), parses the XML
  * and maps it to an expected format for the VueX store.
  *
  */
 export const generateStoreAttributesFromExistingVCF = (data) => {
-  const vcf = {
+  const vcf: vcfConfig = {
     flashID: 1,
-    author: null,
-    description: null,
-    lightables: [],
-    statics: {
-      extras: [],
-      miscs: [],
-    },
-    useServerSirens: false,
-    sounds: [],
-    patterns: [],
-    flashes: [],
+    configuration: {
+      author: null,
+      description: null,
+      lightables: [],
+      statics: [],
+      useServerSirens: false,
+      sounds: [],
+      patterns: [],
+      flashes: [],
+    }
   };
 
   // parse the XML string
   const parsedVCF = new DOMParser().parseFromString(data, "text/xml");
 
   // get basic document info
-  vcf.description = parsedVCF
+  vcf.configuration.description = parsedVCF
     .querySelector("vcfroot")
-    .getAttribute("Description");
-  vcf.author = parsedVCF.querySelector("vcfroot").getAttribute("Author");
+    .getAttribute("Description") ?? null;
+  vcf.configuration.author = parsedVCF.querySelector("vcfroot").getAttribute("Author");
 
   // EOVERRIDE section
   const eoverride = parsedVCF.querySelector("EOVERRIDE");
@@ -41,7 +43,7 @@ export const generateStoreAttributesFromExistingVCF = (data) => {
   });
 
   extras.forEach((extra) => {
-    vcf.lightables.push({
+    vcf.configuration.lightables.push({
       id: parseInt(extra.nodeName.match(/([0-9]|[1-9][0-9])$/g)[0]),
       type: 'extra',
       enabled: extra.getAttribute("IsElsControlled") === "true",
@@ -51,7 +53,7 @@ export const generateStoreAttributesFromExistingVCF = (data) => {
   });
 
   miscs.forEach((misc) => {
-    vcf.lightables.push({
+    vcf.configuration.lightables.push({
       id: misc.nodeName.match(/([A-Z])$/g)[0],
       type: 'misc',
       enabled: misc.getAttribute("IsElsControlled") === "true",
@@ -73,15 +75,17 @@ export const generateStoreAttributesFromExistingVCF = (data) => {
   });
 
   staticExtras.forEach((staticExtra) => {
-    vcf.statics.extras.push({
-      extra: parseInt(staticExtra.nodeName.match(/([0-9]|[1-9][0-9])$/g)[0]),
+    vcf.configuration.statics.push({
+      id: parseInt(staticExtra.nodeName.match(/([0-9]|[1-9][0-9])$/g)[0]) as numericalLightableId,
+      type: 'extra',
       name: staticExtra.getAttribute("Name") ?? staticExtra.nodeName,
     });
   });
 
   staticMiscs.forEach((staticMisc) => {
-    vcf.statics.miscs.push({
-      misc: staticMisc.nodeName.match(/([A-Z])$/g)[0],
+    vcf.configuration.statics.push({
+      id: staticMisc.nodeName.match(/([A-Z])$/g)[0].toLowerCase() as letterLightableId,
+      type: 'misc',
       name: staticMisc.getAttribute("Name") ?? staticMisc.nodeName,
     });
   });
@@ -91,7 +95,7 @@ export const generateStoreAttributesFromExistingVCF = (data) => {
   const sounds = soundsObject.querySelectorAll("*");
 
   sounds.forEach((sound) => {
-    vcf.sounds.push({
+    vcf.configuration.sounds.push({
       name: sound.nodeName,
       allowUse: sound.getAttribute("AllowUse") === "true",
       audioString: sound.getAttribute("AudioString") ?? null,
@@ -102,7 +106,7 @@ export const generateStoreAttributesFromExistingVCF = (data) => {
   // determine whether a SoundSet is present
   sounds.forEach((sound) => {
     if (sound.getAttribute("SoundSet") !== null) {
-      vcf.useServerSirens = true;
+      vcf.configuration.useServerSirens = true;
     }
   });
 
@@ -110,21 +114,22 @@ export const generateStoreAttributesFromExistingVCF = (data) => {
   const patternsObject = parsedVCF.querySelector("PATTERN");
 
   for (const pattern of patternsObject.children) {
-    vcf.patterns.push({
+    vcf.configuration.patterns.push({
       name: pattern.nodeName,
       isEmergency: pattern.getAttribute("IsEmergency") === "true",
       flashHighBeam: pattern.getAttribute("FlashHighBeam") === "true",
       enableWarningBeep: pattern.getAttribute("EnableWarningBeep") === "true",
+      loopPreview: false
     });
 
     for (const flash of pattern.children) {
       const enabledExtras = flash.getAttribute("Extras")?.split(",") ?? [];
-      const enabledMiscs = flash.getAttribute("Miscs")?.split(",") ?? [];
+      const enabledMiscs: letterLightableId[] = flash.getAttribute("Miscs")?.split(",") as letterLightableId[] ?? [];
 
-      vcf.flashes.push({
+      vcf.configuration.flashes.push({
         id: vcf.flashID++,
         duration: parseInt(flash.getAttribute("Duration")) ?? 100,
-        extras: enabledExtras.map((extra) => parseInt(extra)) ?? [],
+        extras: enabledExtras.map((extra) => parseInt(extra) as numericalLightableId) ?? [],
         miscs: enabledMiscs ?? [],
         pattern: pattern.nodeName,
       });

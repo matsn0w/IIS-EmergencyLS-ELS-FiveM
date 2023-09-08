@@ -7,7 +7,6 @@
     </header>
 
     <div class="p-3 overflow-x-auto">
-      {{VCF.configuration.lightables.map((lightable) => lightable.id)}}
       <table class="table-auto w-full">
         <thead class="text-xs font-semibold uppercase text-gray-400 bg-gray-50">
           <tr>
@@ -78,22 +77,15 @@
 
 <script setup lang="ts">
 import {XMarkIcon} from "@heroicons/vue/24/solid"
-import {letterLightableId, Lightable, lightableType, numericalLightableId} from "~/types/lights";
+import {Lightable, lightableType} from "~/types/lights";
 
 const colors = ["blue", "amber", "red", "green", "white"];
 
 const VCF = useVcfConfiguration();
-const miscIds: letterLightableId[] = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-const extraIds: numericalLightableId[] = [1,2,3,4,5,6,7,8,9,10,11,12]
 
 const removeLightable = (index: number) => {
   return VCF.value.configuration.lightables.splice(index, 1)
 }
-
-const isLightableIdInUse = (id: letterLightableId|numericalLightableId) => VCF.value.configuration.lightables.map((lightable) => lightable.id).includes(id)
-
-const availableMiscIds = computed(() => miscIds.filter(miscId => !isLightableIdInUse(miscId)))
-const availableExtraIds = computed(() => extraIds.filter(extraId => !isLightableIdInUse(extraId)))
 
 const getNewLightableId = (lightable: Lightable|null = null, type: lightableType|null = null) => {
     if (type === 'extra' || lightable?.type === 'extra') {

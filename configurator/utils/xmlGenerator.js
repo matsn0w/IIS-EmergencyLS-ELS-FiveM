@@ -62,8 +62,15 @@ export const generateVcfDocument = (data) => {
   const statics = doc.createElement("STATIC");
 
   data.statics.forEach((stat) => {
-    const s = doc.createElement(`Extra${stat.extra}`);
-    s.setAttribute("Name", stat.name ?? `Extra ${stat.extra}`);
+    let nodeName = ''
+    if (s.type === 'extra') {
+      nodeName = `EXTRA${stat.id}`
+    } else if (stat.type === 'misc') {
+      nodeName = `MISC${String(stat.id).toUpperCase()}`
+    }
+
+    const s = doc.createElement(nodeName);
+    s.setAttribute("Name", stat.name ?? nodeName);
 
     statics.appendChild(s);
   });
