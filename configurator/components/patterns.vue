@@ -60,13 +60,13 @@
 
           <tbody class="text-sm divide-y divide-gray-100">
             <tr>
-              <td class="font-bold">Preview</td>
-              <td>
+              <td class="font-semibold w-32">Preview</td>
+              <td class="py-4">
                 <span
                   v-for="(extra, j) in enabledExtras"
                   :key="j"
                   :id="`${pattern.name}_extra_${extra.id}`"
-                  class="light"
+                  class="light py-4"
                   >{{ extra?.id }}</span
                 >
               </td>
@@ -79,21 +79,23 @@
                   >{{ misc.id }}</span
                 >
               </td>
-              <td class="flex gap-4">
-                <button
-                  type="button"
-                  class="green"
-                  @click="playPreview(pattern)"
-                >
-                  <PlayIcon class="w-4 h-4" />
-                </button>
-                <button
-                  type="button"
-                  :class="pattern.loopPreview ? 'blue' : 'blue outlined'"
-                  @click="pattern.loopPreview = !pattern.loopPreview"
-                >
-                  <ArrowPathRoundedSquareIcon class="w-4 h-4" />
-                </button>
+              <td class="align-middle">
+                <div class="flex gap-4">
+                  <button
+                    type="button"
+                    class="green"
+                    @click="playPreview(pattern)"
+                  >
+                    <PlayIcon class="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    :class="pattern.loopPreview ? 'blue' : 'blue outlined'"
+                    @click="pattern.loopPreview = !pattern.loopPreview"
+                  >
+                    <ArrowPathRoundedSquareIcon class="w-4 h-4" />
+                  </button>
+                </div>
               </td>
             </tr>
             <tr>
@@ -102,10 +104,10 @@
               </td>
             </tr>
             <tr v-for="(flash, i) in getFlashesForPattern(pattern)" :key="i">
-              <td>
+              <td class="w-32">
                 <input v-model.number="flash.duration" type="number" min="0" />
               </td>
-              <td>
+              <td class="py-4">
                 <span
                   v-for="(extra, j) in enabledExtras"
                   :key="j"
