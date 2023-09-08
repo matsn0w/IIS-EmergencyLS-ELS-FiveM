@@ -3,27 +3,27 @@
 @tailwind utilities;
 
 body {
-  @apply bg-gray-100 dark:bg-gray-900; // Set background color for light and dark modes
+  @apply bg-gray-100 dark:bg-gray-900;
 
   h1 {
-    @apply dark:text-gray-300
+    @apply dark:text-gray-300;
   }
 }
 
 .card {
-  @apply p-2 my-6 bg-white rounded-md shadow-lg dark:bg-gray-800; // Adjust card background for dark mode
+  @apply p-2 my-6 bg-white rounded-md shadow-lg dark:bg-gray-800;
 
   h2 {
-    @apply font-semibold text-gray-800 dark:text-gray-300; // Adjust text color for dark mode
+    @apply font-semibold text-gray-800 dark:text-gray-300;
   }
 
   h3 {
-    @apply font-semibold text-gray-800 dark:text-gray-300; // Adjust text color for dark mode
+    @apply font-semibold text-gray-800 dark:text-gray-300;
   }
 }
 
 button {
-  @apply px-2 py-1 rounded-md shadow dark:bg-gray-800 dark:text-gray-300; // Adjust button styles for dark mode
+  @apply px-2 py-1 text-white text-sm rounded shadow dark:bg-gray-800 dark:text-gray-300;
 }
 
 table {
@@ -46,16 +46,16 @@ table {
 }
 
 label {
-  @apply block text-gray-500 dark:text-gray-300 font-bold md:text-right mb-1 md:mb-0 pr-4;
+  @apply block text-gray-500 dark:text-gray-300 font-semibold md:text-right mb-1 md:mb-0 pr-4;
 }
 
 input[type="text"],
 input[type="number"],
 select {
-  @apply form-input block w-full px-2 py-1 rounded bg-gray-200 text-gray-700 border-2 border-gray-200 focus:bg-white focus:border-blue-500 focus:outline-none;
+  @apply form-input block w-full px-2 py-1 rounded bg-gray-200 text-gray-700 border-2 border-gray-200 focus:bg-white focus:border-blue-500 focus:outline-none dark:bg-gray-800 dark:border-gray-800 dark:text-white;
 
-  &.dark {
-    @apply bg-gray-800 text-white border-gray-700; // Adjust input styles for dark mode
+  .card & {
+    @apply bg-gray-100 border-gray-100 dark:bg-gray-900 dark:border-gray-900;
   }
 }
 
@@ -68,11 +68,7 @@ select {
 }
 
 input[type="checkbox"] {
-  @apply form-checkbox h-5 w-5 text-blue-500 rounded;
-
-  &.dark {
-    @apply text-white border-gray-700; // Adjust checkbox styles for dark mode
-  }
+  @apply form-checkbox h-5 w-5 rounded bg-gray-100 border border-gray-100 checked:bg-blue-500 dark:bg-gray-900 dark:border-gray-900;
 }
 
 .cb-label {
@@ -80,39 +76,57 @@ input[type="checkbox"] {
 }
 
 .blue {
-  @apply text-white bg-blue-500 #{!important};
+  @apply bg-blue-500 border-blue-500 #{!important};
+
+  &.outlined {
+    @apply border-blue-500 text-blue-500;
+  }
 }
 
 .amber {
   @apply text-white bg-yellow-500 #{!important};
+
+  &.outlined {
+    @apply border-yellow-500 text-yellow-500;
+  }
 }
 
 .red {
   @apply text-white bg-red-500 #{!important};
+
+  &.outlined {
+    @apply border-red-500 text-red-500;
+  }
 }
 
 .green {
   @apply text-white bg-green-500 #{!important};
+
+  &.outlined {
+    @apply border-green-500 text-green-500;
+  }
 }
 
 .white {
   @apply text-black bg-white border-2 border-gray-500 #{!important};
+
+  &.outlined {
+    @apply border-black text-black;
+  }
 }
 
 .nocolor {
   @apply text-white bg-gray-500 #{!important};
 }
 
-.import-button {
-  @apply relative overflow-hidden inline-block border-2 border-black rounded-md p-2 cursor-pointer
-}
+.outlined {
+  @apply border;
 
-.import-button {
-  input {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1;
-    opacity: 0;
+  &:hover {
+    @apply text-white;
+  }
+
+  &:not(:hover) {
+    @apply bg-transparent dark:bg-transparent #{!important};
   }
 }

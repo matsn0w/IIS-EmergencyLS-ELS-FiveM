@@ -1,8 +1,8 @@
 # Vehicle Configuration File (VCF)
 
-A Vehicle Configuration File, shortly VCF, is an XML file which contains all ELS-related configurations of a specific vehicle. Each ELS-enabled vehicle must have a configuration file set up in order for ELS to know how to handle it.
+A Vehicle Configuration File, shortly VCF, is an XML file which contains all ELS-related configuration for a specific vehicle. Each ELS-enabled vehicle must have its own configuration file set up in order for ELS to know how to handle it.
 
-A VCF consists of 3 main sections:
+A VCF consists of 4 main sections:
 
 - extras (`EOVERRIDE`)
 - statics (`STATIC`)
@@ -126,7 +126,7 @@ If you are using [WMServerSirens](https://github.com/Walsheyy/WMServerSirens), y
 
 Now, you might ask yourself: how do I know which sounds I can use? Well... it's complicated. There doesn't seem to be an unequivocal answer to that question. You can read [this forum topic](gtaforums.com/topic/795622-audio-for-mods), especially [this comment](https://gtaforums.com/topic/795622-audio-for-mods/?do=findComment&comment=1068658778) for some guidelines.
 
-*Note that you can use WMServerSirens and native game sounds mixed together (do not specify a SoundSet to use a native game sound).*
+_Note that you can use WMServerSirens and native game sounds mixed together (do not specify a SoundSet to use a native game sound)._
 
 Example with WMServerSirens:
 
@@ -157,11 +157,11 @@ Example with native game sounds:
 Options:
 
 **MainHorn**:
-| Name        | Type    | Values                    | Default          | Description                                                                                                                                        |
+| Name | Type | Values | Default | Description |
 | ----------- | ------- | ------------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AllowUse    | boolean | `true`, `false`           | `false`          | Whether the custom horn is enabled or not. The game's horn for the vehicle will be used (different depending on the `vehicles.meta` entry for it). |
-| AudioString | string  | name hash of sound to use | `SIRENS_AIRHORN` | The name of an audio to play. Must be compatible with the [`PLAY_SOUND_FROM_ENTITY`](https://docs.fivem.net/natives/?_0xE65F427EB70AB1ED) native.  |
-| SoundSet    | string  | name of sound bank to use | -                | The name of the sound set if using WMServerSirens.                                                                                                 |
+| AllowUse | boolean | `true`, `false` | `false` | Whether the custom horn is enabled or not. The game's horn for the vehicle will be used (different depending on the `vehicles.meta` entry for it). |
+| AudioString | string | name hash of sound to use | `SIRENS_AIRHORN` | The name of an audio to play. Must be compatible with the [`PLAY_SOUND_FROM_ENTITY`](https://docs.fivem.net/natives/?_0xE65F427EB70AB1ED) native. |
+| SoundSet | string | name of sound bank to use | - | The name of the sound set if using WMServerSirens. |
 
 **NineMode**:
 

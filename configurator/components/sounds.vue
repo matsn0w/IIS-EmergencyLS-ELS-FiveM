@@ -10,7 +10,7 @@
           v-model="VCF.configuration.useServerSirens"
           type="checkbox"
         />
-        Use
+        Use&nbsp;
         <a
           class="underline"
           href="https://github.com/Walsheyy/WMServerSirens"

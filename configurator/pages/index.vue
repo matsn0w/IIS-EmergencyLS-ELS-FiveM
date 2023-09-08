@@ -4,7 +4,13 @@
 
     <div class="flex gap-4">
       <importButton @load="importedVCF = $event" />
-      <button @click="toggleDarkMode" class="flex items-center gap-2 p-4"><SunIcon class="w-4 h-4 text-yellow-400" v-if="darkModeState === 'dark'" /> <MoonIcon class="w-4 h-4 text-yellow-400" v-else/></button>
+      <button
+        @click="toggleDarkMode"
+        class="blue outlined p-3 !text-yellow-400"
+      >
+        <SunIcon class="w-4 h-4" v-if="darkModeState === 'dark'" />
+        <MoonIcon class="w-4 h-4" v-else />
+      </button>
     </div>
   </div>
 
@@ -39,30 +45,31 @@
 <script setup>
 import { saveAs } from "file-saver";
 import formatXml from "xml-formatter";
-import {SunIcon, MoonIcon} from "@heroicons/vue/24/solid";
+import { SunIcon, MoonIcon } from "@heroicons/vue/24/solid";
 
-const darkModeState = ref(localStorage.getItem('theme') ?? 'light')
+const darkModeState = ref(localStorage.getItem("theme") ?? "light");
 
 const toggleDarkMode = () => {
-  document.getElementsByTagName('html')[0]?.classList.remove(darkModeState.value)
-  darkModeState.value = darkModeState.value === 'light' ? 'dark' : 'light'
-  document.getElementsByTagName('html')[0]?.classList.add(darkModeState.value)
-}
+  document
+    .getElementsByTagName("html")[0]
+    ?.classList.remove(darkModeState.value);
+  darkModeState.value = darkModeState.value === "light" ? "dark" : "light";
+  document.getElementsByTagName("html")[0]?.classList.add(darkModeState.value);
+};
 
 onMounted(() => {
   if (!darkModeState.value) {
-    darkModeState.value = 'light'
+    darkModeState.value = "light";
   }
 
-  document.getElementsByTagName('html')[0]?.classList.add(darkModeState.value)
-})
+  document.getElementsByTagName("html")[0]?.classList.add(darkModeState.value);
+});
 
 watch(
-    () => darkModeState.value,
-    (newTheme) => {
-      localStorage.setItem('theme', newTheme);
-
-    }
+  () => darkModeState.value,
+  (newTheme) => {
+    localStorage.setItem("theme", newTheme);
+  }
 );
 
 const VCF = useVcfConfiguration();
