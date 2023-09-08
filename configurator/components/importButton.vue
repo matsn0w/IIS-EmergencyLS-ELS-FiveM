@@ -1,11 +1,14 @@
 <template>
-  <label class="import-button">
+  <button class="blue outlined px-4" type="button" @click="vcf.click()">
     Import Existing VCF
-    <input type="file" @change="loadVCF" />
-  </label>
+  </button>
+
+  <input ref="vcf" class="hidden" type="file" @change="loadVCF" />
 </template>
 
 <script setup>
+const vcf = ref(null);
+
 const emit = defineEmits(["load"]);
 
 const loadVCF = (ev) => {

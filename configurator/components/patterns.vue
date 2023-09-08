@@ -60,37 +60,37 @@
 
           <tbody class="text-sm divide-y divide-gray-100">
             <tr>
-              <td class="font-bold">
-                Preview
+              <td class="font-bold">Preview</td>
+              <td>
+                <span
+                  v-for="(extra, j) in enabledExtras"
+                  :key="j"
+                  :id="`${pattern.name}_extra_${extra.id}`"
+                  class="light"
+                  >{{ extra?.id }}</span
+                >
               </td>
               <td>
-                  <span
-                      v-for="(extra, j) in enabledExtras"
-                      :key="j"
-                      :id="`${pattern.name}_extra_${extra.id}`"
-                      class="light"
-                  >{{ extra?.id }}</span>
-              </td>
-              <td>
-                  <span
-                      v-for="(misc, j) in enabledMiscs"
-                      :key="j"
-                      class="light"
-                      :id="`${pattern.name}_misc_${misc.id}`"
-                  >{{ misc.id }}</span>
+                <span
+                  v-for="(misc, j) in enabledMiscs"
+                  :key="j"
+                  class="light"
+                  :id="`${pattern.name}_misc_${misc.id}`"
+                  >{{ misc.id }}</span
+                >
               </td>
               <td class="flex gap-4">
                 <button
-                    type="button"
-                    class="green"
-                    @click="playPreview(pattern)"
+                  type="button"
+                  class="green"
+                  @click="playPreview(pattern)"
                 >
                   <PlayIcon class="w-4 h-4" />
                 </button>
                 <button
-                    type="button"
-                    :class="pattern.loopPreview ? 'blue' : ''"
-                    @click="pattern.loopPreview = !pattern.loopPreview"
+                  type="button"
+                  :class="pattern.loopPreview ? 'blue' : 'blue outlined'"
+                  @click="pattern.loopPreview = !pattern.loopPreview"
                 >
                   <ArrowPathRoundedSquareIcon class="w-4 h-4" />
                 </button>
@@ -147,16 +147,24 @@
 </template>
 
 <script setup>
-import {XMarkIcon, PlayIcon, ArrowPathRoundedSquareIcon} from "@heroicons/vue/24/solid";
+import {
+  XMarkIcon,
+  PlayIcon,
+  ArrowPathRoundedSquareIcon,
+} from "@heroicons/vue/24/solid";
 
 const VCF = useVcfConfiguration();
 
 const enabledExtras = computed(() =>
-  VCF.value.configuration.lightables.filter((lightable) => lightable.enabled && lightable.type === 'extra')
+  VCF.value.configuration.lightables.filter(
+    (lightable) => lightable.enabled && lightable.type === "extra"
+  )
 );
 
 const enabledMiscs = computed(() =>
-  VCF.value.configuration.lightables.filter((lightable) => lightable.enabled && lightable.type === 'misc')
+  VCF.value.configuration.lightables.filter(
+    (lightable) => lightable.enabled && lightable.type === "misc"
+  )
 );
 
 const addFlash = (pattern) => {
@@ -168,19 +176,25 @@ const removeFlash = (pattern, flash) => {
 };
 
 const playPreview = async (pattern) => {
-  const flashes = getFlashesForPattern(pattern)
+  const flashes = getFlashesForPattern(pattern);
 
   for (const flash of flashes) {
     for (const extraId of flash.extras) {
       const extra = enabledExtras.value.find((extra) => extra.id === extraId);
       const color = getLightColor(extra);
 
-      document.querySelector(`#${pattern.name}_extra_${extraId}`).classList.toggle(color);
+      document
+        .querySelector(`#${pattern.name}_extra_${extraId}`)
+        .classList.toggle(color);
     }
 
     for (const miscId of flash.miscs) {
-      const color = getLightColor(enabledMiscs.value.filter((misc) => misc.id === miscId));
-      document.querySelector(`#${pattern.name}_misc_${miscId}`).classList.toggle(color);
+      const color = getLightColor(
+        enabledMiscs.value.filter((misc) => misc.id === miscId)
+      );
+      document
+        .querySelector(`#${pattern.name}_misc_${miscId}`)
+        .classList.toggle(color);
     }
 
     await new Promise((resolve) => {
@@ -191,21 +205,29 @@ const playPreview = async (pattern) => {
       const extra = enabledExtras.value.find((extra) => extra.id === extraId);
       const color = getLightColor(extra);
 
-      document.querySelector(`#${pattern.name}_extra_${extraId}`).classList.toggle(color);
+      document
+        .querySelector(`#${pattern.name}_extra_${extraId}`)
+        .classList.toggle(color);
     }
 
     for (const miscId of flash.miscs) {
-      const misc = enabledMiscs.value.find((misc) => misc.id === miscId)
+      const misc = enabledMiscs.value.find((misc) => misc.id === miscId);
       const color = getLightColor(misc);
 
-      document.querySelector(`#${pattern.name}_misc_${miscId}`).classList.toggle(color);
+      document
+        .querySelector(`#${pattern.name}_misc_${miscId}`)
+        .classList.toggle(color);
     }
   }
 
-  if (VCF.value.configuration.patterns.find((vcfPattern) => vcfPattern.name === pattern.name)?.loopPreview) {
-    return await playPreview(pattern)
+  if (
+    VCF.value.configuration.patterns.find(
+      (vcfPattern) => vcfPattern.name === pattern.name
+    )?.loopPreview
+  ) {
+    return await playPreview(pattern);
   }
-}
+};
 
 const toggleLight = (pattern, flash, light) => {
   useToggleLight({ pattern, flash, light });
