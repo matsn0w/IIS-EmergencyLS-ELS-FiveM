@@ -58,10 +58,12 @@
             </tr>
           </thead>
 
-          <tbody class="text-sm divide-y divide-gray-100">
+          <tbody>
             <tr>
-              <td class="font-semibold w-32">Preview</td>
-              <td class="py-4">
+              <td class="pt-4 pb-8 align-top font-semibold text-sm w-32">
+                Preview
+              </td>
+              <td class="pt-4 pb-8 align-top">
                 <span
                   v-for="(extra, j) in enabledExtras"
                   :key="j"
@@ -70,7 +72,7 @@
                   >{{ extra?.id }}</span
                 >
               </td>
-              <td>
+              <td class="pt-4 pb-8 align-top">
                 <span
                   v-for="(misc, j) in enabledMiscs"
                   :key="j"
@@ -79,7 +81,7 @@
                   >{{ misc.id }}</span
                 >
               </td>
-              <td class="align-middle">
+              <td class="pt-4 pb-8 align-top">
                 <div class="flex gap-4">
                   <button
                     type="button"
@@ -88,6 +90,7 @@
                   >
                     <PlayIcon class="w-4 h-4" />
                   </button>
+
                   <button
                     type="button"
                     :class="pattern.loopPreview ? 'blue' : 'blue outlined'"
@@ -98,11 +101,9 @@
                 </div>
               </td>
             </tr>
-            <tr>
-              <td>
-                <!-- This is very ugly, but we don't care. We need the whitespace -->
-              </td>
-            </tr>
+          </tbody>
+
+          <tbody class="text-sm divide-y divide-gray-100">
             <tr v-for="(flash, i) in getFlashesForPattern(pattern)" :key="i">
               <td class="w-32">
                 <input v-model.number="flash.duration" type="number" min="0" />
