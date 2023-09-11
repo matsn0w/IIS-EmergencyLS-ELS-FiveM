@@ -54,7 +54,7 @@ export const generateStoreAttributesFromExistingVCF = (data) => {
 
   miscs.forEach((misc) => {
     vcf.configuration.lightables.push({
-      id: misc.nodeName.match(/([A-Z])$/g)[0],
+      id: misc.nodeName.match(/([A-Z])$/g)[0].toLowerCase(),
       type: 'misc',
       enabled: misc.getAttribute("IsElsControlled") === "true",
       allowEnv: misc.getAttribute("AllowEnvLight") === "true",

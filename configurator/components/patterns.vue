@@ -93,7 +93,7 @@
 
                   <button
                     type="button"
-                    :class="pattern.loopPreview ? 'blue' : 'blue outlined'"
+                    :class="pattern.loopPreview ? 'blue border-[1px]' : 'blue outlined'"
                     @click="pattern.loopPreview = !pattern.loopPreview"
                   >
                     <ArrowPathRoundedSquareIcon class="w-4 h-4" />
@@ -150,7 +150,7 @@
 </template>
 
 <script setup lang="ts">
-import {Lightable} from "~/types/lights";
+import {letterLightableId, Lightable, numericalLightableId} from "~/types/lights";
 import {patternType} from "~/types/patterns";
 import {flashType} from "~/types/flash";
 import {
@@ -163,13 +163,13 @@ const VCF = useVcfConfiguration();
 
 const enabledExtras = computed(() =>
   VCF.value.configuration.lightables.filter(
-    (lightable) => lightable.enabled && lightable.type === "extra"
+    (lightable) => lightable.enabled && lightable.type === "extra" && lightableIsNotInUseAsStatic(lightable.id)
   )
 );
 
 const enabledMiscs = computed(() =>
   VCF.value.configuration.lightables.filter(
-    (lightable) => lightable.enabled && lightable.type === "misc"
+    (lightable) => lightable.enabled && lightable.type === "misc"  && lightableIsNotInUseAsStatic(lightable.id)
   )
 );
 
@@ -262,5 +262,12 @@ const getFlashesForPattern = (pattern: patternType) => {
 <style scoped>
 .light {
   @apply bg-gray-200 px-3 py-2 border-2 border-gray-300 rounded mr-3 select-none text-center text-gray-500;
+}
+
+.light.red,
+.light.green,
+.light.amber,
+.light.blue {
+  @apply text-white
 }
 </style>

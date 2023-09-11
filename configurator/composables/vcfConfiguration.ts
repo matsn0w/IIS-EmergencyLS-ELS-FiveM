@@ -84,6 +84,8 @@ const getFlashIndex = (flash: flashType) => {
   return VCF.value.configuration.flashes.map((f) => f.id).indexOf(flash.id);
 };
 
+export const lightableIsNotInUseAsStatic = (lightableId: numericalLightableId|letterLightableId) => !useVcfConfiguration().value.configuration.statics.map((staticElement: staticType) => staticElement.id).includes(lightableId)
+
 export const miscIds: letterLightableId[] = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 export const extraIds: numericalLightableId[] = [1,2,3,4,5,6,7,8,9,10,11,12]
 

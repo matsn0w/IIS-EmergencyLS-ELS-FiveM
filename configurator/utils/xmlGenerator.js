@@ -41,7 +41,7 @@ export const generateVcfDocument = (data) => {
 
   data.lightables.filter((lightable) => lightable.type === 'misc').forEach((misc) => {
     let miscId = `${misc.id}`;
-    miscId = miscId.replace(/(^[^\d\n]*\d[^\d\n]*$)/gm, "0$1");
+    miscId = miscId.replace(/(^[^\d\n]*\d[^\d\n]*$)/gm, "0$1").toUpperCase();
     const m = doc.createElement(`Misc${miscId}`);
     m.setAttribute("IsElsControlled", misc.enabled);
 
@@ -63,7 +63,7 @@ export const generateVcfDocument = (data) => {
 
   data.statics.forEach((stat) => {
     let nodeName = ''
-    if (s.type === 'extra') {
+    if (stat.type === 'extra') {
       nodeName = `EXTRA${stat.id}`
     } else if (stat.type === 'misc') {
       nodeName = `MISC${String(stat.id).toUpperCase()}`
