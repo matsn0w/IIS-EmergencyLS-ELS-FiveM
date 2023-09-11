@@ -37,7 +37,7 @@
     <patterns class="card" />
 
     <div class="py-3">
-      <button class="blue" type="submit">Generate VCF</button>
+      <button class="blue py-2 px-4" type="submit">Generate VCF</button>
     </div>
   </form>
 </template>
