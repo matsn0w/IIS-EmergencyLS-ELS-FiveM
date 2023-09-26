@@ -12,7 +12,6 @@
           <tr>
             <th>Lightable type</th>
             <th>Lightable ID</th>
-            <th>Is ELS controlled</th>
             <th>Allow env light</th>
             <th>Color</th>
             <th></th>
@@ -35,11 +34,6 @@
                 <option v-if="lightable.type === 'extra'" v-for="id in extraIds" :key="'extra_' + id" :value="id" :disabled="isLightableIdInUse(id)">{{ id }}</option>
                 <option v-else-if="lightable.type === 'misc'" v-for="id in miscIds" :key="'misc_' + id" :disabled="isLightableIdInUse(id)" :value="id">{{ id }}</option>
               </select>
-            </td>
-            <td>
-              <label class="cb-label">
-                <input v-model="lightable.enabled" type="checkbox" />
-              </label>
             </td>
             <td>
               <label class="cb-label">
