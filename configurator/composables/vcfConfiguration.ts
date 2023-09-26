@@ -93,7 +93,6 @@ const getVcfConfig = (): vcfConfig => {
 
 watch(useVcfConfiguration().value, (value) => {
   localStorage.setItem("vcfConfiguration", JSON.stringify(value));
-  console.log(JSON.parse(localStorage.getItem("vcfConfiguration") as string))
 })
 
 export const resetVcfConfiguration = () => {
