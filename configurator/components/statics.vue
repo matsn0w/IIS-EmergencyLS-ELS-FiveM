@@ -32,8 +32,8 @@
                 <select
                     v-model.number="s.id"
                 >
-                  <option v-for="extraId in extraIds" :value="extraId" v-if="s.type === 'extra'" :key="`extra_${extraId}`" :disabled="isLightableIdInUseByStatic(extraId)">{{extraId}}</option>
-                  <option v-for="miscId in miscIds" :value="miscId" :key="`misc_${miscId}`" v-else :disabled="isLightableIdInUseByStatic(miscId)">{{miscId}}</option>
+                  <option v-for="extraId in elsEnabledExtraIds" :value="extraId" v-if="s.type === 'extra'" :key="`extra_${extraId}`" :disabled="isLightableIdInUseByStatic(extraId)">{{extraId}}</option>
+                  <option v-for="miscId in elsEnabledMiscIds" :value="miscId" :key="`misc_${miscId}`" v-else :disabled="isLightableIdInUseByStatic(miscId)">{{miscId}}</option>
                 </select>
               </td>
               <td>
@@ -62,13 +62,16 @@
 </template>
 
 <script setup lang="ts">
-import {letterLightableId, Lightable, numericalLightableId} from "~/types/lights";
+import {letterLightableId, numericalLightableId} from "~/types/lights";
 import {staticType} from "~/types/static";
 
 const VCF = useVcfConfiguration();
 const isLightableIdInUseByStatic = (id: letterLightableId|numericalLightableId) => useVcfConfiguration().value.configuration.statics.map((staticElement: staticType) => staticElement.id).includes(id)
-const availableStaticMiscIds = computed(() => miscIds.filter(miscId => !isLightableIdInUseByStatic(miscId)))
-const availableStaticExtraIds = computed(() => extraIds.filter(extraId => !isLightableIdInUseByStatic(extraId)))
+
+const elsEnabledExtraIds = computed(() => extraIds.filter(extraId => isLightableIdInUse(extraId)))
+const elsEnabledMiscIds = computed(() => miscIds.filter(miscId => isLightableIdInUse(miscId)))
+const availableStaticMiscIds = computed(() => elsEnabledMiscIds.value.filter(miscId => !isLightableIdInUseByStatic(miscId)))
+const availableStaticExtraIds = computed(() => elsEnabledExtraIds.value.filter(extraId => !isLightableIdInUseByStatic(extraId)))
 
 const addStatic = () => {
   useAddStatic({ id: null, type: 'extra', name: null });
