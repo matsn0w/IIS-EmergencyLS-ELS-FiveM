@@ -127,7 +127,7 @@ export const generateStoreAttributesFromExistingVCF = (data: any) => {
       isEmergency: pattern.getAttribute("IsEmergency") === "true",
       flashHighBeam: pattern.getAttribute("FlashHighBeam") === "true",
       enableWarningBeep: pattern.getAttribute("EnableWarningBeep") === "true",
-      loopPreview: false,
+      loopPreview: true,
       isPlayingPreview: false,
     });
 
