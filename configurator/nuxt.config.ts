@@ -1,3 +1,5 @@
+import pkg from "./package.json";
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   app: {
@@ -13,4 +15,9 @@ export default defineNuxtConfig({
   ssr: false,
   devtools: { enabled: true },
   modules: ["@nuxtjs/tailwindcss", "@nuxt/devtools"],
+  runtimeConfig: {
+    public: {
+      version: pkg.version,
+    },
+  },
 });
