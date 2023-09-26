@@ -36,8 +36,9 @@
     <sounds class="card" />
     <patterns class="card" />
 
-    <div class="py-3">
+    <div class="py-3 flex gap-4">
       <button class="blue py-2 px-4" type="submit">Generate VCF</button>
+      <button class="amber py-2 px-4" type="button" @click.prevent="onResetVcfConfiguration">Reset VCF</button>
     </div>
   </form>
 </template>
@@ -46,6 +47,11 @@
 import { saveAs } from "file-saver";
 import formatXml from "xml-formatter";
 import { SunIcon, MoonIcon } from "@heroicons/vue/24/solid";
+import {resetVcfConfiguration} from "~/composables/vcfConfiguration";
+
+const onResetVcfConfiguration = () => {
+  resetVcfConfiguration();
+};
 
 const darkModeState = ref(localStorage.getItem("theme") ?? "light");
 
