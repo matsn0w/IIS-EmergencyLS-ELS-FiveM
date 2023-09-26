@@ -1,12 +1,13 @@
 import {vcfConfig} from "~/types/vcfConfig";
-import {letterLightableId, numericalLightableId} from "~/types/lights";
+import {Color, letterLightableId, numericalLightableId} from "~/types/lights";
+import {soundType} from "~/types/sounds";
 
 /**
  * This method takes in an existing VCF file (as XML string), parses the XML
  * and maps it to an expected format for the VueX store.
  *
  */
-export const generateStoreAttributesFromExistingVCF = (data) => {
+export const generateStoreAttributesFromExistingVCF = (data: any) => {
   const vcf: vcfConfig = {
     flashID: 1,
     configuration: {
@@ -48,7 +49,7 @@ export const generateStoreAttributesFromExistingVCF = (data) => {
       type: 'extra',
       enabled: extra.getAttribute("IsElsControlled") === "true",
       allowEnv: extra.getAttribute("AllowEnvLight") === "true",
-      color: extra.getAttribute("Color") ?? null,
+      color: extra.getAttribute("Color") as Color ?? null,
     });
   });
 
@@ -58,7 +59,7 @@ export const generateStoreAttributesFromExistingVCF = (data) => {
       type: 'misc',
       enabled: misc.getAttribute("IsElsControlled") === "true",
       allowEnv: misc.getAttribute("AllowEnvLight") === "true",
-      color: misc.getAttribute("Color") ?? null,
+      color: misc.getAttribute("Color") as Color ?? null,
     });
   });
 
@@ -92,19 +93,26 @@ export const generateStoreAttributesFromExistingVCF = (data) => {
 
   // SOUNDS section
   const soundsObject = parsedVCF.querySelector("SOUNDS");
-  const sounds = soundsObject.querySelectorAll("*");
+  const sounds = soundsObject?.querySelectorAll("*");
 
-  sounds.forEach((sound) => {
-    vcf.configuration.sounds.push({
+  sounds?.forEach((sound) => {
+    const isNineMode = sound.nodeName === "NineMode";
+
+    let fields: Partial<soundType> = {
       name: sound.nodeName,
       allowUse: sound.getAttribute("AllowUse") === "true",
-      audioString: sound.getAttribute("AudioString") ?? null,
-      soundSet: sound.getAttribute("SoundSet") ?? null,
-    });
+    }
+
+    if (!isNineMode) {
+      fields.audioString = sound.getAttribute("AudioString")
+      fields.soundSet = sound.getAttribute("SoundSet")
+    }
+
+    vcf.configuration.sounds.push(fields as soundType);
   });
 
   // determine whether a SoundSet is present
-  sounds.forEach((sound) => {
+  sounds?.forEach((sound) => {
     if (sound.getAttribute("SoundSet") !== null) {
       vcf.configuration.useServerSirens = true;
     }
@@ -119,7 +127,8 @@ export const generateStoreAttributesFromExistingVCF = (data) => {
       isEmergency: pattern.getAttribute("IsEmergency") === "true",
       flashHighBeam: pattern.getAttribute("FlashHighBeam") === "true",
       enableWarningBeep: pattern.getAttribute("EnableWarningBeep") === "true",
-      loopPreview: false
+      loopPreview: false,
+      isPlayingPreview: false,
     });
 
     for (const flash of pattern.children) {
@@ -128,7 +137,7 @@ export const generateStoreAttributesFromExistingVCF = (data) => {
 
       vcf.configuration.flashes.push({
         id: vcf.flashID++,
-        duration: parseInt(flash.getAttribute("Duration")) ?? 100,
+        duration: parseInt(flash.getAttribute("Duration") || '') ?? 100,
         extras: enabledExtras.map((extra) => parseInt(extra) as numericalLightableId) ?? [],
         miscs: enabledMiscs ?? [],
         pattern: pattern.nodeName,

@@ -87,8 +87,18 @@
                     type="button"
                     class="green"
                     @click="playPreview(pattern)"
+                    v-if="!pattern.isPlayingPreview"
                   >
                     <PlayIcon class="w-4 h-4" />
+                  </button>
+
+                  <button
+                      type="button"
+                      class="amber"
+                      @click="pattern.loopPreview = false; pattern.isPlayingPreview = false"
+                      v-else
+                  >
+                    <PlayPauseIcon class="w-4 h-4" />
                   </button>
 
                   <button
@@ -156,6 +166,7 @@ import {flashType} from "~/types/flash";
 import {
   XMarkIcon,
   PlayIcon,
+  PlayPauseIcon,
   ArrowPathRoundedSquareIcon,
 } from "@heroicons/vue/24/solid";
 
@@ -182,6 +193,9 @@ const removeFlash = (pattern: patternType, flash: flashType) => {
 };
 
 const playPreview = async (pattern: patternType) => {
+
+  pattern.isPlayingPreview = true
+
   const flashes = getFlashesForPattern(pattern)
 
   for (const flash of flashes) {
@@ -226,12 +240,12 @@ const playPreview = async (pattern: patternType) => {
   }
 
   if (
-    VCF.value.configuration.patterns.find(
-      (vcfPattern) => vcfPattern.name === pattern.name
-    )?.loopPreview
+      pattern?.loopPreview && pattern?.isPlayingPreview
   ) {
     return await playPreview(pattern);
   }
+
+  pattern.isPlayingPreview = false
 };
 
 const toggleLight = (pattern: patternType, flash: flashType, light: Lightable) => {

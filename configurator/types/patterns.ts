@@ -4,4 +4,5 @@ export type patternType = {
   flashHighBeam: boolean,
   enableWarningBeep: boolean
   loopPreview: boolean
+  isPlayingPreview: boolean
 }

@@ -57,6 +57,7 @@ export const useVcfConfiguration = (): Ref<vcfConfig> => {
           flashHighBeam: false,
           enableWarningBeep: false,
           loopPreview: false,
+          isPlayingPreview: false,
         },
         {
           name: "SECONDARY",
@@ -64,6 +65,7 @@ export const useVcfConfiguration = (): Ref<vcfConfig> => {
           flashHighBeam: false,
           enableWarningBeep: false,
           loopPreview: false,
+          isPlayingPreview: false,
         },
         {
           name: "REARREDS",
@@ -71,6 +73,7 @@ export const useVcfConfiguration = (): Ref<vcfConfig> => {
           flashHighBeam: false,
           enableWarningBeep: false,
           loopPreview: false,
+          isPlayingPreview: false,
         },
       ],
       flashes: [],
@@ -157,7 +160,6 @@ export const useToggleLight = (pattern: patternType, flash: flashType, lightable
 
 export const useImportExistingConfiguration = (value: vcfConfig) => {
   const VCF = useVcfConfiguration();
-  console.log(value)
 
   VCF.value.flashID = value.flashID;
   VCF.value.configuration = value.configuration;
