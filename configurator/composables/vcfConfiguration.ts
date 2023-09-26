@@ -56,7 +56,7 @@ export const useVcfConfiguration = (): Ref<vcfConfig> => {
           isEmergency: true,
           flashHighBeam: false,
           enableWarningBeep: false,
-          loopPreview: false,
+          loopPreview: true,
           isPlayingPreview: false,
         },
         {
@@ -64,7 +64,7 @@ export const useVcfConfiguration = (): Ref<vcfConfig> => {
           isEmergency: true,
           flashHighBeam: false,
           enableWarningBeep: false,
-          loopPreview: false,
+          loopPreview: true,
           isPlayingPreview: false,
         },
         {
@@ -72,7 +72,7 @@ export const useVcfConfiguration = (): Ref<vcfConfig> => {
           isEmergency: true,
           flashHighBeam: false,
           enableWarningBeep: false,
-          loopPreview: false,
+          loopPreview: true,
           isPlayingPreview: false,
         },
       ],
