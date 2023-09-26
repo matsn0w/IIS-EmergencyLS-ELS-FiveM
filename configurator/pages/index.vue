@@ -50,7 +50,10 @@ import { SunIcon, MoonIcon } from "@heroicons/vue/24/solid";
 import {resetVcfConfiguration} from "~/composables/vcfConfiguration";
 
 const onResetVcfConfiguration = () => {
-  resetVcfConfiguration();
+  const result = window.confirm('Are you sure you want to reset? All changes to the VCF will be lost.');
+  if (result) {
+    resetVcfConfiguration();
+  }
 };
 
 const darkModeState = ref(localStorage.getItem("theme") ?? "light");
