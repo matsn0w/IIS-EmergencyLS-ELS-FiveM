@@ -72,6 +72,7 @@ import {defaultVcfConfig} from "~/composables/vcfConfiguration";
 
 const VCF = useVcfConfiguration();
 
+// Added all strings, so we can easily add more siren options, without having to change the code.
 const natoAlphabet = [
   'ALPHA',
   'BRAVO',
@@ -101,6 +102,7 @@ const natoAlphabet = [
   'ZULU'
 ]
 
+// Watch for changes in the useServerSirens checkbox, and update the audioString to the NATO alphabet.
 watch(
     () => VCF.value.configuration.useServerSirens,
     () => {
