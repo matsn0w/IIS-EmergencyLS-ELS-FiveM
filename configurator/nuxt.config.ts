@@ -14,6 +14,9 @@ export default defineNuxtConfig({
   css: ["~/assets/css/main.scss"],
   ssr: false,
   devtools: { enabled: true },
+  plugins: [
+      'plugins/luxon'
+  ],
   modules: ["@nuxtjs/tailwindcss", "@nuxt/devtools"],
   runtimeConfig: {
     public: {

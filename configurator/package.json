@@ -20,7 +20,9 @@
   },
   "dependencies": {
     "@heroicons/vue": "^2.0.18",
+    "@types/luxon": "^3.3.4",
     "file-saver": "^2.0.5",
+    "luxon": "^3.4.4",
     "vuedraggable": "^4.1.0",
     "xml-formatter": "^3.5.0"
   }

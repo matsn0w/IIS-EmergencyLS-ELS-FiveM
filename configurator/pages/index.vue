@@ -11,6 +11,80 @@
         <SunIcon class="w-4 h-4" v-if="darkModeState === 'dark'" />
         <MoonIcon class="w-4 h-4" v-else />
       </button>
+      <button
+          @click="toggleSaveVcfInBrowserStorage"
+          class="blue outlined p-3"
+      >
+        <InboxArrowDownIcon class="w-4 h-4" v-if="saveVcfInBrowserStorageState === '1'" />
+        <template v-else>
+          <div class="relative">
+            <InboxIcon
+                class="w-4 h-4"
+            />
+            <XMarkIcon
+                class="w-4 h-4 absolute top-0 left-0 !text-white"
+            />
+          </div>
+        </template>
+      </button>
+    </div>
+  </div>
+
+  <div class="py-4" v-if="!hasReadLocalStorageNotice">
+    <div class="rounded-md bg-blue-200 p-4">
+      <div class="flex">
+        <div>
+          <h3 class="text-sm font-medium text-blue-800">Attention! From now on, we are storing data in the browser's memory.</h3>
+          <div class="mt-2 text-sm text-blue-700">
+            <p>
+              To prevent data loss, we store your current VCF in your local browser data.<br />
+              When you revisit the configurator, the last VCF file you modified will be loaded again.<br />
+              Do you not want this? Or do you want to start with an empty VCF? Then you can disable local storage.<br />
+              This can be done via the button below or the button at the top right.<br />
+              Resetting can be done via the button below or at the very bottom of the page.
+            </p>
+          </div>
+          <div class="mt-4">
+            <div class="-mx-2 -my-1.5 flex gap-4">
+              <button
+                  @click="toggleSaveVcfInBrowserStorage"
+                  class="blue p-3 flex items-center !text-white"
+              >
+                <InboxArrowDownIcon class="w-4 h-4" v-if="saveVcfInBrowserStorageState === '1'" />
+                <template v-else>
+                  <div class="relative">
+                    <InboxIcon
+                        class="w-4 h-4"
+                    />
+                    <XMarkIcon
+                        class="w-4 h-4 absolute top-0 left-0"
+                    />
+                  </div>
+                </template>
+                <span class="ml-2">{{saveVcfInBrowserStorageState ==='1' ? 'Disable' : 'Enable'}} local VCF storage</span>
+              </button>
+              <button
+                  @click="onResetVcfConfiguration"
+                  class="amber py-2 px-4"
+              >
+                Reset VCF
+              </button>
+            </div>
+        </div>
+      </div>
+        <div class="ml-auto pl-3">
+          <div class="-mx-1.5 -my-1.5">
+            <button
+                type="button"
+                class="blue outlined p-1.5"
+                @click="dismissLocalStorageNotice"
+            >
+              <span class="sr-only">Dismiss</span>
+              <XMarkIcon class="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+    </div>
     </div>
   </div>
 
@@ -46,7 +120,13 @@
 <script setup>
 import { saveAs } from "file-saver";
 import formatXml from "xml-formatter";
-import { SunIcon, MoonIcon } from "@heroicons/vue/24/solid";
+import {
+  SunIcon,
+  MoonIcon,
+  InboxArrowDownIcon,
+  InboxIcon,
+  XMarkIcon,
+} from "@heroicons/vue/24/solid";
 import {resetVcfConfiguration} from "~/composables/vcfConfiguration";
 
 const onResetVcfConfiguration = () => {
@@ -80,6 +160,40 @@ watch(
     localStorage.setItem("theme", newTheme);
   }
 );
+
+const saveVcfInBrowserStorageState = ref(localStorage.getItem("saveVcfLocal") ?? "1");
+
+const toggleSaveVcfInBrowserStorage = () => {
+  saveVcfInBrowserStorageState.value = saveVcfInBrowserStorageState.value === "1" ? "0" : "1";
+
+  if (saveVcfInBrowserStorageState.value === "0") {
+    localStorage.removeItem("vcfConfiguration");
+    localStorage.removeItem("vcfUpdated");
+  }
+};
+
+onMounted(() => {
+  if (!saveVcfInBrowserStorageState.value) {
+    saveVcfInBrowserStorageState.value = "1";
+  }
+});
+
+watch(
+    () => saveVcfInBrowserStorageState.value,
+    (saveVcfInBrowserStorageStateSetting) => {
+      localStorage.setItem("saveVcfLocal", saveVcfInBrowserStorageStateSetting)
+    }
+);
+
+const hasReadLocalStorageNotice = ref(Boolean(Number(localStorage.getItem("hasReadLocalStorageNotice"))) ?? false);
+
+const dismissLocalStorageNotice = () => {
+  const result = window.confirm('Are you sure you want to dismiss this message? You will never see it again.');
+  if (result) {
+    hasReadLocalStorageNotice.value = true;
+    localStorage.setItem("hasReadLocalStorageNotice", "1");
+  }
+};
 
 const VCF = useVcfConfiguration();
 

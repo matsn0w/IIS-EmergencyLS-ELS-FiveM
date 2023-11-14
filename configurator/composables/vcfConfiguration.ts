@@ -4,6 +4,7 @@ import {flashType} from "~/types/flash";
 import {staticType} from "~/types/static";
 import {patternType} from "~/types/patterns";
 import {Ref} from "vue";
+import {DateTime} from "luxon";
 
 const defaultVcfConfig: vcfConfig = {
   flashID: 1,
@@ -78,13 +79,14 @@ const defaultVcfConfig: vcfConfig = {
     flashes: [],
   },
 } as vcfConfig
+const luxon = DateTime
 
 export const useVcfConfiguration = (): Ref<vcfConfig> => {
   return useState("vcfConfiguration", () => getVcfConfig());
 };
 
 const getVcfConfig = (): vcfConfig => {
-  if (localStorage.getItem("vcfConfiguration") !== null) {
+  if (localStorage.getItem("vcfConfiguration") !== null && localStorage.getItem("saveVcfLocal") === "1") {
     return JSON.parse(localStorage.getItem("vcfConfiguration") as string) as vcfConfig;
   } else {
     return defaultVcfConfig
@@ -92,6 +94,7 @@ const getVcfConfig = (): vcfConfig => {
 }
 
 watch(useVcfConfiguration().value, (value) => {
+  localStorage.setItem("vcfUpdate", String(luxon.now().toUnixInteger()))
   localStorage.setItem("vcfConfiguration", JSON.stringify(value));
 })
 
