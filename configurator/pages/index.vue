@@ -11,22 +11,10 @@
         <SunIcon class="w-4 h-4" v-if="darkModeState === 'dark'" />
         <MoonIcon class="w-4 h-4" v-else />
       </button>
-      <button
+      <LocalStorageComponent
+          :state="saveVcfInBrowserStorageState"
           @click="toggleSaveVcfInBrowserStorage"
-          class="blue outlined p-3"
-      >
-        <InboxArrowDownIcon class="w-4 h-4" v-if="saveVcfInBrowserStorageState === '1'" />
-        <template v-else>
-          <div class="relative">
-            <InboxIcon
-                class="w-4 h-4"
-            />
-            <XMarkIcon
-                class="w-4 h-4 absolute top-0 left-0 !text-white"
-            />
-          </div>
-        </template>
-      </button>
+      />
     </div>
   </div>
 
@@ -46,23 +34,11 @@
           </div>
           <div class="mt-4">
             <div class="-mx-2 -my-1.5 flex gap-4">
-              <button
+              <LocalStorageComponent
+                  :state="vcfLocalStorageState"
                   @click="toggleSaveVcfInBrowserStorage"
-                  class="blue p-3 flex items-center !text-white"
-              >
-                <InboxArrowDownIcon class="w-4 h-4" v-if="saveVcfInBrowserStorageState === '1'" />
-                <template v-else>
-                  <div class="relative">
-                    <InboxIcon
-                        class="w-4 h-4"
-                    />
-                    <XMarkIcon
-                        class="w-4 h-4 absolute top-0 left-0"
-                    />
-                  </div>
-                </template>
-                <span class="ml-2">{{saveVcfInBrowserStorageState ==='1' ? 'Disable' : 'Enable'}} local VCF storage</span>
-              </button>
+                  :isForNotice="true"
+              />
               <button
                   @click="onResetVcfConfiguration"
                   class="amber py-2 px-4"
@@ -128,6 +104,7 @@ import {
   XMarkIcon,
 } from "@heroicons/vue/24/solid";
 import {resetVcfConfiguration} from "~/composables/vcfConfiguration";
+import LocalStorageComponent from "~/components/LocalStorageComponent.vue";
 
 const onResetVcfConfiguration = () => {
   const result = window.confirm('Are you sure you want to reset? All changes to the VCF will be lost.');

@@ -12,10 +12,10 @@
         />
         Use&nbsp;
         <a
-          class="underline"
+          class="underline flex items-center"
           href="https://github.com/Walsheyy/WMServerSirens"
           target="_blank"
-          >WMServerSirens</a
+          >WMServerSirens <ArrowTopRightOnSquareIcon class=" ml-2 w-4 h-auto" /></a
         >
       </label>
     </header>
@@ -67,5 +67,58 @@
 </template>
 
 <script setup>
+import { ArrowTopRightOnSquareIcon } from "@heroicons/vue/24/solid";
+import {defaultVcfConfig} from "~/composables/vcfConfiguration";
+
 const VCF = useVcfConfiguration();
+
+const natoAlphabet = [
+  'ALPHA',
+  'BRAVO',
+  'CHARLIE',
+  'DELTA',
+  'ECHO',
+  'FOXTROT',
+  'GOLF',
+  'HOTEL',
+  'INDIA',
+  'JULIETT',
+  'KILO',
+  'LIMA',
+  'MIKE',
+  'NOVEMBER',
+  'OSCAR',
+  'PAPA',
+  'QUEBEC',
+  'ROMEO',
+  'SIERRA',
+  'TANGO',
+  'UNIFORM',
+  'VICTOR',
+  'WHISKEY',
+  'X-RAY',
+  'YANKEE',
+  'ZULU'
+]
+
+watch(
+    () => VCF.value.configuration.useServerSirens,
+    () => {
+      if (VCF.value.configuration.useServerSirens) {
+        let iterations = 0
+        VCF.value.configuration.sounds.forEach((sound) => {
+          if (!['MainHorn', 'NineMode'].includes(sound.name)) {
+            sound.audioString = `SIREN_${natoAlphabet[iterations]}`;
+            iterations++;
+          }
+        })
+      } else {
+        VCF.value.configuration.sounds.forEach((sound) => {
+          if (!['MainHorn', 'NineMode'].includes(sound.name)) {
+            sound.audioString = defaultVcfConfig.configuration.sounds.find((defaultSound) => defaultSound.name === sound.name).audioString;
+          }
+        })
+      }
+    }
+)
 </script>

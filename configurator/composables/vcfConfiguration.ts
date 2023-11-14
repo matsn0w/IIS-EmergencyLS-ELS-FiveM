@@ -6,7 +6,7 @@ import {patternType} from "~/types/patterns";
 import {Ref} from "vue";
 import {DateTime} from "luxon";
 
-const defaultVcfConfig: vcfConfig = {
+export const defaultVcfConfig: vcfConfig = {
   flashID: 1,
   configuration: {
     author: null,
