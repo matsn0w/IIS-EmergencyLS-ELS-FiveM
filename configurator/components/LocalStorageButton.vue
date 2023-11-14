@@ -24,8 +24,8 @@ export default defineComponent({
 <template>
   <button
       @click="$emit('click')"
-      class="blue p-3 flex items-center"
-      :class="isForNotice ? '!text-white' : 'outlined'"
+      class="blue flex items-center"
+      :class="isForNotice ? '!text-white p-2' : 'outlined p-3'"
   >
     <InboxArrowDownIcon class="w-4 h-4" v-if="state === '1'" />
     <template v-else>

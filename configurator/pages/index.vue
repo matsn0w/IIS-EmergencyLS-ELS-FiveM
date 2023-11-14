@@ -11,7 +11,7 @@
         <SunIcon class="w-4 h-4" v-if="darkModeState === 'dark'" />
         <MoonIcon class="w-4 h-4" v-else />
       </button>
-      <LocalStorageComponent
+      <LocalStorageButton
           :state="saveVcfInBrowserStorageState"
           @click="toggleSaveVcfInBrowserStorage"
       />
@@ -34,14 +34,14 @@
           </div>
           <div class="mt-4">
             <div class="-mx-2 -my-1.5 flex gap-4">
-              <LocalStorageComponent
+              <LocalStorageButton
                   :state="vcfLocalStorageState"
                   @click="toggleSaveVcfInBrowserStorage"
                   :isForNotice="true"
               />
               <button
                   @click="onResetVcfConfiguration"
-                  class="amber py-2 px-4"
+                  class="amber p-2"
               >
                 Reset VCF
               </button>
@@ -104,7 +104,7 @@ import {
   XMarkIcon,
 } from "@heroicons/vue/24/solid";
 import {resetVcfConfiguration} from "~/composables/vcfConfiguration";
-import LocalStorageComponent from "~/components/LocalStorageComponent.vue";
+import LocalStorageButton from "~/components/LocalStorageButton.vue";
 
 const onResetVcfConfiguration = () => {
   const result = window.confirm('Are you sure you want to reset? All changes to the VCF will be lost.');
