@@ -1,19 +1,21 @@
 function ParseVCF(xml, fileName)
 
-    local vcf = {}
-    fileName = string.sub(fileName, 1, -5)
-
-    vcf.patterns = {}
-    vcf.patterns.primary = {}
-    vcf.patterns.secondary = {}
-    vcf.patterns.rearreds = {}
-    vcf.extras = {}
-    vcf.miscs = {}
-    vcf.statics = {
-        extras = {},
-        miscs = {},
+    local vcf = {
+        patterns: {
+            primary: {},
+            secondary: {},
+            rearreds: {},
+        },
+        extras: {},
+        miscs: {},
+        statics: {
+            extras: {},
+            miscs: {},
+        },
+        sounds: {},
     }
-    vcf.sounds = {}
+
+    fileName = string.sub(fileName, 1, -5)
 
     for i = 1, #xml.root.el do
 
@@ -34,39 +36,52 @@ function ParseVCF(xml, fileName)
                     -- extra should always have a leading zero here
                     local extra = tonumber(string.sub(elem.name, -2))
 
-                    vcf.extras[extra] = {}
-                    vcf.extras[extra].enabled = elem.attr['IsElsControlled'] == 'true'
-                    vcf.extras[extra].env_light = false
-                    vcf.extras[extra].env_pos = {}
-                    vcf.extras[extra].env_pos['x'] = 0
-                    vcf.extras[extra].env_pos['y'] = 0
-                    vcf.extras[extra].env_pos['z'] = 0
-                    vcf.extras[extra].env_color = 'RED'
+                    vcf.extras[extra] = {
+                        enabled: true,
+                        env_light: false,
+                        env_pos: {
+                            x: 0,
+                            y: 0,
+                            z: 0,
+                        },
+                        env_color: 'RED',
+                    }
 
                     if elem.attr['AllowEnvLight'] == 'true' then
                         vcf.extras[extra].env_light = true
-                        vcf.extras[extra].env_pos['x'] = tonumber(elem.attr['OffsetX'] or 0.0)
-                        vcf.extras[extra].env_pos['y'] = tonumber(elem.attr['OffsetY'] or 0.0)
-                        vcf.extras[extra].env_pos['z'] = tonumber(elem.attr['OffsetZ'] or 0.0)
+                        vcf.extras[extra].env_pos = {
+                            x: tonumber(elem.attr['OffsetX'] or 0.0),
+                            y: tonumber(elem.attr['OffsetY'] or 0.0),
+                            z: tonumber(elem.attr['OffsetZ'] or 0.0),
+                        }
                         vcf.extras[extra].env_color = string.upper(elem.attr['Color'] or 'RED')
+                    end
+
+                    -- backwards compatibility for VCF's without 'IsElsControlled' tag	
+                    if elem.attr['IsElsControlled'] ~= nil then
+                        vcf.extras[extra].enabled = elem.attr['IsElsControlled'] == 'true'
                     end
                 elseif string.find(elem.name, 'Misc', 1) then
                     local misc = ConvertMiscNameToId(string.sub(elem.name, -1))
 
-                    vcf.miscs[misc] = {}
-                    vcf.miscs[misc].enabled = elem.attr['IsElsControlled'] == 'true'
-                    vcf.miscs[misc].env_light = false
-                    vcf.miscs[misc].env_pos = {}
-                    vcf.miscs[misc].env_pos['x'] = 0
-                    vcf.miscs[misc].env_pos['y'] = 0
-                    vcf.miscs[misc].env_pos['z'] = 0
-                    vcf.miscs[misc].env_color = 'RED'
+                    vcf.miscs[misc] = {
+                        enabled: true,
+                        env_light: false,
+                        env_pos: {
+                            x: 0,
+                            y: 0,
+                            z: 0,
+                        },
+                        env_color: 'RED',
+                    }
 
                     if elem.attr['AllowEnvLight'] == 'true' then
                         vcf.miscs[misc].env_light = true
-                        vcf.miscs[misc].env_pos['x'] = tonumber(elem.attr['OffsetX'] or 0.0)
-                        vcf.miscs[misc].env_pos['y'] = tonumber(elem.attr['OffsetY'] or 0.0)
-                        vcf.miscs[misc].env_pos['z'] = tonumber(elem.attr['OffsetZ'] or 0.0)
+                        vcf.miscs[misc].env_pos = {
+                            x: tonumber(elem.attr['OffsetX'] or 0.0),
+                            y: tonumber(elem.attr['OffsetY'] or 0.0),
+                            z: tonumber(elem.attr['OffsetZ'] or 0.0),
+                        }
                         vcf.miscs[misc].env_color = string.upper(elem.attr['Color'] or 'RED')
                     end
                 end
