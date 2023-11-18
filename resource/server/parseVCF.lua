@@ -1,18 +1,18 @@
 function ParseVCF(xml, fileName)
 
     local vcf = {
-        patterns: {
-            primary: {},
-            secondary: {},
-            rearreds: {},
+        patterns = {
+            primary = {},
+            secondary = {},
+            rearreds = {},
         },
-        extras: {},
-        miscs: {},
-        statics: {
-            extras: {},
-            miscs: {},
+        extras = {},
+        miscs = {},
+        statics = {
+            extras = {},
+            miscs = {},
         },
-        sounds: {},
+        sounds = {},
     }
 
     fileName = string.sub(fileName, 1, -5)
@@ -37,22 +37,22 @@ function ParseVCF(xml, fileName)
                     local extra = tonumber(string.sub(elem.name, -2))
 
                     vcf.extras[extra] = {
-                        enabled: true,
-                        env_light: false,
-                        env_pos: {
-                            x: 0,
-                            y: 0,
-                            z: 0,
+                        enabled = true,
+                        env_light = false,
+                        env_pos = {
+                            x = 0,
+                            y = 0,
+                            z = 0,
                         },
-                        env_color: 'RED',
+                        env_color = 'RED',
                     }
 
                     if elem.attr['AllowEnvLight'] == 'true' then
                         vcf.extras[extra].env_light = true
                         vcf.extras[extra].env_pos = {
-                            x: tonumber(elem.attr['OffsetX'] or 0.0),
-                            y: tonumber(elem.attr['OffsetY'] or 0.0),
-                            z: tonumber(elem.attr['OffsetZ'] or 0.0),
+                            x = tonumber(elem.attr['OffsetX'] or 0.0),
+                            y = tonumber(elem.attr['OffsetY'] or 0.0),
+                            z = tonumber(elem.attr['OffsetZ'] or 0.0),
                         }
                         vcf.extras[extra].env_color = string.upper(elem.attr['Color'] or 'RED')
                     end
@@ -65,22 +65,22 @@ function ParseVCF(xml, fileName)
                     local misc = ConvertMiscNameToId(string.sub(elem.name, -1))
 
                     vcf.miscs[misc] = {
-                        enabled: true,
-                        env_light: false,
-                        env_pos: {
-                            x: 0,
-                            y: 0,
-                            z: 0,
+                        enabled = true,
+                        env_light = false,
+                        env_pos = {
+                            x = 0,
+                            y = 0,
+                            z = 0,
                         },
-                        env_color: 'RED',
+                        env_color = 'RED',
                     }
 
                     if elem.attr['AllowEnvLight'] == 'true' then
                         vcf.miscs[misc].env_light = true
                         vcf.miscs[misc].env_pos = {
-                            x: tonumber(elem.attr['OffsetX'] or 0.0),
-                            y: tonumber(elem.attr['OffsetY'] or 0.0),
-                            z: tonumber(elem.attr['OffsetZ'] or 0.0),
+                            x = tonumber(elem.attr['OffsetX'] or 0.0),
+                            y = tonumber(elem.attr['OffsetY'] or 0.0),
+                            z = tonumber(elem.attr['OffsetZ'] or 0.0),
                         }
                         vcf.miscs[misc].env_color = string.upper(elem.attr['Color'] or 'RED')
                     end
