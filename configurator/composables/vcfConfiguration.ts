@@ -11,84 +11,86 @@ import type { Ref } from "vue";
 import { DateTime } from "luxon";
 const config = useRuntimeConfig();
 
-export const defaultVcfConfig: vcfConfig = {
-  flashID: 1,
-  configuration: {
-    author: null,
-    description: null,
-    version: config.public.version,
-    lightables: [],
-    statics: [],
-    useServerSirens: false,
-    sounds: [
-      {
-        name: "MainHorn",
-        allowUse: true,
-        audioString: "SIRENS_AIRHORN",
-        soundSet: null,
-      },
-      {
-        name: "NineMode",
-        allowUse: false,
-      },
-      {
-        name: "SrnTone1",
-        allowUse: true,
-        audioString: "VEHICLES_HORNS_SIREN_1",
-        soundSet: "DLC_WMSIRENS_SOUNDSET",
-      },
-      {
-        name: "SrnTone2",
-        allowUse: true,
-        audioString: "VEHICLES_HORNS_SIREN_2",
-        soundSet: "DLC_WMSIRENS_SOUNDSET",
-      },
-      {
-        name: "SrnTone3",
-        allowUse: true,
-        audioString: "VEHICLES_HORNS_POLICE_WARNING",
-        soundSet: "DLC_WMSIRENS_SOUNDSET",
-      },
-      {
-        name: "SrnTone4",
-        allowUse: true,
-        audioString: "VEHICLES_HORNS_AMBULANCE_WARNING",
-        soundSet: "DLC_WMSIRENS_SOUNDSET",
-      },
-    ],
-    patterns: [
-      {
-        name: "PRIMARY",
-        isEmergency: true,
-        flashHighBeam: false,
-        enableWarningBeep: false,
-        loopPreview: true,
-        isPlayingPreview: false,
-      },
-      {
-        name: "SECONDARY",
-        isEmergency: true,
-        flashHighBeam: false,
-        enableWarningBeep: false,
-        loopPreview: true,
-        isPlayingPreview: false,
-      },
-      {
-        name: "REARREDS",
-        isEmergency: true,
-        flashHighBeam: false,
-        enableWarningBeep: false,
-        loopPreview: true,
-        isPlayingPreview: false,
-      },
-    ],
-    flashes: [],
-  },
+export const defaultVcfConfig = () => {
+  return {
+    flashID: 1,
+    configuration: {
+      author: null,
+      description: null,
+      version: config.public.version,
+      lightables: [],
+      statics: [],
+      useServerSirens: false,
+      sounds: [
+        {
+          name: "MainHorn",
+          allowUse: true,
+          audioString: "SIRENS_AIRHORN",
+          soundSet: null,
+        },
+        {
+          name: "NineMode",
+          allowUse: false,
+        },
+        {
+          name: "SrnTone1",
+          allowUse: true,
+          audioString: "VEHICLES_HORNS_SIREN_1",
+          soundSet: "DLC_WMSIRENS_SOUNDSET",
+        },
+        {
+          name: "SrnTone2",
+          allowUse: true,
+          audioString: "VEHICLES_HORNS_SIREN_2",
+          soundSet: "DLC_WMSIRENS_SOUNDSET",
+        },
+        {
+          name: "SrnTone3",
+          allowUse: true,
+          audioString: "VEHICLES_HORNS_POLICE_WARNING",
+          soundSet: "DLC_WMSIRENS_SOUNDSET",
+        },
+        {
+          name: "SrnTone4",
+          allowUse: true,
+          audioString: "VEHICLES_HORNS_AMBULANCE_WARNING",
+          soundSet: "DLC_WMSIRENS_SOUNDSET",
+        },
+      ],
+      patterns: [
+        {
+          name: "PRIMARY",
+          isEmergency: true,
+          flashHighBeam: false,
+          enableWarningBeep: false,
+          loopPreview: true,
+          isPlayingPreview: false,
+        },
+        {
+          name: "SECONDARY",
+          isEmergency: true,
+          flashHighBeam: false,
+          enableWarningBeep: false,
+          loopPreview: true,
+          isPlayingPreview: false,
+        },
+        {
+          name: "REARREDS",
+          isEmergency: true,
+          flashHighBeam: false,
+          enableWarningBeep: false,
+          loopPreview: true,
+          isPlayingPreview: false,
+        },
+      ],
+      flashes: [],
+    },
+  }
 };
 const luxon = DateTime;
 
 export const useVcfConfiguration = (): Ref<vcfConfig> => {
-  return useState("vcfConfiguration", () => ({...getVcfConfig()}));
+  return useState("vcfConfiguration", () => (getVcfConfig() as vcfConfig));
 };
 
 const getVcfConfig = (): vcfConfig => {
@@ -100,7 +102,7 @@ const getVcfConfig = (): vcfConfig => {
       localStorage.getItem("vcfConfiguration") as string
     ) as vcfConfig;
   } else {
-    return defaultVcfConfig;
+    return defaultVcfConfig()
   }
 };
 
@@ -111,8 +113,8 @@ watch(useVcfConfiguration().value, (value) => {
 
 export const resetVcfConfiguration = () => {
   // To make sure we trigger the watch
-  useVcfConfiguration().value.flashID = defaultVcfConfig.flashID;
-  useVcfConfiguration().value.configuration = defaultVcfConfig.configuration;
+  useVcfConfiguration().value.flashID = defaultVcfConfig().flashID;
+  useVcfConfiguration().value.configuration = defaultVcfConfig().configuration;
 };
 
 const getFlashIndex = (flash: flashType) => {

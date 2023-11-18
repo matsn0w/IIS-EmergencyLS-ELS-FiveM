@@ -117,7 +117,7 @@ watch(
       } else {
         VCF.value.configuration.sounds.forEach((sound) => {
           if (!['MainHorn', 'NineMode'].includes(sound.name)) {
-            sound.audioString = defaultVcfConfig.configuration.sounds.find((defaultSound) => defaultSound.name === sound.name).audioString;
+            sound.audioString = defaultVcfConfig().configuration.sounds.find((defaultSound) => defaultSound.name === sound.name).audioString;
           }
         })
       }

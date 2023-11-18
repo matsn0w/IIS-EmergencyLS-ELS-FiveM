@@ -17,7 +17,10 @@ export default defineNuxtConfig({
   plugins: [
       'plugins/luxon'
   ],
-  modules: ["@nuxtjs/tailwindcss", "@nuxt/devtools"],
+  modules: [
+    "@nuxtjs/tailwindcss", 
+    "@nuxt/devtools",
+  ],
   runtimeConfig: {
     public: {
       version: pkg.version,
