@@ -1,10 +1,10 @@
 # Vehicle Configuration File (VCF)
 
-A Vehicle Configuration File, shortly VCF, is an XML file which contains all ELS-related configurations of a specific vehicle. Each ELS-enabled vehicle must have a configuration file set up in order for ELS to know how to handle it.
+A Vehicle Configuration File, shortly VCF, is an XML file which contains all ELS-related configuration for a specific vehicle. Each ELS-enabled vehicle must have its own configuration file set up in order for ELS to know how to handle it.
 
-A VCF consists of 3 main sections:
+A VCF consists of 4 main sections:
 
-- extras (`EOVERRIDE`)
+- extras and miscs (`EOVERRIDE`)
 - statics (`STATIC`)
 - sounds (`SOUNDS`)
 - patterns (`PATTERN`)
@@ -16,22 +16,9 @@ Alternatively, you can use [this convenient graphical interface](https://matsn0w
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <!-- ELS VEHICLE CONFIGURATION FILE -->
-<vcfroot Description="Bare bone configuration file" Author="matsn0w" >
-    <!-- EXTRAS CONFIGURATION -->
-    <EOVERRIDE>
-        <Extra01 />
-        <Extra02 />
-        <Extra03 />
-        <Extra04 />
-        <Extra05 />
-        <Extra06 />
-        <Extra07 />
-        <Extra08 />
-        <Extra09 />
-        <Extra10 />
-        <Extra11 />
-        <Extra12 />
-    </EOVERRIDE>
+<vcfroot Description="Bare bone configuration file" Author="matsn0w" Version="1.1.0">
+    <!-- LIGHTS CONFIGURATION -->
+    <EOVERRIDE></EOVERRIDE>
 
     <!-- STATIC EXTRAS -->
     <STATIC></STATIC>
@@ -55,34 +42,35 @@ Alternatively, you can use [this convenient graphical interface](https://matsn0w
 </vcfroot>
 ```
 
-## Extras: `EOVERRIDE`
+## Extras and miscs: `EOVERRIDE`
 
-This section defines the configuration of the extras that live on the vehicle.
+This section defines the configuration of the extras and miscs that live on the vehicle.
 
-These extra parts are a bit like vehicle modifications (you can often change the look of the wheels for example), but with the difference that they can be enabled or disabled. This means that you can choose whether you want to see it on the vehicle. Normally, the extra parts are used for optional parts like the cupholders in the Blista. A clever guy once came up with the idea of using these extras to create more dynamic light bars on emergency vehicles. This gives the player much more options and flexibility compared to the native lightbars. Now, advanced configurations with fancy traffic advisors and takedown lights are possible. Nice!
+These parts are a bit like vehicle modifications (you can often change the look of the wheels for example), but with the difference that they can be enabled or disabled. This means that you can choose whether you want to see it on the vehicle. Normally, these parts are used for optional features like the cupholders in the Blista. A clever guy once came up with the idea of using these to create more dynamic light bars on emergency vehicles. This gives the player much more options and flexibility compared to the native lightbars. Now, advanced configurations with fancy traffic advisors and takedown lights are possible. Nice!
 
-The only limitation is the amount of extras that can be placed on a vehicle. The game developers limited this to 12 extras, each with a number from 1 to 12. This means you can have a maximum of 12 different lights on your vehicle, but you can sometimes combine multiple light sources into one extra. The configuration depends on the vehicle and needs to be set up correctly by the author of it.
+The only limitation is the amount of extras and miscs that can be placed on a vehicle. The game developers limited this to 12 extras (numbered from 1 to 12) and 26 miscs (a-z). This means you can have a maximum of 38 different lights on your vehicle. You can, if you want, combine multiple light sources into one extra or misc. The configuration depends on the vehicle and needs to be set up correctly by it's the author. **This means that every car is unique, and so is the corresponding VCF!**
 
-In the `EOVERRIDE` section, you can define each extra on your vehicle and configure some options for each of them. Consult the author of the vehicle if you are unsure about the layout of the vehicle.
+Using miscs as light source is a little more advanced feature, read more about it [here](miscs.md).
 
-As you can see in the example below, you should define each extra as `ExtraXX` where XX is the ID of the extra. ID's lower than 10 must have a leading 0. Most options are optional and will fall back to a default value when not specified. You can omit an option, but it's totally OK to specify them anyway. See the configuration table for an explanation of each option.
+In the `EOVERRIDE` section, you can define the extras and miscs on your vehicle and configure some options for each of them. Consult the author of the vehicle if you are unsure about the layout of the vehicle.
+
+As you can see in the example below, you should define each extra as `ExtraXX` where XX is the ID of the extra. ID's lower than 10 must have a leading 0. Most options are optional and will fall back to a default value when not specified. You can omit an option, but it's totally OK to specify them anyway. See the configuration table for an explanation of each option. Miscs are defined as `MiscX` where X is any letter of the alphabet.
+
+You should only define extras and miscs that are controlled by MISS-ELS. MISS-ELS won't touch any others.
 
 Example configuration:
 
 ```xml
 <EOVERRIDE>
-    <Extra01 IsElsControlled="true" AllowEnvLight="true" Color="blue" OffsetX="-3.0" />
-    <Extra02 IsElsControlled="false" />
-    <Extra03 IsElsControlled="false" />
-    <Extra04 IsElsControlled="true" AllowEnvLight="true" Color="blue" OffsetX="3.0" />
-    <Extra05 IsElsControlled="true" AllowEnvLight="true" Color="amber" OffsetX="-3.0" OffsetY="-3.0" OffsetZ="3.0" />
-    <Extra06 IsElsControlled="true" AllowEnvLight="true" Color="amber" OffsetX="-4.7" OffsetZ="0.0" />
-    <Extra07 IsElsControlled="true" AllowEnvLight="false" />
-    <Extra08 IsElsControlled="true" />
-    <Extra09 IsElsControlled="false" />
-    <Extra10 IsElsControlled="false" />
-    <Extra11 IsElsControlled="true" AllowEnvLight="true" Color="green" />
-    <Extra12 IsElsControlled="true" AllowEnvLight="true" Color="white" OffsetY="5.0" />
+    <Extra01 AllowEnvLight="true" Color="blue" />
+    <Extra02 AllowEnvLight="true" Color="blue" />
+    <Extra03 AllowEnvLight="true" Color="blue" />
+    <Extra04 AllowEnvLight="true" Color="blue" />
+    <Extra07 AllowEnvLight="true" Color="red" />
+    <Extra08 AllowEnvLight="true" Color="red" />
+    <Extra09 AllowEnvLight="true" Color="red" OffsetX="0.40" OffsetY="-0.80" OffsetZ="0.40" />
+    <Extra11 AllowEnvLight="false" />
+    <Extra12 />
 </EOVERRIDE>
 ```
 
@@ -90,18 +78,17 @@ Options:
 
 | Name                      | Type    | Values                                   | Default | Description                                                                                                                                                               |
 | ------------------------- | ------- | ---------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| IsElsControlled           | boolean | `true`, `false`                          | `false` | Whether the extra should be controlled by ELS or not. ELS will ignore the extra when this is set to `false`.                                                              |
 | AllowEnvLight             | boolean | `true`, `false`                          | `false` | Whether environment lights are enabled or not. This is better known as 'flashing on the walls'.                                                                           |
 | Color                     | string  | `red`, `green`, `blue`, `white`, `amber` | `red`   | Specifies the color of environment lights (reflections). Should be set when AllowEnvLight is set to true.                                                                 |
 | OffsetX, OffsetY, OffsetZ | float   | a positive or negative decimal number    | `0.0`   | Optionally specifies an offset for the environment light on the x, y or z-axis, relative to the origin of the light source. This will 'move' the reflection of the light. |
 
-## Static extras: `STATIC`
+## Static extras and miscs: `STATIC`
 
-This section allows you to specify which extras on your vehicle are static. All extras defined here are enabled in a special menu (`U` key by default). In this menu, you can quickly enable or disable the extra. You can also define a custom name for the extra to easily identify it. This will be visible in the menu.
+This section allows you to specify which extras and/or miscs on your vehicle are static. All statics defined here are enabled in a special menu (`U` key by default). In this menu, you can quickly enable or disable the static. You can also define a custom name to easily identify it. This will be visible in the menu.
 
-If you do not specify a Name, the menu will display it as 'Extra XX' (where XX is the ID of the extra).
+If you do not specify a `Name`, the menu will display it as 'Extra XX' (where XX is the ID of the extra) or 'Misc X' (where X is the ID of the misc).
 
-Note that you can still configure the extras in the `EOVERRIDE` section. Setting an environment light will still work for example. It's recommended to set IsElsControlled to `false`, so the extra won't be turned off when you activate a light stage.
+Note that you must still configure the extra/misc in the `EOVERRIDE` section.
 
 Example:
 
@@ -109,14 +96,15 @@ Example:
 <STATIC>
     <Extra11 Name="Bullbar" />
     <Extra12 Name="Takedown lights" />
+    <MiscK Name="Cup of coffee" />
 </STATIC>
 ```
 
 Options:
 
-| Name | Type   | Values            | Default    | Description                          |
-| ---- | ------ | ----------------- | ---------- | ------------------------------------ |
-| Name | string | any name you like | `Extra XX` | A human readable name for the extra. |
+| Name | Type   | Values            | Default                | Description                           |
+| ---- | ------ | ----------------- | ---------------------- | ------------------------------------- |
+| Name | string | any name you like | `Extra XX` or `Misc X` | A human readable name for the static. |
 
 ## Sounds: `SOUNDS`
 
@@ -126,7 +114,7 @@ If you are using [WMServerSirens](https://github.com/Walsheyy/WMServerSirens), y
 
 Now, you might ask yourself: how do I know which sounds I can use? Well... it's complicated. There doesn't seem to be an unequivocal answer to that question. You can read [this forum topic](gtaforums.com/topic/795622-audio-for-mods), especially [this comment](https://gtaforums.com/topic/795622-audio-for-mods/?do=findComment&comment=1068658778) for some guidelines.
 
-*Note that you can use WMServerSirens and native game sounds mixed together (do not specify a SoundSet to use a native game sound).*
+_Note that you can use WMServerSirens and native game sounds mixed together (do not specify a SoundSet to use a native game sound)._
 
 Example with WMServerSirens:
 
@@ -157,11 +145,11 @@ Example with native game sounds:
 Options:
 
 **MainHorn**:
-| Name        | Type    | Values                    | Default          | Description                                                                                                                                        |
+| Name | Type | Values | Default | Description |
 | ----------- | ------- | ------------------------- | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AllowUse    | boolean | `true`, `false`           | `false`          | Whether the custom horn is enabled or not. The game's horn for the vehicle will be used (different depending on the `vehicles.meta` entry for it). |
-| AudioString | string  | name hash of sound to use | `SIRENS_AIRHORN` | The name of an audio to play. Must be compatible with the [`PLAY_SOUND_FROM_ENTITY`](https://docs.fivem.net/natives/?_0xE65F427EB70AB1ED) native.  |
-| SoundSet    | string  | name of sound bank to use | -                | The name of the sound set if using WMServerSirens.                                                                                                 |
+| AllowUse | boolean | `true`, `false` | `false` | Whether the custom horn is enabled or not. The game's horn for the vehicle will be used (different depending on the `vehicles.meta` entry for it). |
+| AudioString | string | name hash of sound to use | `SIRENS_AIRHORN` | The name of an audio to play. Must be compatible with the [`PLAY_SOUND_FROM_ENTITY`](https://docs.fivem.net/natives/?_0xE65F427EB70AB1ED) native. |
+| SoundSet | string | name of sound bank to use | - | The name of the sound set if using WMServerSirens. |
 
 **NineMode**:
 
@@ -187,13 +175,19 @@ The duration is measured in milliseconds. Flashes will be executed by appearance
 
 It's recommended to include an 'empty flash' at the bottom of each pattern to make the transition from last to first flash smooth.
 
+### Extra options
+
 You can optionally set `IsEmergency` to `false` if you don't want vehicles to pull over when you have that light stage activated.
+
+Also, you can set `FlashHighBeam` to `true` if you want your head lights to flash every .5 seconds. This is disabled by default. You can tweak the flash intensity in `config.lua`. By default, the intensity is set to `5.0`. The game default is `1.0`.
+
+Finally, you can toggle `EnableWarningBeep` to `true` to add a subtile warning beep sound to indicate that, for example, your stop sign is turned on. By default, this is `false`. You can tweak the length of the beep by editing `Config.WarningBeepDuration`. The length of the default sound is 2 seconds. If you replace the audio file, make sure to set the duration to the exact length of the beep (or even longer to add a delay).
 
 Pattern example:
 
 ```xml
 <PATTERN>
-    <PRIMARY>
+    <PRIMARY IsEmergency="true" FlashHighBeam="true" EnableWarningBeep="true">
         <Flash Duration="50" Extras="1,4" />
         <Flash Duration="50" />
         <Flash Duration="150" Extras="1,4" />
@@ -215,7 +209,7 @@ Pattern example:
         <Flash Duration="50" Extras="" />
     </SECONDARY>
 
-    <REARREDS IsEmergency="false">
+    <REARREDS IsEmergency="false" FlashHighBeam="false" EnableWarningBeep="false">
         <Flash Duration="1000" Extras="8" />
         <Flash Duration="250" />
         <Flash Duration="1000" Extras="7" />

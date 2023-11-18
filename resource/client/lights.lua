@@ -1,50 +1,143 @@
+local function ToggleExtra(vehicle, extra, toggle)
+    local value = toggle and 0 or 1
+
+    SetVehicleAutoRepairDisabled(vehicle, true)
+    SetVehicleExtra(vehicle, extra, value)
+end
+
+local function ToggleMisc(vehicle, misc, toggle)
+    SetVehicleModKit(vehicle, 0)
+    -- TODO: respect custom wheel setting
+    SetVehicleMod(vehicle, misc, toggle, false)
+end
+
 local function SetLightStage(vehicle, stage, toggle)
     local ELSvehicle = kjEnabledVehicles[vehicle]
     local VCFdata = kjxmlData[GetCarHash(vehicle)]
 
-    -- convert the given light stage to a pattern in the VCF
-    local pattern = ConvertStageToPattern(stage)
+    -- get the pattern data
+    local patternData = VCFdata.patterns[ConvertStageToPattern(stage)]
 
-    -- reset all extras
+    -- reset all extras and miscs
     TriggerEvent('kjELS:resetExtras', vehicle)
+    TriggerEvent('kjELS:resetMiscs', vehicle)
 
     -- set the light state
     ELSvehicle[stage] = toggle
 
-    if VCFdata.patterns[pattern].isEmergency then
+    if patternData.isEmergency then
         -- toggle the native siren ('emergency mode')
         SetVehicleSiren(vehicle, toggle)
     end
 
-    while ELSvehicle[stage] do
-        -- keep the engine on whilst the lights are activated
-        SetVehicleEngineOn(vehicle, true, true, false)
+    if (patternData.flashHighBeam) then
+        Citizen.CreateThread(function()
+            -- get the current vehicle lights state
+            local _, lightsOn, highbeamsOn = GetVehicleLightsState(vehicle)
 
-        local lastFlash = {}
+            -- turn the lights on to avoid flashing tail lights
+            if lightsOn == 0 then SetVehicleLights(vehicle, 2) end
 
-        for _, flash in ipairs(VCFdata.patterns[pattern]) do
-            if ELSvehicle[stage] then
-                for _, extra in ipairs(flash['extras']) do
-                    -- turn the extra on
-                    SetVehicleExtra(vehicle, extra, 0)
+            -- flash the high beam
+            while ELSvehicle[stage] do
+                if ELSvehicle.highBeamEnabled then
+                    SetVehicleFullbeam(vehicle, true)
+                    SetVehicleLightMultiplier(vehicle, Config.HighBeamIntensity or 5.0)
 
-                    -- save the extra as last flashed
-                    table.insert(lastFlash, extra)
+                    Wait(500)
+
+                    SetVehicleFullbeam(vehicle, false)
+                    SetVehicleLightMultiplier(vehicle, 1.0)
+
+                    Wait(500)
                 end
 
-                Citizen.Wait(flash.duration)
+                Wait(0)
             end
 
-            -- turn off the last flashed extras
-            for _, v in ipairs(lastFlash) do
-                SetVehicleExtra(vehicle, v, 1)
+            -- reset initial vehicle state
+            if lightsOn == 0 then SetVehicleLights(vehicle, 0) end
+            if highbeamsOn == 1 then SetVehicleFullbeam(vehicle, true) end
+
+            Wait(0)
+        end)
+    end
+
+    if patternData.enableWarningBeep then
+        Citizen.CreateThread(function()
+            while ELSvehicle[stage] do
+                -- play warning sound
+                SendNUIMessage({ transactionType = 'playSound', transactionFile = 'WarningBeep', transactionVolume = 0.2 })
+
+                -- this should be equal to the length of the audio file
+                Citizen.Wait((Config.WarningBeepDuration or 0) * 1000)
+            end
+        end)
+    end
+
+    Citizen.CreateThread(function()
+        while ELSvehicle[stage] do
+            -- keep the engine on whilst the lights are activated
+            SetVehicleEngineOn(vehicle, true, true, false)
+
+            local lastFlash = {
+                extras = {},
+                miscs = {},
+            }
+
+            for _, flash in ipairs(patternData) do
+                if ELSvehicle[stage] then
+                    for _, extra in ipairs(flash['extras']) do
+                        -- disable auto repairs
+                        SetVehicleAutoRepairDisabled(vehicle, true)
+
+                        -- turn the extra on
+                        ToggleExtra(vehicle, extra, true)
+
+                        -- save the extra as last flashed
+                        table.insert(lastFlash.extras, extra)
+                    end
+
+                    for _, misc in ipairs(flash['miscs']) do
+                        -- turn the misc on
+                        ToggleMisc(vehicle, misc, true)
+
+                        -- save the misc as last flashed
+                        table.insert(lastFlash.miscs, misc)
+                    end
+
+                    Citizen.Wait(flash.duration)
+                end
+
+                -- turn off the last flashed lights
+                for _, v in ipairs(lastFlash.extras) do
+                    -- disable auto repairs
+                    SetVehicleAutoRepairDisabled(vehicle, true)
+
+                    ToggleExtra(vehicle, v, false)
+                end
+
+                for _, v in ipairs(lastFlash.miscs) do
+                    ToggleMisc(vehicle, v, false)
+                end
+
+                lastFlash.extras = {}
+                lastFlash.miscs = {}
             end
 
-            lastFlash = {}
+            Citizen.Wait(0)
         end
 
-        Citizen.Wait(0)
-    end
+        Wait(0)
+    end)
+end
+
+local function StaticsIncludesExtra(model, extra)
+    return kjxmlData[model].statics.extras[extra] ~= nil
+end
+
+local function StaticsIncludesMisc(model, misc)
+    return kjxmlData[model].statics.miscs[misc] ~= nil
 end
 
 RegisterNetEvent('kjELS:resetExtras')
@@ -64,9 +157,36 @@ AddEventHandler('kjELS:resetExtras', function(vehicle)
     -- loop through all extra's
     for extra, info in pairs(kjxmlData[model].extras) do
         -- check if we can control this extra
-        if info.enabled == true then
+        if info.enabled == true and not StaticsIncludesExtra(model, extra) then
+            -- disable auto repairs
+            SetVehicleAutoRepairDisabled(vehicle, true)
+
             -- disable the extra
-            SetVehicleExtra(vehicle, extra, true)
+            ToggleExtra(vehicle, extra, false)
+        end
+    end
+end)
+
+RegisterNetEvent('kjELS:resetMiscs')
+AddEventHandler('kjELS:resetMiscs', function(vehicle)
+    if not vehicle then
+        CancelEvent()
+        return
+    end
+
+    local model = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle))
+
+    if not SetContains(kjxmlData, model) then
+        CancelEvent()
+        return
+    end
+
+    -- loop through all miscs
+    for misc, info in pairs(kjxmlData[model].miscs) do
+        -- check if we can control this misc
+        if info.enabled == true and not StaticsIncludesMisc(model, extra) then
+            -- disable the misc
+            ToggleMisc(vehicle, misc, false)
         end
     end
 end)
@@ -191,8 +311,9 @@ AddEventHandler('kjELS:updateIndicators', function(dir, toggle)
     end
 end)
 
-local function CreateEnviromentLight(vehicle, extra, offset, color)
-    local boneIndex = GetEntityBoneIndexByName(vehicle, 'extra_' .. extra)
+local function CreateEnviromentLight(vehicle, light, offset, color)
+    -- local boneIndex = GetEntityBoneIndexByName(vehicle, 'extra_' .. extra)
+    local boneIndex = GetEntityBoneIndexByName(vehicle, light.type .. '_' .. tostring(light.name))
     local coords = GetWorldPositionOfEntityBone(vehicle, boneIndex)
     local position = coords + offset
 
@@ -228,9 +349,26 @@ Citizen.CreateThread(function()
                 for extra, info in pairs(data.extras) do
                     if IsVehicleExtraTurnedOn(vehicle, extra) and info.env_light then
                         local offset = vector3(info.env_pos.x, info.env_pos.y, info.env_pos.z)
+                        local light = {
+                            type = 'extra',
+                            name = extra
+                        }
 
                         -- flash on walls
-                        CreateEnviromentLight(vehicle, extra, offset, info.env_color)
+                        CreateEnviromentLight(vehicle, light, offset, info.env_color)
+                    end
+                end
+
+                for misc, info in pairs(data.miscs) do
+                    if IsVehicleMiscTurnedOn(vehicle, misc) and info.env_light then
+                        local offset = vector3(info.env_pos.x, info.env_pos.y, info.env_pos.z)
+                        local light = {
+                            type = 'misc',
+                            name = ConvertMiscIdToName(misc)
+                        }
+
+                        -- flash on walls
+                        CreateEnviromentLight(vehicle, light, offset, info.env_color)
                     end
                 end
             end

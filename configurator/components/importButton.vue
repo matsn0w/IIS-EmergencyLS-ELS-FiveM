@@ -1,21 +1,21 @@
 <template>
-  <label class="import-button">
+  <button class="blue outlined px-4" type="button" @click="vcf.click()">
     Import Existing VCF
-    <input type="file" @change="loadVCF">
-  </label>
+  </button>
+
+  <input ref="vcf" class="hidden" type="file" @change="loadVCF" />
 </template>
 
-<script>
-export default {
-  name: 'ImportButton',
-  methods: {
-    loadVCF (ev) {
-      const file = ev.target.files[0]
-      const reader = new FileReader()
+<script setup>
+const vcf = ref(null);
 
-      reader.onload = e => this.$emit('load', e.target.result)
-      reader.readAsText(file)
-    }
-  }
-}
+const emit = defineEmits(["load"]);
+
+const loadVCF = (ev) => {
+  const file = ev.target.files[0];
+  const reader = new FileReader();
+
+  reader.onload = (e) => emit("load", e.target.result);
+  reader.readAsText(file);
+};
 </script>

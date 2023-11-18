@@ -5,17 +5,14 @@ Indicators = {
     hazard = false
 }
 
-local function HandleIndicators(vehicle)
-    -- only the driver can control the indicators
-    if not PedIsDriver(vehicle) then return end
-
-    local type = nil
-
-    if IsDisabledControlJustReleased(0, Config.KeyBinds['IndicatorHazard']) and IsUsingKeyboard(0) then type = 'hazard'
-    elseif IsDisabledControlJustReleased(0, Config.KeyBinds['IndicatorLeft']) and IsUsingKeyboard(0) then type = 'left'
-    elseif IsDisabledControlJustReleased(0, Config.KeyBinds['IndicatorRight']) and IsUsingKeyboard(0) then type = 'right' end
-
+local function HandleIndicators(type)
     if not type then return end
+
+    local ped = PlayerPedId()
+    local vehicle = GetVehiclePedIsUsing(ped)
+
+    -- only the driver can control the indicators
+    if not vehicle or not PedIsDriver(vehicle) then return end
 
     -- disable all other indicators
     if type ~= 'left' and Indicators.left then Indicators.left = false
@@ -30,9 +27,27 @@ local function HandleIndicators(vehicle)
     PlaySoundFrontend(-1, 'NAV_UP_DOWN', 'HUD_FRONTEND_DEFAULT_SOUNDSET', 1)
 end
 
-local function HandleHorn(vehicle)
+-- indicators are allowed on all vehicles
+if Config.Indicators then
+    RegisterCommand('MISS-ELS:toggle-indicator-hazard', function ()
+        HandleIndicators('hazard')
+    end)
+
+    RegisterCommand('MISS-ELS:toggle-indicator-left', function ()
+        HandleIndicators('left')
+    end)
+
+    RegisterCommand('MISS-ELS:toggle-indicator-right', function ()
+        HandleIndicators('right')
+    end)
+end
+
+local function HandleHorn()
+    local ped = PlayerPedId()
+    local vehicle = GetVehiclePedIsUsing(ped)
+
     -- only the driver can control the horn
-    if not PedIsDriver(vehicle) then return end
+    if not vehicle or not PedIsDriver(vehicle) then return end
 
     -- get the horn info from the VCF
     local mainHorn = kjxmlData[GetCarHash(vehicle)].sounds.mainHorn
@@ -55,14 +70,21 @@ local function HandleHorn(vehicle)
 end
 
 local function ToggleLights(vehicle, stage, toggle)
+    local ELSvehicle = kjEnabledVehicles[vehicle]
+
     -- turn light stage on or off based on the toggle
     TriggerEvent('kjELS:toggleLights', vehicle, stage, toggle)
 
-    -- the siren is always off when the lights are toggled
-    TriggerServerEvent('kjELS:setSirenState', 0)
+    -- turn siren off when all lights are off
+    if not ELSvehicle.primary and not ELSvehicle.secondary and not ELSvehicle.warning then
+        TriggerServerEvent('kjELS:setSirenState', 0)
+    end
 end
 
-local function HandleLightStage(vehicle, stage)
+local function HandleLightStage(stage)
+    local ped = PlayerPedId()
+    local vehicle = GetVehiclePedIsUsing(ped)
+
     if kjEnabledVehicles[vehicle][stage] then
         -- turn lights off
         ToggleLights(vehicle, stage, false)
@@ -77,7 +99,10 @@ local function HandleLightStage(vehicle, stage)
     end
 end
 
-local function HandleSiren(vehicle, siren)
+local function HandleSiren(siren)
+    local ped = PlayerPedId()
+    local vehicle = GetVehiclePedIsUsing(ped)
+
     -- siren only works in the primary light stage
     if not kjEnabledVehicles[vehicle].primary and not Config.SirenAlwaysAllowed then return end
 
@@ -111,7 +136,10 @@ local function HandleSiren(vehicle, siren)
     end
 end
 
-local function NextSiren(vehicle)
+local function NextSiren()
+    local ped = PlayerPedId()
+    local vehicle = GetVehiclePedIsUsing(ped)
+
     -- get the next siren
     local next = kjEnabledVehicles[vehicle].siren + 1
 
@@ -137,8 +165,62 @@ local function NextSiren(vehicle)
     end
 
     -- turn the siren on
-    HandleSiren(vehicle, next)
+    HandleSiren(next)
 end
+
+RegisterCommand('MISS-ELS:toggle-stage-primary', function ()
+    if not CanControlELS() then return end
+
+    HandleLightStage('primary')
+end)
+
+RegisterCommand('MISS-ELS:toggle-stage-secondary', function ()
+    if not CanControlELS() then return end
+
+    HandleLightStage('secondary')
+end)
+
+RegisterCommand('MISS-ELS:toggle-stage-warning', function ()
+    if not CanControlELS() then return end
+
+    HandleLightStage('warning')
+end)
+
+RegisterCommand('MISS-ELS:toggle-siren', function ()
+    if not CanControlELS() then return end
+
+    HandleSiren()
+end)
+
+RegisterCommand('MISS-ELS:toggle-siren-next', function ()
+    if not CanControlELS() then return end
+
+    NextSiren()
+end)
+
+RegisterCommand('MISS-ELS:toggle-siren-one', function ()
+    if not CanControlELS() then return end
+
+    HandleSiren(1)
+end)
+
+RegisterCommand('MISS-ELS:toggle-siren-two', function ()
+    if not CanControlELS() then return end
+
+    HandleSiren(2)
+end)
+
+RegisterCommand('MISS-ELS:toggle-siren-three', function ()
+    if not CanControlELS() then return end
+
+    HandleSiren(3)
+end)
+
+RegisterCommand('MISS-ELS:toggle-siren-four', function ()
+    if not CanControlELS() then return end
+
+    HandleSiren(4)
+end)
 
 AddEventHandler('onClientResourceStart', function(name)
     if not Config then
@@ -167,11 +249,6 @@ AddEventHandler('onClientResourceStart', function(name)
             local ped = PlayerPedId()
             local vehicle = GetVehiclePedIsUsing(ped)
 
-            if IsUsingKeyboard(0) then
-                -- indicators are allowed on all vehicles
-                if Config.Indicators then HandleIndicators(vehicle) end
-            end
-
             -- only run if player is in an ELS enabled vehicle and can control the sirens
             if IsELSVehicle(vehicle) and CanControlSirens(vehicle) then
                 -- conflicting controls
@@ -191,11 +268,6 @@ AddEventHandler('onClientResourceStart', function(name)
                     DisableControlAction(control[1], control[2], true)
                 end
 
-                -- disable all ELS keybinds
-                for _, control in pairs(Config.KeyBinds) do
-                    DisableControlAction(0, control, true)
-                end
-
                 -- set vehicle state
                 SetVehRadioStation(vehicle, 'OFF')
                 SetVehicleRadioEnabled(vehicle, false)
@@ -205,27 +277,13 @@ AddEventHandler('onClientResourceStart', function(name)
                 if kjEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
 
                 -- handle the horn
-                HandleHorn(vehicle)
+                HandleHorn()
 
-                if IsUsingKeyboard(0) then
-                    -- light stages
-                    if IsDisabledControlJustReleased(0, Config.KeyBinds['PrimaryLights']) then HandleLightStage(vehicle, 'primary')
-                    elseif IsDisabledControlJustReleased(0, Config.KeyBinds['SecondaryLights']) then HandleLightStage(vehicle, 'secondary')
-                    elseif IsDisabledControlJustReleased(0, Config.KeyBinds['MiscLights']) then HandleLightStage(vehicle, 'warning')
-                    end
-
-                    -- siren toggles
-                    if IsDisabledControlJustReleased(0, Config.KeyBinds['ActivateSiren']) then HandleSiren(vehicle)
-                    elseif IsDisabledControlJustReleased(0, Config.KeyBinds['NextSiren']) then NextSiren(vehicle)
-                    elseif IsDisabledControlJustReleased(0, Config.KeyBinds['Siren1']) then HandleSiren(vehicle, 1)
-                    elseif IsDisabledControlJustReleased(0, Config.KeyBinds['Siren2']) then HandleSiren(vehicle, 2)
-                    elseif IsDisabledControlJustReleased(0, Config.KeyBinds['Siren3']) then HandleSiren(vehicle, 3)
-                    elseif IsDisabledControlJustReleased(0, Config.KeyBinds['Siren4']) then HandleSiren(vehicle, 4)
-                    end
-                else -- on controller
-                    if IsDisabledControlJustReleased(1, 85 --[[ DPAD_LEFT ]]) then HandleLightStage(vehicle, 'primary')
-                    elseif IsDisabledControlJustReleased(1, 170 --[[ B ]]) then NextSiren(vehicle)
-                    elseif IsDisabledControlJustReleased(1, 173 --[[ DPAD_DOWN ]]) then HandleSiren(vehicle)
+                if not IsUsingKeyboard(0) then
+                    -- on controller
+                    if IsDisabledControlJustReleased(1, 85 --[[ DPAD_LEFT ]]) then HandleLightStage('primary')
+                    elseif IsDisabledControlJustReleased(1, 170 --[[ B ]]) then NextSiren()
+                    elseif IsDisabledControlJustReleased(1, 173 --[[ DPAD_DOWN ]]) then HandleSiren()
                     end
                 end
             end

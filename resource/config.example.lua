@@ -12,6 +12,9 @@ Config.EnvironmentalLights = {
     Intensity = 1.0, -- how intense the light source is
 }
 
+-- You can make the flashing high beams brighter. Set to 1.0 for GTA default
+Config.HighBeamIntensity = 5.0
+
 -- Whether vehicle passengers are allowed to control the lights and sirens
 Config.AllowPassengers = false
 
@@ -19,7 +22,6 @@ Config.AllowPassengers = false
 Config.SirenAlwaysAllowed = false
 
 -- Whether vehicle indicator control should be enabled
--- The indicators are controlled with arrow left, right and down on your keyboard
 Config.Indicators = true
 
 -- Enables a short honk when a siren is activated
@@ -28,26 +30,23 @@ Config.HornBlip = true
 -- Enables a short beep when a light stage or siren is activated
 Config.Beeps = false
 
+-- Duration for the warning beep (in seconds)
+-- Should be equal to the WarningBeep.ogg file
+-- Only change this if you replace the audio file with your own
+Config.WarningBeepDuration = 2.0
+
 -- Enables controller support for controlling the primary light stage and the sirens
 -- DPAD_LEFT = toggle primary lights
 -- DPAD_DOWN = toggle siren 1
 -- B = activate next siren
 Config.ControllerSupport = true
 
--- Sets keybinds for various actions
--- See https://docs.fivem.net/docs/game-references/controls for a list of codes
-Config.KeyBinds = {
-    PrimaryLights = 85, -- Q
-    SecondaryLights = 311, -- K
-    MiscLights = 182, -- L
-    ActivateSiren = 19, -- LEFT ALT
-    NextSiren = 45, -- R
-    Siren1 = 157, -- 1
-    Siren2 = 158, -- 2
-    Siren3 = 160, -- 3
-    Siren4 = 164, -- 4
-    IndicatorLeft = 174, -- ARROW LEFT
-    IndicatorRight = 175, -- ARROW RIGHT
-    IndicatorHazard = 173, -- ARROW DOWN
-    ExtrasMenu = 303, -- U
+-- Customize various strings to your own liking
+Config.Translations = {
+    VehicleControlMenu = {
+        MenuTitle = 'Vehicle Control Menu',
+        ExtraDoesNotExist = 'This extra does not exist on your vehicle!',
+        MiscDoesNotExist = 'This misc does not exist on your vehicle!',
+        FlashingHighBeam = 'Flashing high beam',
+    }
 }
