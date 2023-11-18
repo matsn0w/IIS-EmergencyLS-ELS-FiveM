@@ -6,10 +6,10 @@ local function AddHighBeamMenuEntry(vehicle)
     end
 end
 
-local function AddStaticExtraEntries(vehicle)
+local function AddStaticsEntries(vehicle)
     local statics = kjxmlData[GetCarHash(vehicle)].statics
 
-    for extra, info in spairs(statics) do
+    for extra, info in spairs(statics.extras) do
         local name = info.name or ('Extra ' .. extra)
         local checked = IsVehicleExtraTurnedOn(vehicle, extra) and true or false
         local extraExists = DoesExtraExist(vehicle, extra)
@@ -28,6 +28,23 @@ local function AddStaticExtraEntries(vehicle)
             end
         end
     end
+
+    for misc, info in spairs(statics.miscs) do
+        local name = info.name or ('Misc ' .. ConvertMiscIdToName(misc))
+        local checked = IsVehicleMiscTurnedOn(vehicle, misc)
+        local miscExists = DoesMiscExist(vehicle, misc)
+
+        if WarMenu.CheckBox(name, checked) and miscExists then
+            -- toggle the misc
+            TriggerEvent('kjELS:toggleMisc', vehicle, misc)
+        end
+
+        if not miscExists then
+            if WarMenu.IsItemHovered() then
+                WarMenu.ToolTip(Config.Translations.VehicleControlMenu.MiscDoesNotExist)
+            end
+        end
+    end
 end
 
 local function ShowMainMenu()
@@ -40,7 +57,7 @@ local function ShowMainMenu()
 
             if WarMenu.Begin('main') then
                 AddHighBeamMenuEntry(vehicle)
-                AddStaticExtraEntries(vehicle)
+                AddStaticsEntries(vehicle)
 
                 WarMenu.End()
             else return end

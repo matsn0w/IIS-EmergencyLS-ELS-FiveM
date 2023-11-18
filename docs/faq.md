@@ -27,7 +27,7 @@ Complete carvariations entry exmaple:
             <indices content="char_array">
                 132
                 132
-                132  
+                132
                 132
             </indices>
 
@@ -47,7 +47,7 @@ Complete carvariations entry exmaple:
             <indices content="char_array">
                 132
                 132
-                132  
+                132
                 132
             </indices>
 
@@ -67,7 +67,7 @@ Complete carvariations entry exmaple:
             <indices content="char_array">
                 132
                 132
-                132  
+                132
                 132
             </indices>
 
@@ -87,7 +87,7 @@ Complete carvariations entry exmaple:
             <indices content="char_array">
                 132
                 132
-                132  
+                132
                 132
             </indices>
 
@@ -107,7 +107,7 @@ Complete carvariations entry exmaple:
             <indices content="char_array">
                 132
                 132
-                132  
+                132
                 132
             </indices>
 
@@ -125,7 +125,7 @@ Complete carvariations entry exmaple:
     </colors>
 
     <kits>
-        <Item>157_massacaro2_modkit</Item>
+        <Item>0_default_modkit</Item>
     </kits>
 
     <windowsWithExposedEdges />

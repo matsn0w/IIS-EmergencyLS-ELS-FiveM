@@ -1,13 +1,22 @@
 <template>
   <div class="flex flex-col justify-center h-full">
     <header class="px-5 pt-3 flex items-center">
-      <h2 class="mr-4">
-        Sounds
-      </h2>
+      <h2 class="mr-4">Sounds</h2>
 
       <label for="useServerSirens" class="cb-label">
-        <input id="useServerSirens" v-model="useServerSirens" type="checkbox">
-        Use <a href="https://github.com/Walsheyy/WMServerSirens" target="_blank">WMServerSirens</a>
+        <input
+          class="mr-2"
+          id="useServerSirens"
+          v-model="VCF.configuration.useServerSirens"
+          type="checkbox"
+        />
+        Use&nbsp;
+        <a
+          class="underline flex items-center"
+          href="https://github.com/Walsheyy/WMServerSirens"
+          target="_blank"
+          >WMServerSirens <ArrowTopRightOnSquareIcon class=" ml-2 w-4 h-auto" /></a
+        >
       </label>
     </header>
 
@@ -18,27 +27,37 @@
             <th>Option</th>
             <th>Allow use</th>
             <th>Audio string</th>
-            <th v-if="useServerSirens">
-              Soundset
-            </th>
+            <th v-if="VCF.configuration.useServerSirens">Soundset</th>
           </tr>
         </thead>
 
         <tbody class="text-sm divide-y divide-gray-100">
-          <tr v-for="option, index in sounds" :key="index">
+          <tr v-for="(option, index) in VCF.configuration.sounds" :key="index">
             <td class="font-bold">
               {{ option.name }}
             </td>
             <td>
               <label :for="`allowUse[${index}]`" class="cb-label">
-                <input :id="`allowUse[${index}]`" v-model="option.allowUse" type="checkbox">
+                <input
+                  :id="`allowUse[${index}]`"
+                  v-model="option.allowUse"
+                  type="checkbox"
+                />
               </label>
             </td>
             <td>
-              <input v-if="option.allowUse && option['audioString'] !== undefined" v-model="option.audioString" type="text">
+              <input
+                v-if="option.allowUse && option['audioString'] !== undefined"
+                v-model="option.audioString"
+                type="text"
+              />
             </td>
-            <td v-if="option.allowUse && useServerSirens">
-              <input v-if="option['soundSet'] !== undefined" v-model="option.soundSet" type="text">
+            <td v-if="option.allowUse && VCF.configuration.useServerSirens">
+              <input
+                v-if="option['soundSet'] !== undefined"
+                v-model="option.soundSet"
+                type="text"
+              />
             </td>
           </tr>
         </tbody>
@@ -47,30 +66,61 @@
   </div>
 </template>
 
-<script>
-import { mapMultiRowFields, mapFields } from 'vuex-map-fields'
+<script setup>
+import { ArrowTopRightOnSquareIcon } from "@heroicons/vue/24/solid";
+import {defaultVcfConfig} from "~/composables/vcfConfiguration";
 
-export default {
-  computed: {
-    ...mapFields([
-      'configuration.useServerSirens'
-    ]),
+const VCF = useVcfConfiguration();
 
-    ...mapMultiRowFields([
-      'configuration.statics',
-      'configuration.sounds'
-    ])
-  },
+// Added all strings, so we can easily add more siren options, without having to change the code.
+const natoAlphabet = [
+  'ALPHA',
+  'BRAVO',
+  'CHARLIE',
+  'DELTA',
+  'ECHO',
+  'FOXTROT',
+  'GOLF',
+  'HOTEL',
+  'INDIA',
+  'JULIETT',
+  'KILO',
+  'LIMA',
+  'MIKE',
+  'NOVEMBER',
+  'OSCAR',
+  'PAPA',
+  'QUEBEC',
+  'ROMEO',
+  'SIERRA',
+  'TANGO',
+  'UNIFORM',
+  'VICTOR',
+  'WHISKEY',
+  'X-RAY',
+  'YANKEE',
+  'ZULU'
+]
 
-  methods: {
-    addStatic () {
-      const highest = this.statics.at(-1)?.extra ?? 0
-      this.$store.commit('addStatic', { extra: highest + 1, name: null })
-    },
-
-    removeStatic (s) {
-      this.$store.commit('removeStatic', s)
+// Watch for changes in the useServerSirens checkbox, and update the audioString to the NATO alphabet.
+watch(
+    () => VCF.value.configuration.useServerSirens,
+    () => {
+      if (VCF.value.configuration.useServerSirens) {
+        let iterations = 0
+        VCF.value.configuration.sounds.forEach((sound) => {
+          if (!['MainHorn', 'NineMode'].includes(sound.name)) {
+            sound.audioString = `SIREN_${natoAlphabet[iterations]}`;
+            iterations++;
+          }
+        })
+      } else {
+        VCF.value.configuration.sounds.forEach((sound) => {
+          if (!['MainHorn', 'NineMode'].includes(sound.name)) {
+            sound.audioString = defaultVcfConfig().configuration.sounds.find((defaultSound) => defaultSound.name === sound.name).audioString;
+          }
+        })
+      }
     }
-  }
-}
+)
 </script>

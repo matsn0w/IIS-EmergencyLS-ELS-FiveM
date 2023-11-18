@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CVehicleModelInfoVariation>
+    <variationData>
+        <Item>
+            <modelName>miscels</modelName>
+            <colors />
+            <kits>
+                <Item>miss_els_modkit</Item>
+            </kits>
+            <windowsWithExposedEdges />
+            <plateProbabilities />
+            <lightSettings />
+            <sirenSettings />
+        </Item>
+    </variationData>
+</CVehicleModelInfoVariation>

@@ -1,15 +1,21 @@
 function ParseVCF(xml, fileName)
 
-    local vcf = {}
-    fileName = string.sub(fileName, 1, -5)
+    local vcf = {
+        patterns = {
+            primary = {},
+            secondary = {},
+            rearreds = {},
+        },
+        extras = {},
+        miscs = {},
+        statics = {
+            extras = {},
+            miscs = {},
+        },
+        sounds = {},
+    }
 
-    vcf.patterns = {}
-    vcf.patterns.primary = {}
-    vcf.patterns.secondary = {}
-    vcf.patterns.rearreds = {}
-    vcf.extras = {}
-    vcf.statics = {}
-    vcf.sounds = {}
+    fileName = string.sub(fileName, 1, -5)
 
     for i = 1, #xml.root.el do
 
@@ -30,21 +36,53 @@ function ParseVCF(xml, fileName)
                     -- extra should always have a leading zero here
                     local extra = tonumber(string.sub(elem.name, -2))
 
-                    vcf.extras[extra] = {}
-                    vcf.extras[extra].enabled = elem.attr['IsElsControlled'] == 'true'
-                    vcf.extras[extra].env_light = false
-                    vcf.extras[extra].env_pos = {}
-                    vcf.extras[extra].env_pos['x'] = 0
-                    vcf.extras[extra].env_pos['y'] = 0
-                    vcf.extras[extra].env_pos['z'] = 0
-                    vcf.extras[extra].env_color = 'RED'
+                    vcf.extras[extra] = {
+                        enabled = true,
+                        env_light = false,
+                        env_pos = {
+                            x = 0,
+                            y = 0,
+                            z = 0,
+                        },
+                        env_color = 'RED',
+                    }
 
                     if elem.attr['AllowEnvLight'] == 'true' then
                         vcf.extras[extra].env_light = true
-                        vcf.extras[extra].env_pos['x'] = tonumber(elem.attr['OffsetX'] or 0.0)
-                        vcf.extras[extra].env_pos['y'] = tonumber(elem.attr['OffsetY'] or 0.0)
-                        vcf.extras[extra].env_pos['z'] = tonumber(elem.attr['OffsetZ'] or 0.0)
+                        vcf.extras[extra].env_pos = {
+                            x = tonumber(elem.attr['OffsetX'] or 0.0),
+                            y = tonumber(elem.attr['OffsetY'] or 0.0),
+                            z = tonumber(elem.attr['OffsetZ'] or 0.0),
+                        }
                         vcf.extras[extra].env_color = string.upper(elem.attr['Color'] or 'RED')
+                    end
+
+                    -- backwards compatibility for VCF's without 'IsElsControlled' tag	
+                    if elem.attr['IsElsControlled'] ~= nil then
+                        vcf.extras[extra].enabled = elem.attr['IsElsControlled'] == 'true'
+                    end
+                elseif string.find(elem.name, 'Misc', 1) then
+                    local misc = ConvertMiscNameToId(string.sub(elem.name, -1))
+
+                    vcf.miscs[misc] = {
+                        enabled = true,
+                        env_light = false,
+                        env_pos = {
+                            x = 0,
+                            y = 0,
+                            z = 0,
+                        },
+                        env_color = 'RED',
+                    }
+
+                    if elem.attr['AllowEnvLight'] == 'true' then
+                        vcf.miscs[misc].env_light = true
+                        vcf.miscs[misc].env_pos = {
+                            x = tonumber(elem.attr['OffsetX'] or 0.0),
+                            y = tonumber(elem.attr['OffsetY'] or 0.0),
+                            z = tonumber(elem.attr['OffsetZ'] or 0.0),
+                        }
+                        vcf.miscs[misc].env_color = string.upper(elem.attr['Color'] or 'RED')
                     end
                 end
             end
@@ -58,9 +96,14 @@ function ParseVCF(xml, fileName)
                     local extra = tonumber(string.sub(elem.name, -2))
 
                     if extra then
-                        vcf.statics[extra] = {}
-                        vcf.statics[extra].name = elem.attr['Name']
+                        vcf.statics.extras[extra] = {}
+                        vcf.statics.extras[extra].name = elem.attr['Name']
                     end
+                elseif string.upper(string.sub(elem.name, 1, -2)) == 'MISC' then
+                    local misc = ConvertMiscNameToId(string.sub(elem.name, -1))
+
+                    vcf.statics.miscs[misc] = {}
+                    vcf.statics.miscs[misc].name = elem.attr['Name']
                 end
             end
         end
@@ -129,6 +172,7 @@ function ParseVCF(xml, fileName)
                         if tag == 'FLASH' then
                             vcf.patterns[type][id] = {}
                             vcf.patterns[type][id].extras = {}
+                            vcf.patterns[type][id].miscs = {}
                             vcf.patterns[type][id].duration = tonumber(flash.attr['Duration'] or '100')
 
                             for extra in string.gmatch(flash.attr['Extras'] or '', '([0-9]+)') do
@@ -137,6 +181,11 @@ function ParseVCF(xml, fileName)
 
                                 -- insert extra # in the table
                                 table.insert(vcf.patterns[type][id].extras, tonumber(extra))
+                            end
+
+                            for misc in string.gmatch(flash.attr['Miscs'] or '', '([a-z]+)') do
+                                -- insert misc in the table
+                                table.insert(vcf.patterns[type][id].miscs, ConvertMiscNameToId(misc))
                             end
 
                             id = id + 1

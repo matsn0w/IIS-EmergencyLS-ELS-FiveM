@@ -1,32 +1,33 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- ELS VEHICLE CONFIGURATION FILE -->
-<vcfroot Description="EmergencyLS | VCF sample configuration with WMServerSirens" Author="Infinity Studios">
-	<!-- EXTRAS CONFIGURATION -->
+<vcfroot Description="VCF sample configuration with WMServerSirens" Author="matsn0w" Version="1.1.0">
+	<!-- LIGHTS CONFIGURATION -->
 	<EOVERRIDE>	
-		<Extra01 IsElsControlled="true" AllowEnvLight="true" Color="blue" OffsetX="-0.70" OffsetY="-0.20" OffsetZ="0.50" /> 
-		<Extra02 IsElsControlled="true" AllowEnvLight="true" Color="blue" OffsetX="-0.25" OffsetY="-0.20" OffsetZ="0.50" />
-		<Extra03 IsElsControlled="true" AllowEnvLight="true" Color="blue" OffsetX="0.25" OffsetY="-0.20" OffsetZ="0.50" />
-		<Extra04 IsElsControlled="true" AllowEnvLight="true" Color="blue" OffsetX="0.70" OffsetY="-0.20" OffsetZ="0.50" />
-		<Extra05 IsElsControlled="true" AllowEnvLight="true" Color="blue" OffsetX="-0.70" OffsetY="-0.20" OffsetZ="0.50" />
-		<Extra06 IsElsControlled="true" AllowEnvLight="true" Color="blue" OffsetX="0.70" OffsetY="-0.20" OffsetZ="0.50" />
-		<Extra07 IsElsControlled="true" AllowEnvLight="true" Color="red" OffsetX="-0.40" OffsetY="-0.80" OffsetZ="0.40" />
-		<Extra08 IsElsControlled="true" AllowEnvLight="true" Color="red" OffsetX="0.00" OffsetY="-0.80" OffsetZ="0.40" />
-		<Extra09 IsElsControlled="true" AllowEnvLight="true" Color="red" OffsetX="0.40" OffsetY="-0.80" OffsetZ="0.40" />
-		<Extra10 IsElsControlled="false" />
-		<Extra11 IsElsControlled="false" />
-		<Extra12 IsElsControlled="false" AllowEnvLight="true" Color="white" />
+		<Extra01 AllowEnvLight="true" Color="blue" /> 
+		<Extra02 AllowEnvLight="true" Color="blue" />
+		<Extra03 AllowEnvLight="true" Color="blue" />
+		<Extra04 AllowEnvLight="true" Color="blue" />
+		<Extra07 AllowEnvLight="true" Color="red" />
+		<Extra08 AllowEnvLight="true" Color="red" />
+		<Extra09 AllowEnvLight="true" Color="red" OffsetX="0.40" OffsetY="-0.80" OffsetZ="0.40" />
+		<Extra11 AllowEnvLight="false" />
+		<Extra12 />
+		<MiscA AllowEnvLight="true" Color="amber" />
+		<MiscB AllowEnvLight="true" Color="amber" />
+		<MiscK />
 	</EOVERRIDE>
 
 	<!-- STATIC EXTRAS -->
 	<STATIC>
 		<Extra11 Name="Bullbar" />
 		<Extra12 Name="Takedown lights" />
+		<MiscK Name="Cup of coffee" />
 	</STATIC>
 
 	<!-- SOUNDS & SIREN CONFIG -->
 	<SOUNDS>
 		<MainHorn AllowUse="true" AudioString="SIRENS_AIRHORN" />
-		<NineMode AllowUse="true" />
+		<NineMode AllowUse="false" />
 		<SrnTone1 AllowUse="true" AudioString="SIREN_CHARLIE" SoundSet="DLC_WMSIRENS_SOUNDSET" />
 		<SrnTone2 AllowUse="true" AudioString="SIREN_DELTA" SoundSet="DLC_WMSIRENS_SOUNDSET" />
 		<SrnTone3 AllowUse="true" AudioString="SIREN_ECHO" SoundSet="DLC_WMSIRENS_SOUNDSET" />
@@ -36,18 +37,19 @@
 	<!-- CUSTOM PATTERN -->
 	<PATTERN>
 		<PRIMARY FlashHighBeam="true"> <!-- This makes your headlights flash -->
-			<Flash Duration="80" Extras="1,2" /> <!-- This is done, then waits 80ms and does... -->
+			<Flash Duration="80" Extras="1,2" Miscs="a,b" /> <!-- This is done, then waits 80ms and does... -->
 			<Flash Duration="80" Extras="1,2,3,4" /> <!-- This one. -->
 			<Flash Duration="80" Extras="3,4" /> <!-- e.t.c. -->
 			<Flash Duration="80" Extras="1,2" />
+			<Flash Duration="80" Miscs="a,b" />
 			<Flash Duration="80" />
 			<!-- Then it is looped back up to the first Flash here after 80ms -->
 		</PRIMARY>
 
 		<SECONDARY> <!-- Matrix Board / Beacon / Scene Lights e.t.c. -->
-			<Flash Duration="280" Extras="6" />
+			<Flash Duration="280" Extras="6" Miscs="k" />
 			<Flash Duration="160" />
-			<Flash Duration="280" Extras="5" />
+			<Flash Duration="280" Extras="5" Miscs="j" />
 			<Flash Duration="160" />
 		</SECONDARY>
 

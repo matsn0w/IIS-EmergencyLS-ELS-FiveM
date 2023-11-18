@@ -3,71 +3,80 @@
 @tailwind utilities;
 
 body {
-  @apply bg-gray-100;
+  @apply bg-gray-100 dark:bg-gray-900;
+
+  h1 {
+    @apply dark:text-gray-300;
+  }
 }
 
 .card {
-  @apply px-3 py-1 my-6 bg-white rounded-md shadow-lg;
-}
+  @apply p-2 my-6 bg-white rounded-md shadow-lg dark:bg-gray-800;
 
-.card h2 {
-  @apply font-semibold text-gray-800;
+  h2 {
+    @apply font-semibold text-gray-800 dark:text-gray-300;
+  }
+
+  h3 {
+    @apply font-semibold text-gray-800 dark:text-gray-300;
+  }
 }
 
 button {
-  @apply px-2 py-1 bg-blue-500 text-white rounded-md shadow;
+  @apply px-2 py-1 text-white text-sm rounded shadow dark:bg-gray-800 dark:text-gray-300;
 }
 
-thead {
-  @apply font-semibold uppercase text-gray-400 bg-gray-50;
+button[disabled] {
+  @apply opacity-50 cursor-not-allowed;
 }
 
-tbody {
-  @apply divide-y divide-gray-100;
-}
+table {
+  thead {
+    @apply font-semibold uppercase text-gray-400 bg-gray-50 dark:bg-gray-700; // Adjust table header for dark mode
+  }
 
-th, td {
-  @apply p-2 align-middle;
-}
+  tbody {
+    @apply divide-y divide-gray-100 dark:divide-gray-700; // Adjust table body for dark mode
+  }
 
-th {
-  @apply font-semibold text-left;
+  th,
+  td {
+    @apply p-2 align-middle dark:text-gray-300;
+  }
+
+  th {
+    @apply font-semibold text-left;
+  }
 }
 
 label {
-  @apply block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4;
+  @apply block text-gray-500 dark:text-gray-300 font-semibold md:text-right mb-1 md:mb-0 pr-4;
 }
 
-input[type=text], input[type=number] {
-  @apply bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full p-2 text-gray-700 leading-tight align-middle;
+p {
+  @apply text-gray-500 dark:text-gray-300;
 }
 
-input[type=text]:focus, input[type=number]:focus {
-  @apply focus:outline-none focus:bg-white focus:border-blue-500;
+input[type="text"],
+input[type="number"],
+select {
+  @apply form-input block w-full px-2 py-1 rounded bg-gray-200 text-gray-700 border-2 border-gray-200 focus:bg-white focus:border-blue-500 focus:outline-none dark:bg-gray-800 dark:border-gray-800 dark:text-white;
+
+  .card & {
+    @apply bg-gray-100 border-gray-100 dark:bg-gray-900 dark:border-gray-900;
+  }
 }
 
 select {
-  @apply
-    form-select appearance-none
-    block w-full
-    px-3 py-1.5
-    text-base font-normal text-gray-700
-    bg-white bg-clip-padding bg-no-repeat
-    border border-solid border-gray-300 rounded
-    transition ease-in-out
-    m-0
-    focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none;
-}
-
-.form-select {
-  -moz-padding-start: calc(.75rem - 3px);
+  @extend select;
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
-  background-position: right .75rem center;
+  background-position: right 0.75rem center;
   background-size: 16px 12px;
+  background-repeat: no-repeat;
 }
 
-input[type='checkbox'] {
-  @apply form-checkbox h-5 w-5 mr-2 text-blue-500 rounded;
+input[type="checkbox"] {
+  @apply form-checkbox h-5 w-5 rounded bg-gray-100 border border-gray-100 checked:bg-blue-500 dark:bg-gray-900 dark:border-gray-900;
 }
 
 .cb-label {
@@ -75,44 +84,57 @@ input[type='checkbox'] {
 }
 
 .blue {
-  @apply text-white bg-blue-500 #{!important};
+  @apply bg-blue-500 border-blue-500 #{!important};
+
+  &.outlined {
+    @apply border-blue-500 text-blue-500;
+  }
 }
 
 .amber {
   @apply text-white bg-yellow-500 #{!important};
+
+  &.outlined {
+    @apply border-yellow-500 text-yellow-500;
+  }
 }
 
 .red {
   @apply text-white bg-red-500 #{!important};
+
+  &.outlined {
+    @apply border-red-500 text-red-500;
+  }
 }
 
 .green {
   @apply text-white bg-green-500 #{!important};
+
+  &.outlined {
+    @apply border-green-500 text-green-500;
+  }
 }
 
 .white {
   @apply text-black bg-white border-2 border-gray-500 #{!important};
+
+  &.outlined {
+    @apply border-black text-black;
+  }
 }
 
 .nocolor {
   @apply text-white bg-gray-500 #{!important};
 }
 
-.import-button {
-  position: relative;
-  overflow: hidden;
-  display: inline-block;
+.outlined {
+  @apply border;
 
-  /* Fancy button looking */
-  border: 2px solid black;
-  border-radius: 5px;
-  padding: 8px 12px;
-  cursor: pointer;
-}
-.import-button input {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  opacity: 0;
+  &:hover {
+    @apply text-white;
+  }
+
+  &:not(:hover) {
+    @apply bg-transparent dark:bg-transparent #{!important};
+  }
 }
