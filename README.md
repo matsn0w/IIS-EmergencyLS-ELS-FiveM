@@ -36,7 +36,7 @@ Furthermore...
 You need to have the following resources installed on your server:
 
 - [FiveM baseevents](https://docs.fivem.net/docs/resources/baseevents) (shipped by default)
-- [NativeUILua](https://github.com/FrazzIe/NativeUILua/releases/latest)
+- [WarMenu](https://github.com/warxander/warmenu)
 
 ## ⚙️ Installation and Configuration
 
@@ -81,6 +81,25 @@ This resource wasn't possible without these libraries:
 _...and everyone else who contributed to the development of this resource - it would never have been this good without you! ❤️_
 
 ## 📃 Changelog
+
+### v2.2.0
+
+#### Resource
+
+- Added flashing high beams (#89, #118)
+- Added stop sign beeping (#101)
+- Added personal keybinds (#109)
+- Added misc support (#152)
+- Improved documentation (#112)
+- Replaced NativeUI with WarMenu (#120)
+
+...and some minor changes (#114, #115, #116, #118)
+
+#### Configurator
+
+- Added dark mode
+- Improved UI/UX
+- Updated configurator to match new features
 
 ### v2.1.1
 
