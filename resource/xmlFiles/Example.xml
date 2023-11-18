@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- ELS VEHICLE CONFIGURATION FILE -->
-<vcfroot Description="VCF sample configuration" Author="matsn0w">
+<vcfroot Description="VCF sample configuration" Author="matsn0w" Version="1.1.0">
 	<!-- LIGHTS CONFIGURATION -->
 	<EOVERRIDE>	
 		<Extra01 AllowEnvLight="true" Color="blue" /> 

@@ -16,7 +16,7 @@ Alternatively, you can use [this convenient graphical interface](https://matsn0w
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <!-- ELS VEHICLE CONFIGURATION FILE -->
-<vcfroot Description="Bare bone configuration file" Author="matsn0w" >
+<vcfroot Description="Bare bone configuration file" Author="matsn0w" Version="1.1.0">
     <!-- LIGHTS CONFIGURATION -->
     <EOVERRIDE></EOVERRIDE>
 
