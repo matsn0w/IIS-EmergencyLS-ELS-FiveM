@@ -31,7 +31,7 @@ export const generateStoreAttributesFromExistingVCF = (data: any) => {
     .querySelector("vcfroot")
     .getAttribute("Description") ?? null;
   vcf.configuration.author = parsedVCF.querySelector("vcfroot").getAttribute("Author");
-  vcf.configuration.verison = parsedVCF
+  vcf.configuration.version = parsedVCF
     .querySelector("vcfroot")
     .getAttribute("Version") ?? null;
 
