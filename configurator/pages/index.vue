@@ -19,12 +19,12 @@
   </div>
 
   <div class="py-4" v-if="!hasReadLocalStorageNotice">
-    <div class="rounded-md bg-blue-200 p-4">
+    <div class="rounded-md bg-yellow-50 p-4">
       <div class="flex">
         <div>
-          <h3 class="text-sm font-medium text-blue-800">Attention! From now on, we are storing data in the browser's memory.</h3>
-          <div class="mt-2 text-sm text-blue-700">
-            <p>
+          <h3 class="text-sm font-medium text-yellow-800">Attention! From now on, we are storing data in the browser's memory.</h3>
+          <div class="mt-2 text-sm">
+            <p class="!text-yellow-700 font-normal">
               To prevent data loss, we store your current VCF in your local browser data.<br />
               When you revisit the configurator, the last VCF file you modified will be loaded again.<br />
               Do you not want this? Or do you want to start with an empty VCF? Then you can disable local storage.<br />
@@ -52,7 +52,7 @@
           <div class="-mx-1.5 -my-1.5">
             <button
                 type="button"
-                class="blue outlined p-1.5"
+                class="amber p-1.5"
                 @click="dismissLocalStorageNotice"
             >
               <span class="sr-only">Dismiss</span>
