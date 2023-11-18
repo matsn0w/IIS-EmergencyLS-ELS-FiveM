@@ -18,8 +18,6 @@ local function SetLightStage(vehicle, stage, toggle)
     -- get the pattern data
     local patternData = VCFdata.patterns[ConvertStageToPattern(stage)]
 
-    print('reset')
-
     -- reset all extras and miscs
     TriggerEvent('kjELS:resetExtras', vehicle)
     TriggerEvent('kjELS:resetMiscs', vehicle)
@@ -135,12 +133,10 @@ local function SetLightStage(vehicle, stage, toggle)
 end
 
 local function StaticsIncludesExtra(model, extra)
-    print('statics includes extra ' .. tostring(kjxmlData[model].statics.extras[extra]))
     return kjxmlData[model].statics.extras[extra] ~= nil
 end
 
 local function StaticsIncludesMisc(model, misc)
-    print('statics includes misc ' .. tostring(kjxmlData[model].statics.miscs[misc]))
     return kjxmlData[model].statics.miscs[misc] ~= nil
 end
 
@@ -160,7 +156,6 @@ AddEventHandler('kjELS:resetExtras', function(vehicle)
 
     -- loop through all extra's
     for extra, info in pairs(kjxmlData[model].extras) do
-        print('disable extra ' .. tostring(extra))
         -- check if we can control this extra
         if info.enabled == true and not StaticsIncludesExtra(model, extra) then
             -- disable auto repairs
@@ -188,7 +183,6 @@ AddEventHandler('kjELS:resetMiscs', function(vehicle)
 
     -- loop through all miscs
     for misc, info in pairs(kjxmlData[model].miscs) do
-        print('disable misc ' .. tostring(misc))
         -- check if we can control this misc
         if info.enabled == true and not StaticsIncludesMisc(model, extra) then
             -- disable the misc
