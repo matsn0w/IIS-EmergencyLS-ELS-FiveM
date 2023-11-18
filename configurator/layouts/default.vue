@@ -32,6 +32,10 @@
         <li>
           <a href="https://matsn0w.dev" target="_blank">matsn0w.dev</a>
         </li>
+
+        <li>
+          <a href="https://github.com/JustinRijsdijk" target="_blank">Justin Rijsdijk</a>
+        </li>
       </ul>
     </footer>
   </div>

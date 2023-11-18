@@ -211,9 +211,10 @@ const playPreview = async (pattern: patternType) => {
     for (const miscId of flash.miscs) {
       const misc = enabledMiscs.value.find((misc) => misc.id === miscId)
       const color = getLightColor(misc);
+      console.log(`#${pattern.name}_misc_${miscId}`)
       document
         .querySelector(`#${pattern.name}_misc_${miscId}`)
-        .classList.toggle(color);
+        ?.classList.toggle(color);
     }
 
     await new Promise((resolve) => {
@@ -226,7 +227,7 @@ const playPreview = async (pattern: patternType) => {
 
       document
         .querySelector(`#${pattern.name}_extra_${extraId}`)
-        .classList.toggle(color);
+        ?.classList.toggle(color);
     }
 
     for (const miscId of flash.miscs) {
@@ -263,7 +264,7 @@ const isLightToggled = (flash: flashType, light: Lightable) => {
 };
 
 const getLightColor = (light: Lightable) => {
-  return light.color ?? "nocolor";
+  return light?.color ?? "nocolor";
 };
 
 const getFlashesForPattern = (pattern: patternType) => {

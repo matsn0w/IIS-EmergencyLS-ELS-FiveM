@@ -30,6 +30,9 @@ export const generateStoreAttributesFromExistingVCF = (data: any) => {
     .querySelector("vcfroot")
     .getAttribute("Description") ?? null;
   vcf.configuration.author = parsedVCF.querySelector("vcfroot").getAttribute("Author");
+  vcf.configuration.verison = parsedVCF
+    .querySelector("vcfroot")
+    .getAttribute("Version") ?? null;
 
   // EOVERRIDE section
   const eoverride = parsedVCF.querySelector("EOVERRIDE");
@@ -47,7 +50,7 @@ export const generateStoreAttributesFromExistingVCF = (data: any) => {
     vcf.configuration.lightables.push({
       id: parseInt(extra.nodeName.match(/([0-9]|[1-9][0-9])$/g)[0]),
       type: 'extra',
-      enabled: extra.getAttribute("IsElsControlled") === "true",
+      enabled: true,
       allowEnv: extra.getAttribute("AllowEnvLight") === "true",
       color: extra.getAttribute("Color") as Color ?? null,
     });
@@ -57,7 +60,7 @@ export const generateStoreAttributesFromExistingVCF = (data: any) => {
     vcf.configuration.lightables.push({
       id: misc.nodeName.match(/([A-Z])$/g)[0].toLowerCase(),
       type: 'misc',
-      enabled: misc.getAttribute("IsElsControlled") === "true",
+      enabled: true,
       allowEnv: misc.getAttribute("AllowEnvLight") === "true",
       color: misc.getAttribute("Color") as Color ?? null,
     });

@@ -9,6 +9,7 @@ export type vcfConfig = {
   configuration: {
     author: string|null
     description: string|null
+    verison: string|null
     lightables: Lightable[]
     statics: staticType[]
     useServerSirens: boolean

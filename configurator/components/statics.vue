@@ -3,7 +3,7 @@
     <header class="px-5 pt-3 flex items-center">
       <h2 class="mr-4">Statics</h2>
 
-      <button class="blue" type="button" @click="addStatic">New</button>
+      <button class="blue" type="button" @click="addStatic" :disabled="!availableStaticMiscIds.length && !availableStaticExtraIds.length">New</button>
     </header>
 
     <div class="p-3 overflow-x-auto">
@@ -48,10 +48,10 @@
           </template>
 
           <tr v-else>
-            <td colspan="2">
+            <td colspan="3">
               <em
-                >You have not configured any static extras. Create one by
-                clicking the '<strong>New</strong>' button.</em
+                >You have not configured any statics. Create one by
+                clicking the '<strong>New</strong>' button. Please be aware that you need to add 'Lightables' before you can mark them as static.</em
               >
             </td>
           </tr>

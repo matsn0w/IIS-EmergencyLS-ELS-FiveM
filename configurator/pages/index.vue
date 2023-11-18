@@ -35,7 +35,7 @@
           <div class="mt-4">
             <div class="-mx-2 -my-1.5 flex gap-4">
               <LocalStorageButton
-                  :state="vcfLocalStorageState"
+                  :state="saveVcfInBrowserStorageState"
                   @click="toggleSaveVcfInBrowserStorage"
                   :isForNotice="true"
               />
@@ -79,6 +79,31 @@
         <label for="author">Author</label>
         <input id="author" v-model="VCF.configuration.author" type="text" />
       </div>
+
+      <div class="md:flex md:items-center mb-3">
+        <label for="version">VCF schema version</label>
+        <p>{{ VCF.configuration.version ?? "Unknown" }}</p>
+      </div>
+
+      <template v-if="!isVcfSchemaVersionUpToDate"> 
+        <div class="border-l-4 border-yellow-400 bg-yellow-50 p-4">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="ml-3">
+              <p class="text-sm !text-yellow-700">
+                Please be aware! The VCF you have imported was generated with an older version of the configurator. <br />
+                This means that some settings may not be available in the configurator, or have been enabled, disabled or changed by default. <br />
+
+                Your VCF schema version is <span class="font-medium">{{ VCF.configuration.version ?? 'Unknown' }}</span>, the latest version is <span class="font-medium">{{ config.public.version }}</span>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </template>
     </div>
 
     <lights class="card" />
@@ -99,12 +124,17 @@ import formatXml from "xml-formatter";
 import {
   SunIcon,
   MoonIcon,
-  InboxArrowDownIcon,
-  InboxIcon,
   XMarkIcon,
 } from "@heroicons/vue/24/solid";
-import {resetVcfConfiguration} from "~/composables/vcfConfiguration";
-import LocalStorageButton from "~/components/LocalStorageButton.vue";
+import {resetVcfConfiguration} from "~/composables/vcfConfiguration"
+import LocalStorageButton from "~/components/LocalStorageButton.vue"
+import {compareVersions} from "compare-versions"
+
+const config = useRuntimeConfig()
+
+const isVcfSchemaVersionUpToDate = computed(() => {
+  return compareVersions(VCF.value.configuration.version ?? '0.0.0', config.public.version) >= 0
+});
 
 const onResetVcfConfiguration = () => {
   const result = window.confirm('Are you sure you want to reset? All changes to the VCF will be lost.');

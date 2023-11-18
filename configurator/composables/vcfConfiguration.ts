@@ -1,16 +1,18 @@
-import {letterLightableId, Lightable, numericalLightableId} from "~/types/lights";
-import {vcfConfig} from "~/types/vcfConfig";
-import {flashType} from "~/types/flash";
-import {staticType} from "~/types/static";
-import {patternType} from "~/types/patterns";
-import {Ref} from "vue";
+import type {letterLightableId, Lightable, numericalLightableId} from "~/types/lights";
+import type {vcfConfig} from "~/types/vcfConfig";
+import type {flashType} from "~/types/flash";
+import type {staticType} from "~/types/static";
+import type {patternType} from "~/types/patterns";
+import type {Ref} from "vue";
 import {DateTime} from "luxon";
+const config = useRuntimeConfig()
 
 export const defaultVcfConfig: vcfConfig = {
   flashID: 1,
   configuration: {
     author: null,
     description: null,
+    version: config.public.version,
     lightables: [],
     statics: [],
     useServerSirens: false,
@@ -82,7 +84,7 @@ export const defaultVcfConfig: vcfConfig = {
 const luxon = DateTime
 
 export const useVcfConfiguration = (): Ref<vcfConfig> => {
-  return useState("vcfConfiguration", () => getVcfConfig());
+  return useState("vcfConfiguration", () => JSON.parse(JSON.stringify(getVcfConfig())) as vcfConfig);
 };
 
 const getVcfConfig = (): vcfConfig => {

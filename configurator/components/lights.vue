@@ -19,7 +19,7 @@
         </thead>
 
         <tbody class="text-sm divide-y divide-gray-100">
-          <tr v-for="(lightable, index) in VCF.configuration.lightables" :key="lightable.id">
+          <tr v-for="(lightable, index) in VCF.configuration.lightables" :key="lightable.id" v-if="VCF.configuration.lightables.length">
             <td class="font-bold">
               <select
                   v-model="lightable.type"
@@ -61,6 +61,14 @@
             </td>
             <td>
               <button class="red" type="button" @click="removeLightable(index)"><XMarkIcon class="w-5 h-5" /></button>
+            </td>
+          </tr>
+          <tr v-else>
+            <td colspan="5">
+              <em
+                >You have not configured any lightables. Create one by
+                clicking the '<strong>New extra</strong>' or '<strong>New misc</strong>' button.</em
+              >
             </td>
           </tr>
         </tbody>

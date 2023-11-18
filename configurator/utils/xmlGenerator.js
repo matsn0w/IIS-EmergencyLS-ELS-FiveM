@@ -31,7 +31,6 @@ export const generateVcfDocument = (data) => {
     let extraId = `${extra.id}`;
     extraId = extraId.replace(/(^[^\d\n]*\d[^\d\n]*$)/gm, "0$1");
     const e = doc.createElement(`Extra${extraId}`);
-    e.setAttribute("IsElsControlled", extra.enabled);
 
     if (extra.allowEnv) {
       e.setAttribute("AllowEnvLight", extra.allowEnv);
@@ -48,7 +47,6 @@ export const generateVcfDocument = (data) => {
     let miscId = `${misc.id}`;
     miscId = miscId.replace(/(^[^\d\n]*\d[^\d\n]*$)/gm, "0$1").toUpperCase();
     const m = doc.createElement(`Misc${miscId}`);
-    m.setAttribute("IsElsControlled", misc.enabled);
 
     if (misc.allowEnv) {
       m.setAttribute("AllowEnvLight", misc.allowEnv);

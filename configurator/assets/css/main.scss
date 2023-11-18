@@ -26,6 +26,10 @@ button {
   @apply px-2 py-1 text-white text-sm rounded shadow dark:bg-gray-800 dark:text-gray-300;
 }
 
+button[disabled] {
+  @apply opacity-50 cursor-not-allowed;
+}
+
 table {
   thead {
     @apply font-semibold uppercase text-gray-400 bg-gray-50 dark:bg-gray-700; // Adjust table header for dark mode
@@ -47,6 +51,10 @@ table {
 
 label {
   @apply block text-gray-500 dark:text-gray-300 font-semibold md:text-right mb-1 md:mb-0 pr-4;
+}
+
+p {
+  @apply text-gray-500 dark:text-gray-300;
 }
 
 input[type="text"],
