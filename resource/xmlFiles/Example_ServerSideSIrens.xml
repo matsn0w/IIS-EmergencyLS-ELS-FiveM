@@ -12,12 +12,16 @@
 		<Extra09 AllowEnvLight="true" Color="red" OffsetX="0.40" OffsetY="-0.80" OffsetZ="0.40" />
 		<Extra11 AllowEnvLight="false" />
 		<Extra12 />
+		<MiscA AllowEnvLight="true" Color="amber" />
+		<MiscB AllowEnvLight="true" Color="amber" />
+		<MiscK />
 	</EOVERRIDE>
 
 	<!-- STATIC EXTRAS -->
 	<STATIC>
 		<Extra11 Name="Bullbar" />
 		<Extra12 Name="Takedown lights" />
+		<MiscK Name="Cup of coffee" />
 	</STATIC>
 
 	<!-- SOUNDS & SIREN CONFIG -->
