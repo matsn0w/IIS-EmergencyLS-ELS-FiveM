@@ -13,6 +13,7 @@ export const generateStoreAttributesFromExistingVCF = (data: any) => {
     configuration: {
       author: null,
       description: null,
+      version: null,
       lightables: [],
       statics: [],
       useServerSirens: false,

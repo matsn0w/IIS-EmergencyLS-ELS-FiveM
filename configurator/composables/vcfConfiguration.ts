@@ -1,11 +1,15 @@
-import type {letterLightableId, Lightable, numericalLightableId} from "~/types/lights";
-import type {vcfConfig} from "~/types/vcfConfig";
-import type {flashType} from "~/types/flash";
-import type {staticType} from "~/types/static";
-import type {patternType} from "~/types/patterns";
-import type {Ref} from "vue";
-import {DateTime} from "luxon";
-const config = useRuntimeConfig()
+import type {
+  letterLightableId,
+  Lightable,
+  numericalLightableId,
+} from "~/types/lights";
+import type { vcfConfig } from "~/types/vcfConfig";
+import type { flashType } from "~/types/flash";
+import type { staticType } from "~/types/static";
+import type { patternType } from "~/types/patterns";
+import type { Ref } from "vue";
+import { DateTime } from "luxon";
+const config = useRuntimeConfig();
 
 export const defaultVcfConfig: vcfConfig = {
   flashID: 1,
@@ -80,31 +84,36 @@ export const defaultVcfConfig: vcfConfig = {
     ],
     flashes: [],
   },
-} as vcfConfig
-const luxon = DateTime
+};
+const luxon = DateTime;
 
 export const useVcfConfiguration = (): Ref<vcfConfig> => {
-  return useState("vcfConfiguration", () => JSON.parse(JSON.stringify(getVcfConfig())) as vcfConfig);
+  return useState("vcfConfiguration", () => ({...getVcfConfig()}));
 };
 
 const getVcfConfig = (): vcfConfig => {
-  if (localStorage.getItem("vcfConfiguration") !== null && localStorage.getItem("saveVcfLocal") === "1") {
-    return JSON.parse(localStorage.getItem("vcfConfiguration") as string) as vcfConfig;
+  if (
+    localStorage.getItem("vcfConfiguration") !== null &&
+    localStorage.getItem("saveVcfLocal") === "1"
+  ) {
+    return JSON.parse(
+      localStorage.getItem("vcfConfiguration") as string
+    ) as vcfConfig;
   } else {
-    return defaultVcfConfig
+    return defaultVcfConfig;
   }
-}
+};
 
 watch(useVcfConfiguration().value, (value) => {
-  localStorage.setItem("vcfUpdate", String(luxon.now().toUnixInteger()))
+  localStorage.setItem("vcfUpdate", String(luxon.now().toUnixInteger()));
   localStorage.setItem("vcfConfiguration", JSON.stringify(value));
-})
+});
 
 export const resetVcfConfiguration = () => {
   // To make sure we trigger the watch
-  useVcfConfiguration().value.flashID = defaultVcfConfig.flashID
-  useVcfConfiguration().value.configuration = defaultVcfConfig.configuration
-}
+  useVcfConfiguration().value.flashID = defaultVcfConfig.flashID;
+  useVcfConfiguration().value.configuration = defaultVcfConfig.configuration;
+};
 
 const getFlashIndex = (flash: flashType) => {
   const VCF = useVcfConfiguration();
@@ -112,14 +121,59 @@ const getFlashIndex = (flash: flashType) => {
   return VCF.value.configuration.flashes.map((f) => f.id).indexOf(flash.id);
 };
 
-export const lightableIsNotInUseAsStatic = (lightableId: numericalLightableId|letterLightableId) => !useVcfConfiguration().value.configuration.statics.map((staticElement: staticType) => staticElement.id).includes(lightableId)
+export const lightableIsNotInUseAsStatic = (
+  lightableId: numericalLightableId | letterLightableId
+) =>
+  !useVcfConfiguration()
+    .value.configuration.statics.map(
+      (staticElement: staticType) => staticElement.id
+    )
+    .includes(lightableId);
 
-export const miscIds: letterLightableId[] = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
-export const extraIds: numericalLightableId[] = [1,2,3,4,5,6,7,8,9,10,11,12]
+export const miscIds: letterLightableId[] = [
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "i",
+  "j",
+  "k",
+  "l",
+  "m",
+  "n",
+  "o",
+  "p",
+  "q",
+  "r",
+  "s",
+  "t",
+  "u",
+  "v",
+  "w",
+  "x",
+  "y",
+  "z",
+];
+export const extraIds: numericalLightableId[] = [
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+];
 
-export const isLightableIdInUse = (id: letterLightableId|numericalLightableId) => useVcfConfiguration().value.configuration.lightables.map((lightable: Lightable) => lightable.id).includes(id)
-export const availableMiscIds = computed(() => miscIds.filter(miscId => !isLightableIdInUse(miscId)))
-export const availableExtraIds = computed(() => extraIds.filter(extraId => !isLightableIdInUse(extraId)))
+export const isLightableIdInUse = (
+  id: letterLightableId | numericalLightableId
+) =>
+  useVcfConfiguration()
+    .value.configuration.lightables.map((lightable: Lightable) => lightable.id)
+    .includes(id);
+export const availableMiscIds = computed(() =>
+  miscIds.filter((miscId) => !isLightableIdInUse(miscId))
+);
+export const availableExtraIds = computed(() =>
+  extraIds.filter((extraId) => !isLightableIdInUse(extraId))
+);
 
 export const useAddStatic = (value: staticType) => {
   const VCF = useVcfConfiguration();
@@ -161,7 +215,11 @@ export const useRemoveFlash = (pattern: patternType, flash: flashType) => {
   }
 };
 
-export const useToggleLight = (pattern: patternType, flash: flashType, lightable: Lightable) => {
+export const useToggleLight = (
+  pattern: patternType,
+  flash: flashType,
+  lightable: Lightable
+) => {
   const VCF = useVcfConfiguration();
 
   const flashIndex: number = getFlashIndex(flash);
