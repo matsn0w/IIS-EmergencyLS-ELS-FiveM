@@ -211,7 +211,6 @@ const playPreview = async (pattern: patternType) => {
     for (const miscId of flash.miscs) {
       const misc = enabledMiscs.value.find((misc) => misc.id === miscId)
       const color = getLightColor(misc);
-      console.log(`#${pattern.name}_misc_${miscId}`)
       document
         .querySelector(`#${pattern.name}_misc_${miscId}`)
         ?.classList.toggle(color);
