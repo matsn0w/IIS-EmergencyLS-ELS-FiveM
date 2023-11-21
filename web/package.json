@@ -10,21 +10,21 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^0.8.2",
-    "@nuxtjs/tailwindcss": "^6.8.0",
-    "@tailwindcss/forms": "^0.5.4",
+    "@nuxtjs/tailwindcss": "^6.10.0",
+    "@tailwindcss/forms": "^0.5.7",
     "@types/node": "^18.17.3",
-    "nuxt": "^3.6.5",
-    "prettier": "3.0.2",
-    "sass": "^1.66.1"
+    "nuxt": "^3.8.2",
+    "nuxt-icon": "^0.6.6",
+    "prettier": "3.1.0",
+    "sass": "^1.69.5"
   },
   "dependencies": {
     "@heroicons/vue": "^2.0.18",
-    "@types/luxon": "^3.3.4",
+    "@types/luxon": "^3.3.5",
     "compare-versions": "^6.1.0",
     "file-saver": "^2.0.5",
     "luxon": "^3.4.4",
-    "vuedraggable": "^4.1.0",
-    "xml-formatter": "^3.5.0"
+    "vuedraggable": "^2.24.3",
+    "xml-formatter": "^3.6.0"
   }
 }

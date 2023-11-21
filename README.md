@@ -50,7 +50,7 @@ If you have any existing VCF files from the [original author](https://github.com
 
 In both cases, it's probably best to re-create them by either writing them yourself OR... use the convient configuration GUI! Using this tool, you can easily generate configuration files for your vehicles. You can find it here:
 
-[![Open VCF Configurator](https://dabuttonfactory.com/button.png?t=MISS+ELS+VCF+Configurator&f=Open+Sans-Bold&ts=16&tc=fff&hp=45&vp=20&c=10&bgt=unicolored&bgc=1a37a8&be=1&bs=1&bc=fff)](https://matsn0w.github.io/MISS-ELS)
+[![Open VCF Configurator](https://dabuttonfactory.com/button.png?t=MISS+ELS+VCF+Configurator&f=Open+Sans-Bold&ts=16&tc=fff&hp=45&vp=20&c=10&bgt=unicolored&bgc=1a37a8&be=1&bs=1&bc=fff)](https://matsn0w.github.io/MISS-ELS/configurator)
 
 ## 💭 Questions or problems?
 

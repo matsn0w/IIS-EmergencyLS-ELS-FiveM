@@ -1,4 +1,4 @@
-name: Configurator deployer
+name: Web deployer
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./configurator
+        working-directory: ./web
 
     steps:
       - name: Checkout code
@@ -36,4 +36,4 @@ jobs:
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: ./configurator/.output/public
+          folder: ./web/.output/public
