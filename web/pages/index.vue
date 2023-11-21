@@ -26,6 +26,7 @@
 
 <script setup lang="ts">
 const url = useRequestURL();
+const config = useRuntimeConfig();
 
 useSeoMeta({
   ogSiteName: "MISS-ELS",
@@ -33,7 +34,7 @@ useSeoMeta({
   ogTitle: "MISS-ELS - server sided sirens for FiveM",
   ogDescription:
     "Server-sided ELS for FiveM with custom patterns per vehicle, custom sirens, indicator control and more!",
-  ogImage: `${url.origin}/images/MISS-ELS.png`,
+  ogImage: `${url.origin + config.app.baseURL}images/MISS-ELS.png`,
 });
 
 definePageMeta({

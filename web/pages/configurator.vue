@@ -173,7 +173,7 @@ useSeoMeta({
   ogTitle: "MISS-ELS VCF Configurator",
   ogDescription:
     "Using our VCF Configurator, you can easily generate configuration files for your vehicles.",
-  ogImage: `${url.origin}/images/MISS-ELS.png`,
+  ogImage: `${url.origin + config.app.baseURL}images/MISS-ELS.png`,
 });
 
 const isVcfSchemaVersionUpToDate = computed(() => {
