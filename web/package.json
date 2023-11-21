@@ -24,6 +24,7 @@
     "compare-versions": "^6.1.0",
     "file-saver": "^2.0.5",
     "luxon": "^3.4.4",
+    "octokit": "^3.1.2",
     "vuedraggable": "^2.24.3",
     "xml-formatter": "^3.6.0"
   }
