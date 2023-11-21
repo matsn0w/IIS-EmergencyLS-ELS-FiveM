@@ -69,8 +69,9 @@
                   :key="j"
                   :id="`${pattern.name}_extra_${extra.id}`"
                   class="light py-4"
-                  >{{ extra?.id }}</span
                 >
+                  {{ extra?.id }}
+                </span>
               </td>
               <td class="pt-4 pb-8 align-top">
                 <span
@@ -78,8 +79,9 @@
                   :key="j"
                   class="light"
                   :id="`${pattern.name}_misc_${misc.id}`"
-                  >{{ misc.id }}</span
                 >
+                  {{ misc.id }}
+                </span>
               </td>
               <td class="pt-4 pb-8 align-top">
                 <div class="flex gap-4">
@@ -93,17 +95,24 @@
                   </button>
 
                   <button
-                      type="button"
-                      class="amber"
-                      @click="pattern.loopPreview = false; pattern.isPlayingPreview = false"
-                      v-else
+                    type="button"
+                    class="amber"
+                    @click="
+                      pattern.loopPreview = false;
+                      pattern.isPlayingPreview = false;
+                    "
+                    v-else
                   >
                     <PlayPauseIcon class="w-4 h-4" />
                   </button>
 
                   <button
                     type="button"
-                    :class="pattern.loopPreview ? 'blue border-[1px]' : 'blue outlined'"
+                    :class="
+                      pattern.loopPreview
+                        ? 'blue border-[1px]'
+                        : 'blue outlined'
+                    "
                     @click="pattern.loopPreview = !pattern.loopPreview"
                   >
                     <ArrowPathRoundedSquareIcon class="w-4 h-4" />
@@ -127,8 +136,9 @@
                     isLightToggled(flash, extra) ? getLightColor(extra) : ''
                   "
                   @click="toggleLight(pattern, flash, extra)"
-                  >{{ extra.id }}</span
                 >
+                  {{ extra.id }}
+                </span>
               </td>
               <td>
                 <span
@@ -139,8 +149,9 @@
                     isLightToggled(flash, misc) ? getLightColor(misc) : ''
                   "
                   @click="toggleLight(pattern, flash, misc)"
-                  >{{ misc.id }}</span
                 >
+                  {{ misc.id }}
+                </span>
               </td>
               <td>
                 <button
@@ -160,9 +171,13 @@
 </template>
 
 <script setup lang="ts">
-import {letterLightableId, Lightable, numericalLightableId} from "~/types/lights";
-import {patternType} from "~/types/patterns";
-import {flashType} from "~/types/flash";
+import type {
+  letterLightableId,
+  Lightable,
+  numericalLightableId,
+} from "~/types/lights";
+import type { patternType } from "~/types/patterns";
+import type { flashType } from "~/types/flash";
 import {
   XMarkIcon,
   PlayIcon,
@@ -174,13 +189,19 @@ const VCF = useVcfConfiguration();
 
 const enabledExtras = computed(() =>
   VCF.value.configuration.lightables.filter(
-    (lightable) => lightable.enabled && lightable.type === "extra" && lightableIsNotInUseAsStatic(lightable.id)
+    (lightable) =>
+      lightable.enabled &&
+      lightable.type === "extra" &&
+      lightableIsNotInUseAsStatic(lightable.id)
   )
 );
 
 const enabledMiscs = computed(() =>
   VCF.value.configuration.lightables.filter(
-    (lightable) => lightable.enabled && lightable.type === "misc"  && lightableIsNotInUseAsStatic(lightable.id)
+    (lightable) =>
+      lightable.enabled &&
+      lightable.type === "misc" &&
+      lightableIsNotInUseAsStatic(lightable.id)
   )
 );
 
@@ -193,10 +214,9 @@ const removeFlash = (pattern: patternType, flash: flashType) => {
 };
 
 const playPreview = async (pattern: patternType) => {
+  pattern.isPlayingPreview = true;
 
-  pattern.isPlayingPreview = true
-
-  const flashes = getFlashesForPattern(pattern)
+  const flashes = getFlashesForPattern(pattern);
 
   for (const flash of flashes) {
     for (const extraId of flash.extras) {
@@ -209,7 +229,7 @@ const playPreview = async (pattern: patternType) => {
     }
 
     for (const miscId of flash.miscs) {
-      const misc = enabledMiscs.value.find((misc) => misc.id === miscId)
+      const misc = enabledMiscs.value.find((misc) => misc.id === miscId);
       const color = getLightColor(misc);
       document
         .querySelector(`#${pattern.name}_misc_${miscId}`)
@@ -239,16 +259,18 @@ const playPreview = async (pattern: patternType) => {
     }
   }
 
-  if (
-      pattern?.loopPreview && pattern?.isPlayingPreview
-  ) {
+  if (pattern?.loopPreview && pattern?.isPlayingPreview) {
     return await playPreview(pattern);
   }
 
-  pattern.isPlayingPreview = false
+  pattern.isPlayingPreview = false;
 };
 
-const toggleLight = (pattern: patternType, flash: flashType, light: Lightable) => {
+const toggleLight = (
+  pattern: patternType,
+  flash: flashType,
+  light: Lightable
+) => {
   useToggleLight(pattern, flash, light);
 };
 
@@ -259,7 +281,9 @@ const isLightToggled = (flash: flashType, light: Lightable) => {
   const extras = VCF.value.configuration.flashes[flashIndex].extras;
   const miscs = VCF.value.configuration.flashes[flashIndex].miscs;
 
-  return Number(light.id) ? extras.includes(light.id as numericalLightableId) : miscs.includes(light.id as letterLightableId);
+  return Number(light.id)
+    ? extras.includes(light.id as numericalLightableId)
+    : miscs.includes(light.id as letterLightableId);
 };
 
 const getLightColor = (light: Lightable) => {
@@ -282,6 +306,6 @@ const getFlashesForPattern = (pattern: patternType) => {
 .light.green,
 .light.amber,
 .light.blue {
-  @apply text-white
+  @apply text-white;
 }
 </style>

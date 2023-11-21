@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   app: {
     baseURL: "/MISS-ELS/",
     head: {
-      title: "MISS ELS VCF Configurator",
+      title: "MISS-ELS",
       htmlAttrs: {
         lang: "en",
       },
@@ -14,13 +14,8 @@ export default defineNuxtConfig({
   css: ["~/assets/css/main.scss"],
   ssr: false,
   devtools: { enabled: true },
-  plugins: [
-      'plugins/luxon'
-  ],
-  modules: [
-    "@nuxtjs/tailwindcss", 
-    "@nuxt/devtools",
-  ],
+  plugins: ["plugins/luxon"],
+  modules: ["@nuxtjs/tailwindcss", "@nuxt/devtools", "nuxt-icon"],
   runtimeConfig: {
     public: {
       version: pkg.version,

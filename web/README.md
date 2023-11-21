@@ -1,4 +1,4 @@
-# MISS ELS VCF Configurator
+# MISS-ELS web
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
