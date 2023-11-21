@@ -160,11 +160,21 @@ import { resetVcfConfiguration } from "~/composables/vcfConfiguration";
 import LocalStorageButton from "~/components/LocalStorageButton.vue";
 import { compareVersions } from "compare-versions";
 
+const url = useRequestURL();
+const config = useRuntimeConfig();
+
 useHead({
   title: "MISS-ELS VCF Configurator",
 });
 
-const config = useRuntimeConfig();
+useSeoMeta({
+  ogSiteName: "MISS-ELS",
+  title: "MISS-ELS VCF Configurator",
+  ogTitle: "MISS-ELS VCF Configurator",
+  ogDescription:
+    "Using our VCF Configurator, you can easily generate configuration files for your vehicles.",
+  ogImage: `${url.origin}/images/MISS-ELS.png`,
+});
 
 const isVcfSchemaVersionUpToDate = computed(() => {
   return (

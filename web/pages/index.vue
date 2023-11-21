@@ -25,6 +25,17 @@
 </template>
 
 <script setup lang="ts">
+const url = useRequestURL();
+
+useSeoMeta({
+  ogSiteName: "MISS-ELS",
+  title: "MISS-ELS - server sided sirens for FiveM",
+  ogTitle: "MISS-ELS - server sided sirens for FiveM",
+  ogDescription:
+    "Server-sided ELS for FiveM with custom patterns per vehicle, custom sirens, indicator control and more!",
+  ogImage: `${url.origin}/images/MISS-ELS.png`,
+});
+
 definePageMeta({
   layout: "fullscreen",
 });
@@ -52,7 +63,7 @@ const viewRelease = async () => {
 
 <style>
 .background {
-  background-image: url("~/assets/images/MISS-ELS.png");
+  background-image: url("/images/MISS-ELS.png");
   background-size: cover;
   background-position: center;
 }
