@@ -190,6 +190,12 @@ function registerElsVehicle(model)
             warning = false,
         },
         siren = 0,
+        sound = nil,
+        indicators = {
+            left = false,
+            right = false,
+            hazard = false,
+        },
     }
 end
 
@@ -229,6 +235,12 @@ function ResetState(netVehicle)
             warning = false,
         },
         siren = 0,
+        sound = nil,
+        indicators = {
+            left = false,
+            right = false,
+            hazard = false,
+        },
     }
 
     TriggerClientEvent('miss-els:client:updateState', -1, netVehicle, registeredElsVehicles[netVehicle])
@@ -237,7 +249,7 @@ end
 -- Toggle the siren of the vehicle
 -- @param netVehicle any
 RegisterNetEvent('miss-els:server:toggleSiren')
-AddEventHandler('miss-els:server:toggleSiren', function(netVehicle)
+AddEventHandler('miss-els:server:toggleSiren', function(netVehicle, sound)
     if not registeredElsVehicles[netVehicle] then
         return
     end
@@ -245,12 +257,33 @@ AddEventHandler('miss-els:server:toggleSiren', function(netVehicle)
     -- @todo: check if it isn't as simple as this?
     -- registeredElsVehicles[netVehicle].siren = !registeredElsVehicles[netVehicle].siren
 
+    -- @todo: set correct siren sound
+
     if registeredElsVehicles[netVehicle].siren <= 0 then
         registeredElsVehicles[netVehicle].siren = 1
         registeredElsVehicles[netVehicle].primary = true
         registeredElsVehicles[netVehicle].warning = false
     else
         registeredElsVehicles[netVehicle].siren = 0
+    end
+
+    TriggerClientEvent('miss-els:client:updateState', -1, netVehicle, registeredElsVehicles[netVehicle])
+end)
+
+-- Toggle the indicators of the vehicle
+-- @param netVehicle any
+RegisterNetEvent('miss-els:server:toggleSiren')
+AddEventHandler('miss-els:server:toggleSiren', function(netVehicle, indicator)
+    if not registeredElsVehicles[netVehicle] then
+        return
+    end
+
+    for k, v in pairs(registeredElsVehicles[netVehicle].indicators) do
+        if k == indicator then
+            registeredElsVehicles[netVehicle].indicators[k] = not v
+        else
+            registeredElsVehicles[netVehicle].indicators[k] = false
+        end
     end
 
     TriggerClientEvent('miss-els:client:updateState', -1, netVehicle, registeredElsVehicles[netVehicle])
