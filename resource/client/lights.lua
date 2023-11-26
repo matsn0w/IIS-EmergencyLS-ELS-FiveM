@@ -25,6 +25,9 @@ local function SetLightStage(vehicle, stage, toggle)
     -- set the light state
     ELSvehicle[stage] = toggle
 
+    -- update the light stage on the server
+    TriggerServerEvent('miss-els:server:toggleLightStage', VehToNet(vehicle), stage)
+
     if patternData.isEmergency then
         -- toggle the native siren ('emergency mode')
         SetVehicleSiren(vehicle, toggle)
@@ -273,7 +276,7 @@ AddEventHandler('kjELS:updateSiren', function(playerid, status)
     local sounds = kjxmlData[GetCarHash(vehicle)].sounds
 
     -- there are 4 possible siren sounds
-    local statuses = {1, 2, 3, 4}
+    local statuses = { 1, 2, 3, 4 }
 
     if TableHasValue(statuses, status) then
         -- get a fresh sound id
@@ -309,6 +312,9 @@ AddEventHandler('kjELS:updateIndicators', function(dir, toggle)
         SetVehicleIndicatorLights(vehicle, 1, toggle)
         SetVehicleIndicatorLights(vehicle, 0, toggle)
     end
+
+    -- update the indicator state on the server
+    TriggerServerEvent('miss-els:server:toggleIndicator', VehToNet(vehicle), dir)
 end)
 
 local function CreateEnviromentLight(vehicle, light, offset, color)
@@ -322,11 +328,16 @@ local function CreateEnviromentLight(vehicle, light, offset, color)
     local intensity = Config.EnvironmentalLights.Intensity or 1.0
     local shadow = 1.0
 
-    if string.lower(color) == 'blue' then rgb = { 0, 0, 255 }
-    elseif string.lower(color) == 'red' then rgb = { 255, 0, 0 }
-    elseif string.lower(color) == 'green' then rgb = { 0, 255, 0 }
-    elseif string.lower(color) == 'white' then rgb = { 255, 255, 255 }
-    elseif string.lower(color) == 'amber' then rgb = { 255, 194, 0}
+    if string.lower(color) == 'blue' then
+        rgb = { 0, 0, 255 }
+    elseif string.lower(color) == 'red' then
+        rgb = { 255, 0, 0 }
+    elseif string.lower(color) == 'green' then
+        rgb = { 0, 255, 0 }
+    elseif string.lower(color) == 'white' then
+        rgb = { 255, 255, 255 }
+    elseif string.lower(color) == 'amber' then
+        rgb = { 255, 194, 0 }
     end
 
     -- draw the light

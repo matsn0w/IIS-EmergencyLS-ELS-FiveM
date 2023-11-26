@@ -272,8 +272,8 @@ end)
 
 -- Toggle the indicators of the vehicle
 -- @param netVehicle any
-RegisterNetEvent('miss-els:server:toggleSiren')
-AddEventHandler('miss-els:server:toggleSiren', function(netVehicle, indicator)
+RegisterNetEvent('miss-els:server:toggleIndicator')
+AddEventHandler('miss-els:server:toggleIndicator', function(netVehicle, indicator)
     if not registeredElsVehicles[netVehicle] then
         return
     end
