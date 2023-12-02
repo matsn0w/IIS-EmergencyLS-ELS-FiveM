@@ -1,3 +1,4 @@
+--- @param type string The type of debug message
 local function GetDebugVariant (type)
     local variant = { text = '', color = Colors.WHITE }
 
@@ -22,6 +23,7 @@ local function Print (message, color)
     print(color .. message .. PrintColors.WHITE)
 end
 
+--- Print a debug message to the console.
 --- @param type string The type of debug message
 --- @param message string The message to print
 function Debug (type, message)
