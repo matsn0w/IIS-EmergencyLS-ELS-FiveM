@@ -368,6 +368,7 @@ end
 
 RegisterNetEvent('MISS-ELS:client:updateState')
 AddEventHandler('MISS-ELS:client:updateState', function(netVehicle, state)
+    PrintTable(state, 4)
     UpdateVehicleState(netVehicle, state)
 end)
 

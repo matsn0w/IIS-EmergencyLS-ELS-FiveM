@@ -80,7 +80,9 @@ local function HandleLightStage(stage)
     local ped = PlayerPedId()
     local vehicle = VehToNet(GetVehiclePedIsUsing(ped))
 
-    if ElsEnabledVehicles[vehicle][stage] then
+    if not ElsEnabledVehicles[vehicle] then AddVehicleToTable(vehicle) end
+
+    if ElsEnabledVehicles[vehicle].stages[stage] then
         -- turn lights off
         ToggleLights(vehicle, stage, false)
     else
