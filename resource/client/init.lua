@@ -1,4 +1,7 @@
+--- @type table All ELS enabled vehicles, keyed by network ID
 ElsEnabledVehicles = {}
+
+--- @type table All available VCF entries, keyed by vehicle model name
 VcfData = nil
 
 AddEventHandler('onClientResourceStart', function(name)

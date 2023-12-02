@@ -45,7 +45,7 @@ local function HandleHorn()
     if not vehicle or not PedIsDriver(vehicle) then return end
 
     -- get the horn info from the VCF
-    local mainHorn = VcfData[GetCarHash(vehicle)].sounds.mainHorn
+    local mainHorn = VcfData[GetVehicleModelName(vehicle)].sounds.mainHorn
 
     -- the custom horn is disabled
     if not mainHorn or not mainHorn.allowUse then return end
@@ -64,30 +64,39 @@ local function HandleHorn()
     end
 end
 
-local function ToggleLights(vehicle, stage, toggle)
-    local ELSvehicle = ElsEnabledVehicles[vehicle]
+--- @param netVehicle number The network ID of the vehicle
+---@param stage string The light stage to toggle
+---@param toggle boolean Whether to turn the lights on or off
+local function ToggleLights(netVehicle, stage, toggle)
+    local ElsVehicle = ElsEnabledVehicles[netVehicle]
 
     -- turn light stage on or off based on the toggle
-    TriggerEvent('MISS-ELS:toggleLights', vehicle, stage, toggle)
+    SetLightStage(netVehicle, stage, toggle)
 
     -- turn siren off when all lights are off
-    if not ELSvehicle.primary and not ELSvehicle.secondary and not ELSvehicle.warning then
+    if not ElsVehicle.primary and not ElsVehicle.secondary and not ElsVehicle.warning then
         TriggerServerEvent('MISS-ELS:setSirenState', 0)
     end
 end
 
+--- @param stage string
 local function HandleLightStage(stage)
     local ped = PlayerPedId()
-    local vehicle = VehToNet(GetVehiclePedIsUsing(ped))
+    local netVehicle = VehToNet(GetVehiclePedIsUsing(ped))
 
-    if not ElsEnabledVehicles[vehicle] then AddVehicleToTable(vehicle) end
+    if not ElsEnabledVehicles[netVehicle] then
+        Debug('warning', 'Vehicle not present in ElsEnabledVehicles table, adding it now')
+        AddVehicleToTable(netVehicle)
+    end
 
-    if ElsEnabledVehicles[vehicle].stages[stage] then
+    Debug('info', 'Set light stage ' .. stage .. ' to ' .. tostring(not ElsEnabledVehicles[netVehicle].stages[stage]))
+
+    if ElsEnabledVehicles[netVehicle].stages[stage] then
         -- turn lights off
-        ToggleLights(vehicle, stage, false)
+        ToggleLights(netVehicle, stage, false)
     else
         -- turn lights on
-        ToggleLights(vehicle, stage, true)
+        ToggleLights(netVehicle, stage, true)
     end
 end
 
@@ -103,7 +112,7 @@ local function HandleSiren(siren)
 
     if (not sirenOn) or (sirenOn and siren and siren ~= currentSiren) then
         -- siren only works if it is enabled
-        if siren and not VcfData[GetCarHash(vehicle)].sounds['srnTone' .. siren].allowUse then return end
+        if siren and not VcfData[GetVehicleModelName(vehicle)].sounds['srnTone' .. siren].allowUse then return end
 
         -- turn the (next) siren on
         TriggerServerEvent('MISS-ELS:setSirenState', siren or 1)
@@ -150,7 +159,7 @@ local function NextSiren()
     if next > 4 then next = 1 end
 
     -- check if the next siren is allowed
-    while not VcfData[GetCarHash(vehicle)].sounds['srnTone' .. next].allowUse do
+    while not VcfData[GetVehicleModelName(vehicle)].sounds['srnTone' .. next].allowUse do
         -- check if the maximum is reached, not even one siren is allowed!
         if count == max then return end
 
@@ -247,12 +256,14 @@ AddEventHandler('onClientResourceStart', function(name)
 
                 -- Vehicle got out of scope of the client
                 if not exists and vehicleState.initialized then
+                    Debug('info', 'Vehicle ' .. netVehicle .. ' got out of scope of the client')
                     UnloadVehicle(netVehicle)
                     goto continue
                 end
 
                 -- Vehicle got within scope of the client
                 if exists and not vehicleState.initialized then
+                    Debug('info', 'Vehicle ' .. netVehicle .. ' got within scope of the client')
                     LoadVehicle(netVehicle)
                 end
 
@@ -279,8 +290,11 @@ AddEventHandler('onClientResourceStart', function(name)
             local ped = PlayerPedId()
             local vehicle = VehToNet(GetVehiclePedIsUsing(ped))
 
+            TriggerServerEvent('MISS-ELS:server:enteredVehicle', vehicle)
+            TriggerEvent('MISS-ELS:initVehicle', ped)
+
             -- only run if player is in an ELS enabled vehicle and can control the sirens
-            if IsELSVehicle(vehicle) and CanControlSirens(vehicle) then
+            if IsElsVehicle(vehicle) and CanControlSirens(vehicle) then
                 -- conflicting controls
                 local controls = {
                     { 0, 58 }, -- INPUT_THROW_GRENADE

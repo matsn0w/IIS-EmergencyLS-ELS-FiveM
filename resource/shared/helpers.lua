@@ -1,15 +1,15 @@
 --- @param type string The type of debug message
 local function GetDebugVariant (type)
-    local variant = { text = '', color = Colors.WHITE }
+    local variant = { text = '', color = PrintColors.WHITE }
 
     if type == DebugType.INFO then
-        variant = { text = 'INFO: ', color = Colors.CYAN }
+        variant = { text = 'INFO: ', color = PrintColors.CYAN }
     elseif type == DebugType.WARNING then
-        variant = { text = 'WARNING: ', color = Colors.YELLOW }
+        variant = { text = 'WARNING: ', color = PrintColors.YELLOW }
     elseif type == DebugType.ERROR then
-        variant = { text = 'ERROR: ', color = Colors.RED }
+        variant = { text = 'ERROR: ', color = PrintColors.RED }
     elseif type == DebugType.SUCCESS then
-        variant = { text = 'SUCCESS: ', color = Colors.GREEN }
+        variant = { text = 'SUCCESS: ', color = PrintColors.GREEN }
     else
         Debug('warning', 'Unknown debug type \'' .. type .. '\'')
     end
@@ -36,14 +36,16 @@ end
 
 --- Print contents of `table`, with indentation.
 --- @param table table The table to print
---- @param indent number The initial level of indentation
+--- @param indent? number The initial level of indentation (used for recursive printing, do not provide yourself)
 --- source: https://gist.github.com/ripter/4270799
 function PrintTable (table, indent)
     if not indent then indent = 0 end
+    
+    if indent == 0 then Print('----- START TABLE -----') end
 
     for k, v in pairs(table) do
         local formatting = string.rep('  ', indent) .. k .. ': '
-
+        
         if type(v) == 'table' then
             Print(formatting)
             PrintTable(v, indent + 1)
@@ -53,25 +55,12 @@ function PrintTable (table, indent)
             Print(formatting .. v)
         end
     end
+
+    if indent == 0 then Print('----- END TABLE -----') end
 end
 
 function GetResourceVersion ()
     return GetResourceMetadata(GetCurrentResourceName(), 'version', 0)
-end
-
-function GetCarHash(car)
-    if not car then return false end
-
-    for k, v in pairs(VcfData) do
-        -- @todo: is this check still functional?
-        if GetEntityModel(car) == GetHashKey(k) and v.extras ~= nil then return k end
-    end
-
-    return false
-end
-
-function IsELSVehicle(vehicle)
-    return GetCarHash(vehicle) ~= false
 end
 
 function PedIsDriver(vehicle)
@@ -87,6 +76,7 @@ function CanControlSirens(vehicle)
 end
 
 
+--- @param stage string The stage to convert
 function ConvertStageToPattern(stage)
     local pattern = stage
 
@@ -110,7 +100,7 @@ function CanControlELS()
     if not IsPedInAnyVehicle(ped, false) then return false end
 
     -- player must be in an ELS vehicle
-    if not IsELSVehicle(vehicle) then return false end
+    if not IsElsVehicle(vehicle) then return false end
 
     -- player must be in a position to control the sirens
     if not CanControlSirens(vehicle) then return false end

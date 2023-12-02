@@ -4,6 +4,7 @@ function AddVehicleToTable(netVehicle)
         initialized = false,
         vehicle = NetToVeh(netVehicle),
         netVehicle = netVehicle,
+        highBeamEnabled = false,
         stages = {
             primary = false,
             secondary = false,
@@ -18,6 +19,20 @@ function AddVehicleToTable(netVehicle)
             hazard = false,
         },
     }
+end
+
+--- @param vehicle number The vehicle to get the model name of
+--- @return string|boolean model The model name of the vehicle or false if not found
+function GetVehicleModelName(vehicle)
+    for model, _ in pairs(VcfData) do
+        if GetEntityModel(vehicle) == GetHashKey(model) then return model end
+    end
+
+    return false
+end
+
+function IsElsVehicle(vehicle)
+    return GetVehicleModelName(vehicle) ~= false
 end
 
 --- Unload the vehicle when the vehicle becomes unavailable to the client
@@ -54,8 +69,8 @@ function LoadVehicle(netVehicle)
     SetVehicleHasMutedSirens(vehicle, true)
 
     -- Reset all extras on the vehicle
-    TriggerEvent('MISS-ELS:resetExtras', netVehicle)
-    TriggerEvent('MISS-ELS:resetMiscs', netVehicle)
+    ResetVehicleExtras(vehicle)
+    ResetVehicleMiscs(vehicle)
 
     -- Request the state of the vehicle
     TriggerServerEvent('MISS-ELS:server:requestState', netVehicle)
@@ -68,53 +83,42 @@ function UpdateVehicleState(netVehicle, state)
     local elsVehicle = ElsEnabledVehicles[netVehicle]
 
     if not elsVehicle.initialized then
+        Debug('warning', 'Vehicle ' .. netVehicle .. ' is not initialized');
         return
     end
 
     -- Update siren when state changed
-    if state.siren ~= elsVehicle.state.siren then
+    if state.siren ~= elsVehicle.siren then
+        Debug('info', 'Updated siren of vehicle ' .. netVehicle .. ' to ' .. state.siren)
         SetVehicleSiren(netVehicle, state.siren)
     end
 
-    if state.indicators ~= elsVehicle.state.indicators then
-        Debug('debug', 'Updated indicators of vehicle ' .. netVehicle .. ' to ' .. state.indicators .. '.')
-        PrintTable({
-            netVehicle = netVehicle,
-            state = state,
-            elsVehicle = elsVehicle,
-        }, 4)
+    if state.indicators.left ~= elsVehicle.indicators.left then
+        Debug('info', 'Updated indicators of vehicle ' .. netVehicle .. ' to ' .. state.indicators.left)
     end
 
+    if state.indicators.right ~= elsVehicle.indicators.right then
+        Debug('info', 'Updated indicators of vehicle ' .. netVehicle .. ' to ' .. state.indicators.right)
+    end
+    
+    if state.indicators.hazard ~= elsVehicle.indicators.hazard then
+        Debug('info', 'Updated indicators of vehicle ' .. netVehicle .. ' to ' .. state.indicators.hazard)
+    end
     -- Update primary when primary changed
-    if state.primary ~= elsVehicle.state.primary then
+    if state.primary ~= elsVehicle.primary then
         SetLightStage(netVehicle, 'primary', state.primary)
-        Debug('debug', 'Updated primary stage of vehicle ' .. netVehicle .. ' to ' .. state.primary .. '.')
-        PrintTable({
-            netVehicle = netVehicle,
-            state = state,
-            elsVehicle = elsVehicle,
-        }, 4)
+        Debug('info', 'Updated primary stage of vehicle ' .. netVehicle .. ' to ' .. state.primary)
     end
 
     -- Update secondary when secondary changed
-    if state.secondary ~= elsVehicle.state.secondary then
+    if state.secondary ~= elsVehicle.secondary then
         SetLightStage(netVehicle, 'secondary', state.secondary)
-        Debug('debug', 'Updated secondary stage of vehicle ' .. netVehicle .. ' to ' .. state.secondary .. '.')
-        PrintTable({
-            netVehicle = netVehicle,
-            state = state,
-            elsVehicle = elsVehicle,
-        }, 4)
+        Debug('info', 'Updated secondary stage of vehicle ' .. netVehicle .. ' to ' .. state.secondary)
     end
 
     -- Update warning lights when warning lights changed
-    if state.warning ~= elsVehicle.state.warning then
+    if state.warning ~= elsVehicle.warning then
         SetLightStage(netVehicle, 'warning', state.warning)
-        Debug('debug', 'Updated warning stage of vehicle ' .. netVehicle .. ' to ' .. state.warning .. '.')
-        PrintTable({
-            netVehicle = netVehicle,
-            state = state,
-            elsVehicle = elsVehicle,
-        }, 4)
+        Debug('info', 'Updated warning stage of vehicle ' .. netVehicle .. ' to ' .. state.warning)
     end
 end

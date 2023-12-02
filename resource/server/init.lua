@@ -161,14 +161,9 @@ AddEventHandler('MISS-ELS:requestELSInformation', function()
     TriggerClientEvent('MISS-ELS:sendELSInformation', source, VcfData)
 end)
 
-RegisterNetEvent('baseevents:enteredVehicle')
-AddEventHandler('baseevents:enteredVehicle', function(veh, seat, name)
-    TriggerClientEvent('MISS-ELS:initVehicle', source)
-end)
-
 
 --- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
---- ┃      OneSync Compatability           ┃
+--- ┃      OneSync Compatability       ┃
 --- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
 --- A table of all registered ELS vehicles
@@ -200,8 +195,6 @@ RegisterNetEvent('MISS-ELS:server:enteredVehicle')
 --- Register the vehicle as ELS vehicles
 --- @param netVehicle number
 AddEventHandler('MISS-ELS:server:enteredVehicle', function(netVehicle)
-    if not IsELSVehicle(NetToVeh(netVehicle)) then return end
-
     if isElsVehicleRegistered(netVehicle) then return end
 
     registerElsVehicle(netVehicle)
@@ -278,20 +271,23 @@ AddEventHandler('MISS-ELS:server:horn', function(netVehicle, pressed)
 end)
 
 RegisterNetEvent('MISS-ELS:server:toggleLightStage')
---- Toggle lightstage(s) on the vehicle
+--- Toggle lights tage(s) on the vehicle
 --- @param netVehicle number
 --- @param lightStages table
 AddEventHandler('MISS-ELS:server:toggleLightStage', function(netVehicle, lightStages)
     if not registeredElsVehicles[netVehicle] then
+        Debug('warning', 'Tried to toggle light stage(s) on vehicle, but vehicle is not registered')
         return
     end
 
-    -- Loop over the lightstages of the vehicle, and toggle them according to the lightstages suppplied by the client
-    for k, v in registeredElsVehicles[netVehicle].stages do
-        -- If the lightstage is in the list of lightstages, then toggle it
+    Debug('info', 'Toggling light stage(s) on vehicle')
+
+    -- Loop over the light stages of the vehicle, and toggle them according to the light stages suppplied by the client
+    for k, v in pairs(registeredElsVehicles[netVehicle].stages) do
+        -- If the light stage is in the list of light stages, then toggle it
         if lightStages[k] then
             registeredElsVehicles[netVehicle].stages[k] = not v
-        -- Else it should be turned off.
+        -- Else it should be turned off
         else
             registeredElsVehicles[netVehicle].stages[k] = false
         end
