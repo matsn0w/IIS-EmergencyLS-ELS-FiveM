@@ -76,18 +76,45 @@ function UpdateVehicleState(netVehicle, state)
         SetVehicleSiren(netVehicle, state.siren)
     end
 
+    if state.indicators ~= elsVehicle.state.indicators then
+        Debug('debug', 'Updated indicators of vehicle ' .. netVehicle .. ' to ' .. state.indicators .. '.')
+        PrintTable({
+            netVehicle = netVehicle,
+            state = state,
+            elsVehicle = elsVehicle,
+        }, 4)
+    end
+
     -- Update primary when primary changed
     if state.primary ~= elsVehicle.state.primary then
         SetLightStage(netVehicle, 'primary', state.primary)
+        Debug('debug', 'Updated primary stage of vehicle ' .. netVehicle .. ' to ' .. state.primary .. '.')
+        PrintTable({
+            netVehicle = netVehicle,
+            state = state,
+            elsVehicle = elsVehicle,
+        }, 4)
     end
 
     -- Update secondary when secondary changed
     if state.secondary ~= elsVehicle.state.secondary then
         SetLightStage(netVehicle, 'secondary', state.secondary)
+        Debug('debug', 'Updated secondary stage of vehicle ' .. netVehicle .. ' to ' .. state.secondary .. '.')
+        PrintTable({
+            netVehicle = netVehicle,
+            state = state,
+            elsVehicle = elsVehicle,
+        }, 4)
     end
 
     -- Update warning lights when warning lights changed
     if state.warning ~= elsVehicle.state.warning then
         SetLightStage(netVehicle, 'warning', state.warning)
+        Debug('debug', 'Updated warning stage of vehicle ' .. netVehicle .. ' to ' .. state.warning .. '.')
+        PrintTable({
+            netVehicle = netVehicle,
+            state = state,
+            elsVehicle = elsVehicle,
+        }, 4)
     end
 end
