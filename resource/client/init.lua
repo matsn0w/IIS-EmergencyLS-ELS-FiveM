@@ -1,5 +1,5 @@
-kjEnabledVehicles = {}
-kjxmlData = nil
+ElsEnabledVehicles = {}
+VcfData = nil
 
 AddEventHandler('onClientResourceStart', function(name)
     if not Config then
@@ -16,12 +16,12 @@ AddEventHandler('onClientResourceStart', function(name)
     for _, v in ipairs(Config.AudioBanks) do RequestScriptAudioBank(v, false) end
 end)
 
-RegisterNetEvent('kjELS:sendELSInformation')
-AddEventHandler('kjELS:sendELSInformation', function(information) kjxmlData = information end)
+RegisterNetEvent('MISS-ELS:sendELSInformation')
+AddEventHandler('MISS-ELS:sendELSInformation', function(information) VcfData = information end)
 
-RegisterNetEvent('kjELS:initVehicle')
-AddEventHandler('kjELS:initVehicle', function()
-    local vehicle = GetVehiclePedIsUsing(PlayerPedId())
+RegisterNetEvent('MISS-ELS:initVehicle')
+AddEventHandler('MISS-ELS:initVehicle', function()
+    local vehicle = VehToNet(GetVehiclePedIsUsing(PlayerPedId()))
 
-    if kjEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
+    if ElsEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
 end)

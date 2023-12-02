@@ -1,13 +1,13 @@
 local function AddHighBeamMenuEntry(vehicle)
-    local checked = kjEnabledVehicles[vehicle].highBeamEnabled
+    local checked = ElsEnabledVehicles[vehicle].highBeamEnabled
 
     if WarMenu.CheckBox(Config.Translations.VehicleControlMenu.FlashingHighBeam, checked) then
-        kjEnabledVehicles[vehicle].highBeamEnabled = not checked
+        ElsEnabledVehicles[vehicle].highBeamEnabled = not checked
     end
 end
 
 local function AddStaticsEntries(vehicle)
-    local statics = kjxmlData[GetCarHash(vehicle)].statics
+    local statics = VcfData[GetCarHash(vehicle)].statics
 
     for extra, info in spairs(statics.extras) do
         local name = info.name or ('Extra ' .. extra)
@@ -36,7 +36,7 @@ local function AddStaticsEntries(vehicle)
 
         if WarMenu.CheckBox(name, checked) and miscExists then
             -- toggle the misc
-            TriggerEvent('kjELS:toggleMisc', vehicle, misc)
+            TriggerEvent('MISS-ELS:toggleMisc', vehicle, misc)
         end
 
         if not miscExists then

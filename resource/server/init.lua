@@ -1,5 +1,26 @@
-kjxmlData = {}
+--- Global storage of all VCF data
+VcfData = {}
+
+--- The determined OS of the server
+--- @type string|nil
 local systemOS = nil
+
+--- Default state of a vehicle
+local defaultState = {
+    stages = {
+        primary = false,
+        secondary = false,
+        rearreds = false,
+    },
+    siren = 0,
+    sound = nil,
+    horn = false,
+    indicators = {
+        left = false,
+        right = false,
+        hazard = false,
+    },
+}
 
 local function parseObjSet(data, fileName)
     local xml = SLAXML:dom(data)
@@ -52,7 +73,7 @@ local function determineOS()
     if unix then system = 'unix' end
     if windows then system = 'windows' end
 
-    -- this guy probably has some custom ENV var set...
+    --- this guy probably has some custom ENV var set...
     if unix and windows then error('Couldn\'t identify the OS unambiguously.') end
 
     return system
@@ -108,7 +129,7 @@ AddEventHandler('onResourceStart', function(name)
 
     local folder = 'xmlFiles'
 
-    -- determine the server OS
+    --- determine the server OS
     systemOS = determineOS()
 
     if not systemOS then
@@ -120,10 +141,10 @@ AddEventHandler('onResourceStart', function(name)
 
         if data then
             if pcall(function() parseObjSet(data, file) end) then
-                -- no errors
+                --- no errors
                 print('Parsed VCF for: ' .. file)
             else
-                -- VCF is faulty, notify the user and continue
+                --- VCF is faulty, notify the user and continue
                 print('VCF file ' .. file .. ' could not be parsed: is your XML valid?')
             end
         else
@@ -131,149 +152,87 @@ AddEventHandler('onResourceStart', function(name)
         end
     end
 
-    -- send the ELS data to all clients
-    TriggerClientEvent('kjELS:sendELSInformation', -1, kjxmlData)
+    --- send the ELS data to all clients
+    TriggerClientEvent('MISS-ELS:sendELSInformation', -1, VcfData)
 end)
 
-RegisterServerEvent('kjELS:requestELSInformation')
-AddEventHandler('kjELS:requestELSInformation', function()
-    TriggerClientEvent('kjELS:sendELSInformation', source, kjxmlData)
+RegisterServerEvent('MISS-ELS:requestELSInformation')
+AddEventHandler('MISS-ELS:requestELSInformation', function()
+    TriggerClientEvent('MISS-ELS:sendELSInformation', source, VcfData)
 end)
 
 RegisterNetEvent('baseevents:enteredVehicle')
 AddEventHandler('baseevents:enteredVehicle', function(veh, seat, name)
-    TriggerClientEvent('kjELS:initVehicle', source)
+    TriggerClientEvent('MISS-ELS:initVehicle', source)
 end)
 
 
--- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
--- ┃         OneSync Compatability        ┃
--- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+--- ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+--- ┃      OneSync Compatability           ┃
+--- ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
--- A table of all registered ELS vehicles
+--- A table of all registered ELS vehicles
 local registeredElsVehicles = {}
 
--- Get the vehicle name from the vcf list
--- @param model any
--- @return string|boolean
-function getVehicleName(model)
-    for k, v in pairs(kjxmlData) do
-        if model === GetHashKey(k) then
-            return k
-        end
-    end
-
-    return false
+--- Check if the vehicle is currently registered as ELS vehicle
+--- @param netVehicle number
+--- @return boolean
+local function isElsVehicleRegistered(netVehicle)
+    return registeredElsVehicles[netVehicle] ~= nil
 end
 
--- Check if the vehicle is an ELS vehicle
--- @param model any
--- @return boolean
-function isElsVehicle(model)
-    return getVehicleName(model) ~= false
+--- Register the vehicle as ELS vehicle
+--- @param netVehicle number
+local function registerElsVehicle(netVehicle)
+    registeredElsVehicles[netVehicle] = deepcopy(defaultState)
+
+    TriggerClientEvent('MISS-ELS:client:registerVehicle', -1, netVehicle)
 end
 
--- Check if the vehicle is currently registered as ELS vehicle
--- @param vehicle any
--- @return boolean
-function isElsVehicleRegistered(vehicle)
-    return registeredElsVehicles[vehicle] ~= nil
-end
-
--- Register the vehicle as ELS vehicle
--- @param model any
-function registerElsVehicle(model)
-    registeredElsVehicles[model] = {
-        stages = {
-            primary = false,
-            secondary = false,
-            warning = false,
-        },
-        siren = 0,
-        sound = nil,
-        indicators = {
-            left = false,
-            right = false,
-            hazard = false,
-        },
-    }
-end
-
--- Allow to get the vehicle state
--- @param netVehicle any
-RegisterNetEvent('miss-els:server:requestState')
-AddEventHandler('miss-els:server:requestState', function(netVehicle)
-    TriggerClientEvent('miss-els:client:updateState', source, netVehicle, registeredElsVehicles[netVehicle])
+RegisterNetEvent('MISS-ELS:server:requestState')
+--- Allow to get the vehicle state
+--- @param netVehicle number
+AddEventHandler('MISS-ELS:server:requestState', function(netVehicle)
+    TriggerClientEvent('MISS-ELS:client:updateState', source, netVehicle, registeredElsVehicles[netVehicle])
 end)
 
--- Register the vehicle as ELS vehicles
--- @param vehicle any
--- @param model any
--- @param netVehicle any
-RegisterNetEvent('miss-els:server:enteredVehicle')
-AddEventHandler('miss-els:server:enteredVehicle', function(vehicle, model, netVehicle)
-    if not IsELSVehicle(model) then
-        return
-    end
+RegisterNetEvent('MISS-ELS:server:enteredVehicle')
+--- Register the vehicle as ELS vehicles
+--- @param netVehicle number
+AddEventHandler('MISS-ELS:server:enteredVehicle', function(netVehicle)
+    if not IsELSVehicle(NetToVeh(netVehicle)) then return end
 
-    if isElsVehicleRegistered(netVehicle) then
-        return
-    end
+    if isElsVehicleRegistered(netVehicle) then return end
 
     registerElsVehicle(netVehicle)
-
-    TriggerClientEvent('miss-els:client:registerVehicle', -1, netVehicle)
 end)
 
--- Reset the state of the vehicle
--- @param netVehicle any
+--- Reset the state of the vehicle
+--- @param netVehicle number
 function ResetState(netVehicle)
-    registeredElsVehicles[netVehicle] = {
-        stages = {
-            primary = false,
-            secondary = false,
-            warning = false,
-        },
-        siren = 0,
-        sound = nil,
-        indicators = {
-            left = false,
-            right = false,
-            hazard = false,
-        },
-    }
+    registeredElsVehicles[netVehicle] = deepcopy(defaultState)
 
-    TriggerClientEvent('miss-els:client:updateState', -1, netVehicle, registeredElsVehicles[netVehicle])
+    TriggerClientEvent('MISS-ELS:client:updateState', -1, netVehicle, registeredElsVehicles[netVehicle])
 end
 
--- Toggle the siren of the vehicle
--- @param netVehicle any
-RegisterNetEvent('miss-els:server:toggleSiren')
-AddEventHandler('miss-els:server:toggleSiren', function(netVehicle, sound)
+RegisterNetEvent('MISS-ELS:server:toggleSiren')
+--- Toggle the siren of the vehicle
+--- @param netVehicle number
+AddEventHandler('MISS-ELS:server:toggleSiren', function(netVehicle, status, sound)
     if not registeredElsVehicles[netVehicle] then
         return
     end
 
-    -- @todo: check if it isn't as simple as this?
-    -- registeredElsVehicles[netVehicle].siren = !registeredElsVehicles[netVehicle].siren
+    registeredElsVehicles[netVehicle].siren = status
+    registeredElsVehicles[netVehicle].sound = sound
 
-    -- @todo: set correct siren sound
-
-    if registeredElsVehicles[netVehicle].siren <= 0 then
-        registeredElsVehicles[netVehicle].siren = 1
-        registeredElsVehicles[netVehicle].primary = true
-        registeredElsVehicles[netVehicle].warning = false
-    else
-        registeredElsVehicles[netVehicle].siren = 0
-    end
-
-    TriggerClientEvent('miss-els:client:updateState', -1, netVehicle, registeredElsVehicles[netVehicle])
+    TriggerClientEvent('MISS-ELS:client:updateState', -1, netVehicle, registeredElsVehicles[netVehicle])
 end)
 
--- Toggle the indicators of the vehicle
--- @param netVehicle any
-RegisterNetEvent('miss-els:server:toggleIndicator')
-AddEventHandler('miss-els:server:toggleIndicator', function(netVehicle, indicator)
+RegisterNetEvent('MISS-ELS:server:toggleIndicator')
+--- Toggle the indicators of the vehicle
+--- @param netVehicle number
+AddEventHandler('MISS-ELS:server:toggleIndicator', function(netVehicle, indicator)
     if not registeredElsVehicles[netVehicle] then
         return
     end
@@ -286,13 +245,13 @@ AddEventHandler('miss-els:server:toggleIndicator', function(netVehicle, indicato
         end
     end
 
-    TriggerClientEvent('miss-els:client:updateState', -1, netVehicle, registeredElsVehicles[netVehicle])
+    TriggerClientEvent('MISS-ELS:client:updateState', -1, netVehicle, registeredElsVehicles[netVehicle])
 end)
 
--- Toggle the horn of the vehicle
--- @param netVehicle any
-RegisterNetEvent('miss-els:server:horn')
-AddEventHandler('miss-els:server:horn', function(netVehicle, pressed)
+RegisterNetEvent('MISS-ELS:server:horn')
+--- Toggle the horn of the vehicle
+--- @param netVehicle number
+AddEventHandler('MISS-ELS:server:horn', function(netVehicle, pressed)
     if not registeredElsVehicles[netVehicle] then
         return
     end
@@ -315,14 +274,14 @@ AddEventHandler('miss-els:server:horn', function(netVehicle, pressed)
 
     ::continue::
 
-    TriggerClientEvent('miss-els:client:updateState', -1, netVehicle, registeredElsVehicles[netVehicle])
+    TriggerClientEvent('MISS-ELS:client:updateState', -1, netVehicle, registeredElsVehicles[netVehicle])
 end)
 
--- Toggle lightstage(s) on the vehicle
--- @param netVehicle any
--- @param lightStages table
-RegisterNetEvent('miss-els:server:toggleLightStage')
-AddEventHandler('miss-els:server:toggleLightStage', function(netVehicle, lightStages)
+RegisterNetEvent('MISS-ELS:server:toggleLightStage')
+--- Toggle lightstage(s) on the vehicle
+--- @param netVehicle number
+--- @param lightStages table
+AddEventHandler('MISS-ELS:server:toggleLightStage', function(netVehicle, lightStages)
     if not registeredElsVehicles[netVehicle] then
         return
     end
@@ -338,5 +297,5 @@ AddEventHandler('miss-els:server:toggleLightStage', function(netVehicle, lightSt
         end
     end
 
-    TriggerClientEvent('miss-els:client:updateState', -1, netVehicle, registeredElsVehicles[netVehicle])
+    TriggerClientEvent('MISS-ELS:client:updateState', -1, netVehicle, registeredElsVehicles[netVehicle])
 end)

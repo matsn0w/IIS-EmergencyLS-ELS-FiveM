@@ -1,15 +1,10 @@
 -- indicator state
-Indicators = {
-    left = false,
-    right = false,
-    hazard = false
-}
-
 local function HandleIndicators(type)
     if not type then return end
 
     local ped = PlayerPedId()
-    local vehicle = GetVehiclePedIsUsing(ped)
+    local vehicle = VehToNet(GetVehiclePedIsUsing(ped))
+    local Indicators = ElsEnabledVehicles[vehicle].indicators
 
     -- only the driver can control the indicators
     if not vehicle or not PedIsDriver(vehicle) then return end
@@ -21,7 +16,7 @@ local function HandleIndicators(type)
 
     -- toggle the indicator
     Indicators[type] = not Indicators[type]
-    TriggerServerEvent('kjELS:sv_Indicator', type, Indicators[type])
+    TriggerServerEvent('MISS-ELS:sv_Indicator', type, Indicators[type])
 
     -- play blip sound
     PlaySoundFrontend(-1, 'NAV_UP_DOWN', 'HUD_FRONTEND_DEFAULT_SOUNDSET', 1)
@@ -44,13 +39,13 @@ end
 
 local function HandleHorn()
     local ped = PlayerPedId()
-    local vehicle = GetVehiclePedIsUsing(ped)
+    local vehicle = VehToNet(GetVehiclePedIsUsing(ped))
 
     -- only the driver can control the horn
     if not vehicle or not PedIsDriver(vehicle) then return end
 
     -- get the horn info from the VCF
-    local mainHorn = kjxmlData[GetCarHash(vehicle)].sounds.mainHorn
+    local mainHorn = VcfData[GetCarHash(vehicle)].sounds.mainHorn
 
     -- the custom horn is disabled
     if not mainHorn or not mainHorn.allowUse then return end
@@ -60,42 +55,37 @@ local function HandleHorn()
 
     -- INPUT_VEH_HORN (E or L3) is pressed
     if IsDisabledControlJustPressed(0, 86) then
-        TriggerServerEvent('kjELS:toggleHorn', true)
+        TriggerServerEvent('MISS-ELS:toggleHorn', true)
     end
 
     -- INPUT_VEH_HORN (E or L3) is released
     if IsDisabledControlJustReleased(0, 86) then
-        TriggerServerEvent('kjELS:toggleHorn', false)
+        TriggerServerEvent('MISS-ELS:toggleHorn', false)
     end
 end
 
 local function ToggleLights(vehicle, stage, toggle)
-    local ELSvehicle = kjEnabledVehicles[vehicle]
+    local ELSvehicle = ElsEnabledVehicles[vehicle]
 
     -- turn light stage on or off based on the toggle
-    TriggerEvent('kjELS:toggleLights', vehicle, stage, toggle)
+    TriggerEvent('MISS-ELS:toggleLights', vehicle, stage, toggle)
 
     -- turn siren off when all lights are off
     if not ELSvehicle.primary and not ELSvehicle.secondary and not ELSvehicle.warning then
-        TriggerServerEvent('kjELS:setSirenState', 0)
+        TriggerServerEvent('MISS-ELS:setSirenState', 0)
     end
 end
 
 local function HandleLightStage(stage)
     local ped = PlayerPedId()
-    local vehicle = GetVehiclePedIsUsing(ped)
+    local vehicle = VehToNet(GetVehiclePedIsUsing(ped))
 
-    if kjEnabledVehicles[vehicle][stage] then
+    if ElsEnabledVehicles[vehicle][stage] then
         -- turn lights off
         ToggleLights(vehicle, stage, false)
     else
         -- turn lights on
         ToggleLights(vehicle, stage, true)
-
-        if stage == 'primary' and kjxmlData[GetCarHash(vehicle)].sounds.nineMode then
-            -- play 999 sound effect
-            SendNUIMessage({ transactionType = 'playSound', transactionFile = '999mode', transactionVolume = 1.0 })
-        end
     end
 end
 
@@ -104,24 +94,24 @@ local function HandleSiren(siren)
     local vehicle = GetVehiclePedIsUsing(ped)
 
     -- siren only works in the primary light stage
-    if not kjEnabledVehicles[vehicle].primary and not Config.SirenAlwaysAllowed then return end
+    if not ElsEnabledVehicles[vehicle].primary and not Config.SirenAlwaysAllowed then return end
 
-    local currentSiren = kjEnabledVehicles[vehicle].siren
+    local currentSiren = ElsEnabledVehicles[vehicle].siren
     local sirenOn = currentSiren ~= 0
 
     if (not sirenOn) or (sirenOn and siren and siren ~= currentSiren) then
         -- siren only works if it is enabled
-        if siren and not kjxmlData[GetCarHash(vehicle)].sounds['srnTone' .. siren].allowUse then return end
+        if siren and not VcfData[GetCarHash(vehicle)].sounds['srnTone' .. siren].allowUse then return end
 
         -- turn the (next) siren on
-        TriggerServerEvent('kjELS:setSirenState', siren or 1)
+        TriggerServerEvent('MISS-ELS:setSirenState', siren or 1)
 
         if Config.HornBlip then
             SoundVehicleHornThisFrame(vehicle)
         end
     elseif sirenOn or not siren then
         -- turn the siren off
-        TriggerServerEvent('kjELS:setSirenState', 0)
+        TriggerServerEvent('MISS-ELS:setSirenState', 0)
 
         if Config.HornBlip then
             Wait(100)
@@ -136,12 +126,19 @@ local function HandleSiren(siren)
     end
 end
 
+local function HandleToggleHighbeams()
+    local ped = PlayerPedId()
+    local vehicle = VehToNet(GetVehiclePedIsUsing(ped))
+
+    ElsEnabledVehicles[vehicle].highBeamEnabled = not ElsEnabledVehicles[vehicle].highBeamEnabled
+end
+
 local function NextSiren()
     local ped = PlayerPedId()
     local vehicle = GetVehiclePedIsUsing(ped)
 
     -- get the next siren
-    local next = kjEnabledVehicles[vehicle].siren + 1
+    local next = ElsEnabledVehicles[vehicle].siren + 1
 
     -- keep track of the amount of tries, there are a total of 4 sirens
     local max = 4
@@ -151,7 +148,7 @@ local function NextSiren()
     if next > 4 then next = 1 end
 
     -- check if the next siren is allowed
-    while not kjxmlData[GetCarHash(vehicle)].sounds['srnTone' .. next].allowUse do
+    while not VcfData[GetCarHash(vehicle)].sounds['srnTone' .. next].allowUse do
         -- check if the maximum is reached, not even one siren is allowed!
         if count == max then return end
 
@@ -222,6 +219,12 @@ RegisterCommand('MISS-ELS:toggle-siren-four', function ()
     HandleSiren(4)
 end)
 
+RegisterCommand('MISS-ELS:toggle-highbeams', function ()
+    if not CanControlELS() then return end
+
+    HandleToggleHighbeams()
+end)
+
 AddEventHandler('onClientResourceStart', function(name)
     if not Config then
         CancelEvent()
@@ -233,21 +236,46 @@ AddEventHandler('onClientResourceStart', function(name)
         return
     end
 
+    -- OneSync render checking loop
+    -- Checks if vehicle is within render on the client
     Citizen.CreateThread(function()
         while true do
-            if not kjxmlData then
+            for netVehicle, vehicleState in pairs(ElsEnabledVehicles) do
+                local exists = NetworkDoesEntityExistWithNetworkId(netVehicle)
+
+                -- Vehicle got out of scope of the client
+                if not exists and vehicleState.initialized then
+                    UnloadVehicle(netVehicle)
+                    goto continue
+                end
+
+                -- Vehicle got within scope of the client
+                if exists and not vehicleState.initialized then
+                    LoadVehicle(netVehicle)
+                end
+
+                ::continue::
+            end
+
+            Citizen.Wait(50)
+        end
+    end)
+
+    Citizen.CreateThread(function()
+        while true do
+            if not VcfData then
                 -- request ELS data
-                TriggerServerEvent('kjELS:requestELSInformation')
+                TriggerServerEvent('MISS-ELS:requestELSInformation')
 
                 -- wait for the data to load
-                while not kjxmlData do Citizen.Wait(0) end
+                while not VcfData do Citizen.Wait(0) end
             end
 
             -- wait untill the player is in a vehicle
             while not IsPedInAnyVehicle(PlayerPedId(), false) do Citizen.Wait(0) end
 
             local ped = PlayerPedId()
-            local vehicle = GetVehiclePedIsUsing(ped)
+            local vehicle = VehToNet(GetVehiclePedIsUsing(ped))
 
             -- only run if player is in an ELS enabled vehicle and can control the sirens
             if IsELSVehicle(vehicle) and CanControlSirens(vehicle) then
@@ -274,7 +302,7 @@ AddEventHandler('onClientResourceStart', function(name)
                 SetVehicleAutoRepairDisabled(vehicle, true)
 
                 -- add vehicle to ELS table if not listed already
-                if kjEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
+                if ElsEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
 
                 -- handle the horn
                 HandleHorn()

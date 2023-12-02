@@ -1,3 +1,5 @@
+--- @param xml table
+--- @param fileName string
 function ParseVCF(xml, fileName)
 
     local vcf = {
@@ -197,5 +199,5 @@ function ParseVCF(xml, fileName)
 
     end
 
-    kjxmlData[fileName] = vcf
+    VcfData[fileName] = vcf
 end

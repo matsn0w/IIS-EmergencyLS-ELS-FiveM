@@ -1,6 +1,9 @@
 -- statics menu
 RegisterKeyMapping('MISS-ELS:open-statics-menu', 'Open statics menu', 'KEYBOARD', 'U')
 
+-- Flashing highbeams
+RegisterKeyMapping('MISS-ELS:toggle-highbeams', 'Toggle flashing highbeams', 'KEYBOARD', 'J')
+
 -- indicators
 RegisterKeyMapping('MISS-ELS:toggle-indicator-hazard', 'Toggle hazard lights', 'KEYBOARD', 'DOWN')
 RegisterKeyMapping('MISS-ELS:toggle-indicator-left', 'Toggle left indicator', 'KEYBOARD', 'LEFT')
