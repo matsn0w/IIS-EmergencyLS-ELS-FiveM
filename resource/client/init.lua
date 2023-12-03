@@ -4,6 +4,13 @@ ElsEnabledVehicles = {}
 --- @type table All available VCF entries, keyed by vehicle model name
 VcfData = nil
 
+local function loadAudioBanks()
+    for _, bank in ipairs(Config.AudioBanks) do
+        Debug.info('Requesting audio bank ' .. bank)
+        RequestScriptAudioBank(bank, false)
+    end
+end
+
 AddEventHandler('onClientResourceStart', function(name)
     if not Config then
         CancelEvent()
@@ -15,16 +22,10 @@ AddEventHandler('onClientResourceStart', function(name)
         return
     end
 
-    -- load audio banks
-    for _, v in ipairs(Config.AudioBanks) do RequestScriptAudioBank(v, false) end
+    loadAudioBanks()
 end)
 
-RegisterNetEvent('MISS-ELS:sendELSInformation')
-AddEventHandler('MISS-ELS:sendELSInformation', function(information) VcfData = information end)
-
-RegisterNetEvent('MISS-ELS:initVehicle')
-AddEventHandler('MISS-ELS:initVehicle', function()
-    local netVehicle = VehToNet(GetVehiclePedIsUsing(PlayerPedId()))
-
-    if ElsEnabledVehicles[netVehicle] == nil then AddVehicleToTable(netVehicle) end
+RegisterNetEvent('MISS-ELS:client:sendElsInformation')
+AddEventHandler('MISS-ELS:client:sendElsInformation', function(information)
+    VcfData = information
 end)

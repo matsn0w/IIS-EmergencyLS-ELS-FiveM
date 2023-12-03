@@ -80,45 +80,55 @@ end
 --- @param netVehicle number The network ID of the vehicle
 --- @param state table The fully updated state of the vehicle
 function UpdateVehicleState(netVehicle, state)
+        Debug.info('Updating vehicle state of ' .. netVehicle)
+    if NetToVeh(netVehicle) == GetVehiclePedIsUsing(PlayerPedId()) then
+        Debug.warning('This is you. Skippping')
+        return
+    end
+    
     local elsVehicle = ElsEnabledVehicles[netVehicle]
 
     if not elsVehicle.initialized then
-        Debug('warning', 'Vehicle ' .. netVehicle .. ' is not initialized');
+        -- Vehicle is not in scope here
+        Debug.warning('Vehicle ' .. netVehicle .. ' is not initialized');
         return
     end
 
     -- Update siren when state changed
     if state.siren ~= elsVehicle.siren then
-        Debug('info', 'Updated siren of vehicle ' .. netVehicle .. ' to ' .. state.siren)
-        SetVehicleSiren(netVehicle, state.siren)
+        Debug.info('Updated siren of vehicle ' .. netVehicle)
+        ToggleSiren(netVehicle, state.siren)
     end
 
     if state.indicators.left ~= elsVehicle.indicators.left then
-        Debug('info', 'Updated indicators of vehicle')
+        Debug.info('Updated indicators of vehicle ' .. netVehicle)
+        setIndicator(netVehicle, 'left', state.indicators.left)
     end
 
     if state.indicators.right ~= elsVehicle.indicators.right then
-        Debug('info', 'Updated indicators of vehicle')
+        Debug.info('Updated indicators of vehicle ' .. netVehicle)
+        setIndicator(netVehicle, 'right', state.indicators.right)
     end
     
     if state.indicators.hazard ~= elsVehicle.indicators.hazard then
-        Debug('info', 'Updated indicators of vehicle')
+        Debug.info('Updated indicators of vehicle ' .. netVehicle)
+        setIndicator(netVehicle, 'hazard', state.indicators.hazard)
     end
     -- Update primary when primary changed
     if state.primary ~= elsVehicle.primary then
         SetLightStage(netVehicle, 'primary', state.primary)
-        Debug('info', 'Updated primary stage of vehicle')
+        Debug.info('Updated primary stage of vehicle')
     end
 
     -- Update secondary when secondary changed
     if state.secondary ~= elsVehicle.secondary then
         SetLightStage(netVehicle, 'secondary', state.secondary)
-        Debug('info', 'Updated secondary stage of vehicle')
+        Debug.info('Updated secondary stage of vehicle')
     end
 
     -- Update warning lights when warning lights changed
     if state.warning ~= elsVehicle.warning then
         SetLightStage(netVehicle, 'warning', state.warning)
-        Debug('info', 'Updated warning stage of vehicle')
+        Debug.info('Updated warning stage of vehicle')
     end
 end

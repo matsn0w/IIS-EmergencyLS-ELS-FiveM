@@ -11,28 +11,42 @@ local function GetDebugVariant (type)
     elseif type == DebugType.SUCCESS then
         variant = { text = 'SUCCESS: ', color = PrintColors.GREEN }
     else
-        Debug('warning', 'Unknown debug type \'' .. type .. '\'')
+        Debug.warning('Unknown debug type \'' .. type .. '\'')
     end
 
     return variant
 end
 
-local function Print (message, color)
+function Print (message, color)
     if not color then color = PrintColors.WHITE end
 
     print(color .. message .. PrintColors.WHITE)
 end
 
 --- Print a debug message to the console.
---- @param type string The type of debug message
+--- @param type DebugType The type of debug message
 --- @param message string The message to print
-function Debug (type, message)
+local function debug (type, message)
     if not Config.Debug then return end
 
-    local debug = GetDebugVariant(type)
+    local debugVariant = GetDebugVariant(type)
 
-    Print(debug.text .. message, debug.color)
+    Print(debugVariant.text .. message, debugVariant.color)
 end
+
+Debug = {
+    --- @param message string The message to print
+    info = function (message) debug(DebugType.INFO, message) end,
+
+    --- @param message string The message to print
+    warning = function (message) debug(DebugType.WARNING, message) end,
+
+    --- @param message string The message to print
+    success = function (message) debug(DebugType.SUCCESS, message) end,
+
+    --- @param message string The message to print
+    error = function (message) debug(DebugType.ERROR, message) end,
+}
 
 --- Print contents of `table`, with indentation.
 --- @param table table The table to print
@@ -63,10 +77,12 @@ function GetResourceVersion ()
     return GetResourceMetadata(GetCurrentResourceName(), 'version', 0)
 end
 
+--- @param vehicle number The vehicle to check
 function PedIsDriver(vehicle)
     return GetPedInVehicleSeat(vehicle, -1) == PlayerPedId()
 end
 
+--- @param vehicle number The vehicle to check
 function CanControlSirens(vehicle)
     -- driver can always control the sirens
     if PedIsDriver(vehicle) then return true end
@@ -74,7 +90,6 @@ function CanControlSirens(vehicle)
     -- either true or false based on the config value
     return Config.AllowPassengers
 end
-
 
 --- @param stage string The stage to convert
 function ConvertStageToPattern(stage)
@@ -87,6 +102,7 @@ function ConvertStageToPattern(stage)
     return pattern
 end
 
+--- Whether the player can control ELS on the current vehicle
 function CanControlELS()
     if not VcfData then
         -- wait for the data to load

@@ -90,7 +90,7 @@ function SetLightStage(netVehicle, stage, toggle)
     -- get the pattern data
     local patternData = VCFdata.patterns[ConvertStageToPattern(stage)]
 
-    Debug('info', 'Toggling light stage')
+    Debug.info('Toggling light stage')
 
     -- reset all extras and miscs
     ResetVehicleExtras(vehicle)
@@ -125,22 +125,22 @@ function SetLightStage(netVehicle, stage, toggle)
                     SetVehicleFullbeam(vehicle, true)
                     SetVehicleLightMultiplier(vehicle, Config.HighBeamIntensity or 5.0)
 
-                    Wait(500)
+                    Citizen.Wait(500)
 
                     SetVehicleFullbeam(vehicle, false)
                     SetVehicleLightMultiplier(vehicle, 1.0)
 
-                    Wait(500)
+                    Citizen.Wait(500)
                 end
 
-                Wait(0)
+                Citizen.Wait(0)
             end
 
             -- reset initial vehicle state
             if lightsOn == 0 then SetVehicleLights(vehicle, 0) end
             if highbeamsOn == 1 then SetVehicleFullbeam(vehicle, true) end
 
-            Wait(0)
+            Citizen.Wait(0)
         end)
     end
 
@@ -209,7 +209,7 @@ function SetLightStage(netVehicle, stage, toggle)
             Citizen.Wait(0)
         end
 
-        Wait(0)
+        Citizen.Wait(0)
     end)
 end
 
@@ -230,11 +230,11 @@ function ResetVehicleExtras(vehicle)
     local model = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle))
 
     if not SetContains(VcfData, model) then
-        Debug('warning', 'Model \'' .. model .. '\' is not in the VCF data')
+        Debug.warning('Model \'' .. model .. '\' is not in the VCF data')
         return
     end
 
-    Debug('info', 'Resetting all enabled extras on vehicle')
+    Debug.info('Resetting all enabled extras on vehicle')
 
     for extra, info in pairs(VcfData[model].extras) do
         if info.enabled == true and not StaticsIncludesExtra(model, extra) then
@@ -252,11 +252,11 @@ function ResetVehicleMiscs(vehicle)
     local model = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle))
 
     if not SetContains(VcfData, model) then
-        Debug('warning', 'Model \'' .. model .. '\' is not in the VCF data')
+        Debug.warning('Model \'' .. model .. '\' is not in the VCF data')
         return
     end
 
-    Debug('info', 'Resetting all enabled miscs on vehicle')
+    Debug.info('Resetting all enabled miscs on vehicle')
 
     for misc, info in pairs(VcfData[model].miscs) do
         if info.enabled == true and not StaticsIncludesMisc(model, misc) then
@@ -265,8 +265,8 @@ function ResetVehicleMiscs(vehicle)
     end
 end
 
-RegisterNetEvent('MISS-ELS:updateHorn')
-AddEventHandler('MISS-ELS:updateHorn', function(playerid, status)
+RegisterNetEvent('MISS-ELS:client:updateHorn')
+AddEventHandler('MISS-ELS:client:updateHorn', function(playerid, status)
     local vehicle = GetVehiclePedIsUsing(GetPlayerPed(GetPlayerFromServerId(playerid)))
 
     if not vehicle then
@@ -312,67 +312,63 @@ AddEventHandler('MISS-ELS:updateHorn', function(playerid, status)
 end)
 
 -- run on MISS-ELS:setSirenState
-RegisterNetEvent('MISS-ELS:updateSiren')
-AddEventHandler('MISS-ELS:updateSiren', function(playerid, status)
-    local vehicle = GetVehiclePedIsUsing(GetPlayerPed(GetPlayerFromServerId(playerid)))
+-- RegisterNetEvent('MISS-ELS:updateSiren')
+-- AddEventHandler('MISS-ELS:updateSiren', function(playerid, status)
+--     local vehicle = GetVehiclePedIsUsing(GetPlayerPed(GetPlayerFromServerId(playerid)))
 
-    if not vehicle then
-        CancelEvent()
-        return
-    end
+--     if not vehicle then
+--         CancelEvent()
+--         return
+--     end
 
-    local netVehicle = VehToNet(vehicle)
+--     local netVehicle = VehToNet(vehicle)
 
-    if ElsEnabledVehicles[netVehicle] == nil then AddVehicleToTable(netVehicle) end
+--     if ElsEnabledVehicles[netVehicle] == nil then AddVehicleToTable(netVehicle) end
 
-    local ElsVehicle = ElsEnabledVehicles[netVehicle]
+--     local ElsVehicle = ElsEnabledVehicles[netVehicle]
 
-    -- toggle the siren state (true = on, false = off)
-    ElsVehicle.siren = status
-    ElsEnabledVehicles[netVehicle].siren = status
+--     -- toggle the siren state (true = on, false = off)
+--     ElsVehicle.siren = status
+--     ElsEnabledVehicles[netVehicle].siren = status
 
-    -- siren is on
-    if ElsVehicle.sound ~= nil then
-        -- stop the siren
-        StopSound(ElsVehicle.sound)
-        ReleaseSoundId(ElsVehicle.sound)
+--     -- siren is on
+--     if ElsVehicle.sound ~= nil then
+--         -- stop the siren
+--         StopSound(ElsVehicle.sound)
+--         ReleaseSoundId(ElsVehicle.sound)
 
-        ElsVehicle.sound = nil
-    end
+--         ElsVehicle.sound = nil
+--     end
 
-    -- get the sounds from the VCF
-    local sounds = VcfData[GetVehicleModelName(vehicle)].sounds
+--     -- get the sounds from the VCF
+--     local sounds = VcfData[GetVehicleModelName(vehicle)].sounds
 
-    -- there are 4 possible siren sounds
-    local statuses = { 1, 2, 3, 4 }
+--     -- there are 4 possible siren sounds
+--     local statuses = { 1, 2, 3, 4 }
 
-    if TableHasValue(statuses, status) then
-        -- get a fresh sound id
-        ElsVehicle.sound = GetSoundId()
-        ElsEnabledVehicles[netVehicle].sound = ElsVehicle.sound
+--     if TableHasValue(statuses, status) then
+--         -- get a fresh sound id
+--         ElsVehicle.sound = GetSoundId()
+--         ElsEnabledVehicles[netVehicle].sound = ElsVehicle.sound
 
-        -- play the siren sound
-        PlaySoundFromEntity(
-            ElsVehicle.sound,
-            sounds['srnTone' .. status].audioString,
-            vehicle,
-            sounds['srnTone' .. status].soundSet,
-            0, 0
-        )
-    end
+--         -- play the siren sound
+--         PlaySoundFromEntity(
+--             ElsVehicle.sound,
+--             sounds['srnTone' .. status].audioString,
+--             vehicle,
+--             sounds['srnTone' .. status].soundSet,
+--             0, 0
+--         )
+--     end
 
-    TriggerServerEvent('MISS-ELS:server:toggleSiren', netVehicle, status)
+--     -- mute the native siren
+--     SetVehicleHasMutedSirens(vehicle, true)
+-- end)
 
-    -- mute the native siren
-    SetVehicleHasMutedSirens(vehicle, true)
-end)
+function setIndicator(netVehicle, dir, toggle)
+    local vehicle = NetToVeh(netVehicle)
 
-RegisterNetEvent('MISS-ELS:updateIndicators')
-AddEventHandler('MISS-ELS:updateIndicators', function(dir, toggle)
-    local vehicle = GetVehiclePedIsIn(PlayerPedId())
-    local netVehicle = VehToNet(vehicle)
-
-    Debug('info', 'Toggling indicators')
+    Debug.info('Toggling indicators')
 
     -- disable all indicators first
     SetVehicleIndicatorLights(vehicle, 1, false) -- 1 is left
@@ -395,14 +391,7 @@ AddEventHandler('MISS-ELS:updateIndicators', function(dir, toggle)
         SetVehicleIndicatorLights(vehicle, 0, toggle)
         ElsEnabledVehicles[netVehicle].indicators.hazard = toggle
     end
-end)
-
-RegisterNetEvent('MISS-ELS:client:updateState')
---- @param netVehicle number
----@param state table
-AddEventHandler('MISS-ELS:client:updateState', function(netVehicle, state)
-    UpdateVehicleState(netVehicle, state)
-end)
+end
 
 Citizen.CreateThread(function()
     while true do
@@ -414,12 +403,7 @@ Citizen.CreateThread(function()
             local data = VcfData[GetVehicleModelName(vehicle)]
 
             if not data then
-                Debug('warning', 'No VCF data found for vehicle ')
-                PrintTable({
-                    netVehicle = netVehicle,
-                    vehicle = vehicle,
-                    data = data,
-                })
+                Debug.warning('No VCF data found for vehicle ')
                 goto continue
             end
 
