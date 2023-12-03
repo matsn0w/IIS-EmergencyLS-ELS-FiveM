@@ -90,6 +90,8 @@ function SetLightStage(netVehicle, stage, toggle)
     -- get the pattern data
     local patternData = VCFdata.patterns[ConvertStageToPattern(stage)]
 
+    Debug('info', 'Toggling light stage')
+
     -- reset all extras and miscs
     ResetVehicleExtras(vehicle)
     ResetVehicleMiscs(vehicle)
@@ -102,7 +104,7 @@ function SetLightStage(netVehicle, stage, toggle)
     stages[stage] = toggle
 
     ElsEnabledVehicles[netVehicle].stages[stage] = toggle
-    TriggerServerEvent('MISS-ELS:server:toggleLightStage', netVehicle, stages)
+    -- TriggerServerEvent('MISS-ELS:server:toggleLightStage', netVehicle, stages)
 
     if patternData.isEmergency then
         -- toggle the native siren ('emergency mode')
@@ -272,7 +274,9 @@ AddEventHandler('MISS-ELS:updateHorn', function(playerid, status)
         return
     end
 
-    if ElsEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
+    local netVehicle = VehToNet(vehicle)
+
+    if ElsEnabledVehicles[netVehicle] == nil then AddVehicleToTable(netVehicle) end
 
     local ElsVehicle = ElsEnabledVehicles[vehicle]
 
@@ -312,13 +316,20 @@ RegisterNetEvent('MISS-ELS:updateSiren')
 AddEventHandler('MISS-ELS:updateSiren', function(playerid, status)
     local vehicle = GetVehiclePedIsUsing(GetPlayerPed(GetPlayerFromServerId(playerid)))
 
-    if ElsEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
+    if not vehicle then
+        CancelEvent()
+        return
+    end
 
-    local ElsVehicle = ElsEnabledVehicles[vehicle]
+    local netVehicle = VehToNet(vehicle)
+
+    if ElsEnabledVehicles[netVehicle] == nil then AddVehicleToTable(netVehicle) end
+
+    local ElsVehicle = ElsEnabledVehicles[netVehicle]
 
     -- toggle the siren state (true = on, false = off)
     ElsVehicle.siren = status
-    ElsEnabledVehicles[vehicle].siren = status
+    ElsEnabledVehicles[netVehicle].siren = status
 
     -- siren is on
     if ElsVehicle.sound ~= nil then
@@ -338,7 +349,7 @@ AddEventHandler('MISS-ELS:updateSiren', function(playerid, status)
     if TableHasValue(statuses, status) then
         -- get a fresh sound id
         ElsVehicle.sound = GetSoundId()
-        ElsEnabledVehicles[vehicle].sound = ElsVehicle.sound
+        ElsEnabledVehicles[netVehicle].sound = ElsVehicle.sound
 
         -- play the siren sound
         PlaySoundFromEntity(
@@ -350,7 +361,7 @@ AddEventHandler('MISS-ELS:updateSiren', function(playerid, status)
         )
     end
 
-    TriggerServerEvent('MISS-ELS:server:toggleSiren', VehToNet(vehicle), status)
+    TriggerServerEvent('MISS-ELS:server:toggleSiren', netVehicle, status)
 
     -- mute the native siren
     SetVehicleHasMutedSirens(vehicle, true)
@@ -359,27 +370,43 @@ end)
 RegisterNetEvent('MISS-ELS:updateIndicators')
 AddEventHandler('MISS-ELS:updateIndicators', function(dir, toggle)
     local vehicle = GetVehiclePedIsIn(PlayerPedId())
+    local netVehicle = VehToNet(vehicle)
+
+    Debug('info', 'Toggling indicators')
 
     -- disable all indicators first
     SetVehicleIndicatorLights(vehicle, 1, false) -- 1 is left
     SetVehicleIndicatorLights(vehicle, 0, false) -- 0 is right
+    ElsEnabledVehicles[netVehicle].indicators = {
+        left = false,
+        right = false,
+        hazard = false,
+    }
 
     if dir == 'left' then
         SetVehicleIndicatorLights(vehicle, 1, toggle)
+        ElsEnabledVehicles[netVehicle].indicators.left = toggle
     elseif dir == 'right' then
         SetVehicleIndicatorLights(vehicle, 0, toggle)
+        ElsEnabledVehicles[netVehicle].indicators.right = toggle
     elseif dir == 'hazard' then
         SetVehicleIndicatorLights(vehicle, 1, toggle)
         SetVehicleIndicatorLights(vehicle, 0, toggle)
-
+        ElsEnabledVehicles[netVehicle].indicators.left = toggle
+        ElsEnabledVehicles[netVehicle].indicators.right = toggle
     end
 
     -- update the indicator state
-    for k, v in pairs(ElsEnabledVehicles[vehicle].indicators) do
+    for k, v in pairs(ElsEnabledVehicles[netVehicle].indicators) do
+        PrintTable({
+            k = k,
+            v = v,
+            dir = dir
+        })
         if k == dir then
-            ElsEnabledVehicles[vehicle].indicators[k] = not v
+            ElsEnabledVehicles[netVehicle].indicators[k] = not v
         else
-            ElsEnabledVehicles[vehicle].indicators[k] = false
+            ElsEnabledVehicles[netVehicle].indicators[k] = false
         end
     end
 
@@ -390,9 +417,9 @@ end)
 RegisterNetEvent('MISS-ELS:client:updateState')
 --- @param netVehicle number
 ---@param state table
-AddEventHandler('MISS-ELS:client:updateState', function(netVehicle, state)
-    UpdateVehicleState(netVehicle, state)
-end)
+-- AddEventHandler('MISS-ELS:client:updateState', function(netVehicle, state)
+--     UpdateVehicleState(netVehicle, state)
+-- end)
 
 Citizen.CreateThread(function()
     while true do
@@ -404,11 +431,16 @@ Citizen.CreateThread(function()
             local data = VcfData[GetVehicleModelName(vehicle)]
 
             if not data then
-                Debug('warning', 'No VCF data found for vehicle ' .. GetVehicleModelName(vehicle))
+                Debug('warning', 'No VCF data found for vehicle ')
+                PrintTable({
+                    netVehicle = netVehicle,
+                    vehicle = vehicle,
+                    data = data,
+                })
                 goto continue
             end
 
-            HandleEnvironmentLights(vehicle, data)
+            -- HandleEnvironmentLights(vehicle, data)
 
             ::continue::
         end

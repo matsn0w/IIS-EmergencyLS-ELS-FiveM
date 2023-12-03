@@ -182,6 +182,8 @@ local function registerElsVehicle(netVehicle)
     registeredElsVehicles[netVehicle] = deepcopy(defaultState)
 
     TriggerClientEvent('MISS-ELS:client:registerVehicle', -1, netVehicle)
+
+    PrintTable(registeredElsVehicles)
 end
 
 RegisterNetEvent('MISS-ELS:server:requestState')

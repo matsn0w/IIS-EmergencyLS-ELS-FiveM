@@ -24,7 +24,7 @@ AddEventHandler('MISS-ELS:sendELSInformation', function(information) VcfData = i
 
 RegisterNetEvent('MISS-ELS:initVehicle')
 AddEventHandler('MISS-ELS:initVehicle', function()
-    local vehicle = VehToNet(GetVehiclePedIsUsing(PlayerPedId()))
+    local netVehicle = VehToNet(GetVehiclePedIsUsing(PlayerPedId()))
 
-    if ElsEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
+    if ElsEnabledVehicles[netVehicle] == nil then AddVehicleToTable(netVehicle) end
 end)

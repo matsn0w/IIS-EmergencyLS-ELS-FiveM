@@ -1,18 +1,16 @@
 -- indicator state
 local function HandleIndicators(type)
+
+    Debug('info', 'Toggling indicator ' .. type)
     if not type then return end
 
     local ped = PlayerPedId()
-    local vehicle = VehToNet(GetVehiclePedIsUsing(ped))
-    local Indicators = ElsEnabledVehicles[vehicle].indicators
+    local vehicle = GetVehiclePedIsUsing(ped)
+    local netVehicle = VehToNet(vehicle)
+    local Indicators = ElsEnabledVehicles[netVehicle].indicators
 
     -- only the driver can control the indicators
     if not vehicle or not PedIsDriver(vehicle) then return end
-
-    -- disable all other indicators
-    if type ~= 'left' and Indicators.left then Indicators.left = false
-    elseif type ~= 'right' and Indicators.right then Indicators.right = false
-    elseif type ~= 'hazard' and Indicators.hazard then Indicators.hazard = false end
 
     -- toggle the indicator
     Indicators[type] = not Indicators[type]
@@ -103,11 +101,12 @@ end
 local function HandleSiren(siren)
     local ped = PlayerPedId()
     local vehicle = GetVehiclePedIsUsing(ped)
+    local netVehicle = VehToNet(vehicle)
 
     -- siren only works in the primary light stage
-    if not ElsEnabledVehicles[vehicle].primary and not Config.SirenAlwaysAllowed then return end
+    if not ElsEnabledVehicles[netVehicle].primary and not Config.SirenAlwaysAllowed then return end
 
-    local currentSiren = ElsEnabledVehicles[vehicle].siren
+    local currentSiren = ElsEnabledVehicles[netVehicle].siren
     local sirenOn = currentSiren ~= 0
 
     if (not sirenOn) or (sirenOn and siren and siren ~= currentSiren) then

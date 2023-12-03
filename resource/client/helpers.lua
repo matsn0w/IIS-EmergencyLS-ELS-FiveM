@@ -94,31 +94,31 @@ function UpdateVehicleState(netVehicle, state)
     end
 
     if state.indicators.left ~= elsVehicle.indicators.left then
-        Debug('info', 'Updated indicators of vehicle ' .. netVehicle .. ' to ' .. state.indicators.left)
+        Debug('info', 'Updated indicators of vehicle')
     end
 
     if state.indicators.right ~= elsVehicle.indicators.right then
-        Debug('info', 'Updated indicators of vehicle ' .. netVehicle .. ' to ' .. state.indicators.right)
+        Debug('info', 'Updated indicators of vehicle')
     end
     
     if state.indicators.hazard ~= elsVehicle.indicators.hazard then
-        Debug('info', 'Updated indicators of vehicle ' .. netVehicle .. ' to ' .. state.indicators.hazard)
+        Debug('info', 'Updated indicators of vehicle')
     end
     -- Update primary when primary changed
     if state.primary ~= elsVehicle.primary then
         SetLightStage(netVehicle, 'primary', state.primary)
-        Debug('info', 'Updated primary stage of vehicle ' .. netVehicle .. ' to ' .. state.primary)
+        Debug('info', 'Updated primary stage of vehicle')
     end
 
     -- Update secondary when secondary changed
     if state.secondary ~= elsVehicle.secondary then
         SetLightStage(netVehicle, 'secondary', state.secondary)
-        Debug('info', 'Updated secondary stage of vehicle ' .. netVehicle .. ' to ' .. state.secondary)
+        Debug('info', 'Updated secondary stage of vehicle')
     end
 
     -- Update warning lights when warning lights changed
     if state.warning ~= elsVehicle.warning then
         SetLightStage(netVehicle, 'warning', state.warning)
-        Debug('info', 'Updated warning stage of vehicle ' .. netVehicle .. ' to ' .. state.warning)
+        Debug('info', 'Updated warning stage of vehicle')
     end
 end
