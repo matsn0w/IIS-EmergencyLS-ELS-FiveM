@@ -377,6 +377,7 @@ AddEventHandler('MISS-ELS:updateIndicators', function(dir, toggle)
     -- disable all indicators first
     SetVehicleIndicatorLights(vehicle, 1, false) -- 1 is left
     SetVehicleIndicatorLights(vehicle, 0, false) -- 0 is right
+
     ElsEnabledVehicles[netVehicle].indicators = {
         left = false,
         right = false,
@@ -392,34 +393,16 @@ AddEventHandler('MISS-ELS:updateIndicators', function(dir, toggle)
     elseif dir == 'hazard' then
         SetVehicleIndicatorLights(vehicle, 1, toggle)
         SetVehicleIndicatorLights(vehicle, 0, toggle)
-        ElsEnabledVehicles[netVehicle].indicators.left = toggle
-        ElsEnabledVehicles[netVehicle].indicators.right = toggle
+        ElsEnabledVehicles[netVehicle].indicators.hazard = toggle
     end
-
-    -- update the indicator state
-    for k, v in pairs(ElsEnabledVehicles[netVehicle].indicators) do
-        PrintTable({
-            k = k,
-            v = v,
-            dir = dir
-        })
-        if k == dir then
-            ElsEnabledVehicles[netVehicle].indicators[k] = not v
-        else
-            ElsEnabledVehicles[netVehicle].indicators[k] = false
-        end
-    end
-
-    -- update the indicator state on the server
-    TriggerServerEvent('MISS-ELS:server:toggleIndicator', VehToNet(vehicle), dir)
 end)
 
 RegisterNetEvent('MISS-ELS:client:updateState')
 --- @param netVehicle number
 ---@param state table
--- AddEventHandler('MISS-ELS:client:updateState', function(netVehicle, state)
---     UpdateVehicleState(netVehicle, state)
--- end)
+AddEventHandler('MISS-ELS:client:updateState', function(netVehicle, state)
+    UpdateVehicleState(netVehicle, state)
+end)
 
 Citizen.CreateThread(function()
     while true do
@@ -440,7 +423,7 @@ Citizen.CreateThread(function()
                 goto continue
             end
 
-            -- HandleEnvironmentLights(vehicle, data)
+            HandleEnvironmentLights(vehicle, data)
 
             ::continue::
         end

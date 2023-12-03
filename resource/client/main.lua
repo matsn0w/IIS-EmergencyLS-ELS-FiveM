@@ -1,5 +1,5 @@
 -- indicator state
-local function HandleIndicators(type)
+function HandleIndicators(type)
 
     Debug('info', 'Toggling indicator ' .. type)
     if not type then return end
@@ -15,6 +15,8 @@ local function HandleIndicators(type)
     -- toggle the indicator
     Indicators[type] = not Indicators[type]
     TriggerServerEvent('MISS-ELS:sv_Indicator', type, Indicators[type])
+    -- update the indicator state on the server
+    TriggerServerEvent('MISS-ELS:server:toggleIndicator', netVehicle, Indicators[type])
 
     -- play blip sound
     PlaySoundFrontend(-1, 'NAV_UP_DOWN', 'HUD_FRONTEND_DEFAULT_SOUNDSET', 1)
