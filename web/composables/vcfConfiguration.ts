@@ -29,10 +29,6 @@ export const defaultVcfConfig = () => {
           soundSet: null,
         },
         {
-          name: "NineMode",
-          allowUse: false,
-        },
-        {
           name: "SrnTone1",
           allowUse: true,
           audioString: "VEHICLES_HORNS_SIREN_1",

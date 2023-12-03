@@ -109,14 +109,14 @@ watch(
       if (VCF.value.configuration.useServerSirens) {
         let iterations = 0
         VCF.value.configuration.sounds.forEach((sound) => {
-          if (!['MainHorn', 'NineMode'].includes(sound.name)) {
+          if (!['MainHorn'].includes(sound.name)) {
             sound.audioString = `SIREN_${natoAlphabet[iterations]}`;
             iterations++;
           }
         })
       } else {
         VCF.value.configuration.sounds.forEach((sound) => {
-          if (!['MainHorn', 'NineMode'].includes(sound.name)) {
+          if (!['MainHorn'].includes(sound.name)) {
             sound.audioString = defaultVcfConfig().configuration.sounds.find((defaultSound) => defaultSound.name === sound.name).audioString;
           }
         })

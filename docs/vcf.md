@@ -26,7 +26,6 @@ Alternatively, you can use [this convenient graphical interface](https://matsn0w
     <!-- SOUNDS & SIREN CONFIG -->
     <SOUNDS>
         <MainHorn />
-        <NineMode />
         <SrnTone1 />
         <SrnTone2 />
         <SrnTone3 />
@@ -108,7 +107,7 @@ Options:
 
 ## Sounds: `SOUNDS`
 
-This section defines the sound for each siren on your vehicle. You can enable up to 4 different sirens for each vehicle. Also, you can optionally set a custom horn sound for the vehicle. This can be used to enable an airhorn for example. Enabling the NineMode setting will activate a '999 mode actived!' sound effect when you press Q (by default, or DPAD_LEFT on controllers).
+This section defines the sound for each siren on your vehicle. You can enable up to 4 different sirens for each vehicle. Also, you can optionally set a custom horn sound for the vehicle. This can be used to enable an airhorn for example.
 
 If you are using [WMServerSirens](https://github.com/Walsheyy/WMServerSirens), you can specify the sound set too. ELS will use the game's native sound effects otherwise. Make sure to include the sound set under `Config.AudioBanks` in order for it to load.
 
@@ -121,7 +120,6 @@ Example with WMServerSirens:
 ```xml
 <SOUNDS>
     <MainHorn AllowUse="false" />
-    <NineMode AllowUse="false" />
     <SrnTone1 AllowUse="true" AudioString="SIREN_ALPHA" SoundSet="DLC_WMSIRENS_SOUNDSET" />
     <SrnTone2 AllowUse="true" AudioString="SIREN_BRAVO" SoundSet="DLC_WMSIRENS_SOUNDSET" />
     <SrnTone3 AllowUse="true" AudioString="VEHICLES_HORNS_SIREN_1" />
@@ -134,7 +132,6 @@ Example with native game sounds:
 ```xml
 <SOUNDS>
     <MainHorn AllowUse="true" AudioString="SIRENS_AIRHORN" />
-    <NineMode AllowUse="true" />
     <SrnTone1 AllowUse="true" AudioString="VEHICLES_HORNS_SIREN_1" />
     <SrnTone2 AllowUse="true" AudioString="VEHICLES_HORNS_SIREN_2" />
     <SrnTone3 AllowUse="true" AudioString="VEHICLES_HORNS_POLICE_WARNING" />
@@ -150,12 +147,6 @@ Options:
 | AllowUse | boolean | `true`, `false` | `false` | Whether the custom horn is enabled or not. The game's horn for the vehicle will be used (different depending on the `vehicles.meta` entry for it). |
 | AudioString | string | name hash of sound to use | `SIRENS_AIRHORN` | The name of an audio to play. Must be compatible with the [`PLAY_SOUND_FROM_ENTITY`](https://docs.fivem.net/natives/?_0xE65F427EB70AB1ED) native. |
 | SoundSet | string | name of sound bank to use | - | The name of the sound set if using WMServerSirens. |
-
-**NineMode**:
-
-| Name     | Type    | Values          | Default | Description                                  |
-| -------- | ------- | --------------- | ------- | -------------------------------------------- |
-| AllowUse | boolean | `true`, `false` | `false` | Enables a '999 mode activated' sound effect. |
 
 **SrnTone1-4**:
 

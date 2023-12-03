@@ -100,16 +100,9 @@ export const generateStoreAttributesFromExistingVCF = (data: any) => {
   const sounds = soundsObject?.querySelectorAll("*");
 
   sounds?.forEach((sound) => {
-    const isNineMode = sound.nodeName === "NineMode";
-
     let fields: Partial<soundType> = {
       name: sound.nodeName,
       allowUse: sound.getAttribute("AllowUse") === "true",
-    }
-
-    if (!isNineMode) {
-      fields.audioString = sound.getAttribute("AudioString")
-      fields.soundSet = sound.getAttribute("SoundSet")
     }
 
     vcf.configuration.sounds.push(fields as soundType);
