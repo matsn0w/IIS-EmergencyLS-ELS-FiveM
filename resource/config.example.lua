@@ -12,6 +12,12 @@ Config.EnvironmentalLights = {
     Intensity = 1.0, -- how intense the light source is
 }
 
+-- How higher these values, how intenser the light will be. Players can ajust the brightness for themselves
+Config.DefaultLightBrightness = {
+    day = 1500.0, -- Default brightness during the day
+    night = 190.0, -- Default brightness during the night
+}
+
 -- You can make the flashing high beams brighter. Set to 1.0 for GTA default
 Config.HighBeamIntensity = 5.0
 
