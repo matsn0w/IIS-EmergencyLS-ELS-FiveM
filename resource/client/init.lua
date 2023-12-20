@@ -11,7 +11,7 @@ Citizen.CreateThread(function()
     local NightBrightness = Config.DefaultLightBrightness.night
 
     if GetResourceKvpFloat('elsdaybrightness') ~= 0.0 then
-        DayBrightness = GetResourceKvpInt('elsdaybrightness')
+        DayBrightness = GetResourceKvpFloat('elsdaybrightness')
     end
 
     if GetResourceKvpFloat('elsnightbrightness') ~= 0.0 then
