@@ -35,6 +35,32 @@ RegisterCommand('extra', function(source, args)
     TriggerEvent('kjELS:toggleExtra', vehicle, extra)
 end)
 
+
+
+-- Let the client configure the brightness of the lights
+RegisterCommand('elsdaybrightness', function(source, args)
+    local brightness = tonumber(args[1])
+    local key = 'elsdaybrightness'
+    if brightness then
+        if math.floor(brightness) == brightness then brightness = brightness + 0.0 end --Convert to float
+        SetResourceKvpFloat(key, brightness)
+        SetVisualSettingFloat("car.defaultlight.day.emissive.on", brightness)
+    end
+end)
+
+RegisterCommand('elsnightbrightness', function(source, args)
+    local brightness = tonumber(args[1])
+    local key = 'elsnightbrightness'
+    if brightness then
+
+        if math.floor(brightness) == brightness then brightness = brightness + 0.0 end --Convert to float
+        SetResourceKvpFloat(key, brightness)
+        SetVisualSettingFloat("car.defaultlight.night.emissive.on", brightness)
+    end
+end)
+
+
+
 RegisterNetEvent('kjELS:toggleMisc')
 AddEventHandler('kjELS:toggleMisc', function(vehicle, misc)
     if not vehicle or not misc then

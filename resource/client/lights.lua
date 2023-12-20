@@ -11,6 +11,12 @@ local function ToggleMisc(vehicle, misc, toggle)
     SetVehicleMod(vehicle, misc, toggle, false)
 end
 
+function PlayWarningBeepSound()
+    local ped = PlayerPedId()
+    if not IsPedInAnyVehicle(ped, false) then return false end --Check if the ped is in a vehicle or not.
+    SendNUIMessage({ transactionType = 'playSound', transactionFile = 'WarningBeep', transactionVolume = 0.2 })
+end
+
 local function SetLightStage(vehicle, stage, toggle)
     local ELSvehicle = kjEnabledVehicles[vehicle]
     local VCFdata = kjxmlData[GetCarHash(vehicle)]
@@ -68,6 +74,7 @@ local function SetLightStage(vehicle, stage, toggle)
             while ELSvehicle[stage] do
                 -- play warning sound
                 SendNUIMessage({ transactionType = 'playSound', transactionFile = 'WarningBeep', transactionVolume = 0.2 })
+                PlayWarningBeepSound() -- I tried putting the function code directly in here, i ran into a deadloop, no idea why...
 
                 -- this should be equal to the length of the audio file
                 Citizen.Wait((Config.WarningBeepDuration or 0) * 1000)

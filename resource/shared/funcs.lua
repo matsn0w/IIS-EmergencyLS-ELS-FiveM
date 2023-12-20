@@ -54,6 +54,9 @@ function AddVehicleToTable(vehicle)
         sound = nil,
         highBeamEnabled = true,
     }
+    --Make sure every extra is turned off when they spawn!
+    TriggerEvent('kjELS:resetExtras', vehicle)
+    TriggerEvent('kjELS:resetMiscs', vehicle)
 end
 
 function IsELSVehicle(vehicle)

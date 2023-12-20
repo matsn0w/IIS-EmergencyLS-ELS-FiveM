@@ -1,6 +1,29 @@
 kjEnabledVehicles = {}
 kjxmlData = nil
 
+
+Citizen.CreateThread(function()
+	while not NetworkIsSessionStarted() do
+		Citizen.Wait(100)
+	end
+
+    local DayBrightness = Config.DefaultLightBrightness.day
+    local NightBrightness = Config.DefaultLightBrightness.night
+
+    if GetResourceKvpFloat('elsdaybrightness') ~= 0.0 then
+        DayBrightness = GetResourceKvpFloat('elsdaybrightness')
+    end
+
+    if GetResourceKvpFloat('elsnightbrightness') ~= 0.0 then
+        NightBrightness = GetResourceKvpFloat('elsnightbrightness')
+    end
+
+
+    -- adjust light intensity, without this it would be very dull.
+    SetVisualSettingFloat("car.defaultlight.night.emissive.on", NightBrightness)
+    SetVisualSettingFloat("car.defaultlight.day.emissive.on", DayBrightness)
+end)
+
 AddEventHandler('onClientResourceStart', function(name)
     if not Config then
         CancelEvent()
