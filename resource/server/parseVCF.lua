@@ -1,5 +1,3 @@
---- @param xml table
---- @param fileName string
 function ParseVCF(xml, fileName)
 
     local vcf = {
@@ -111,6 +109,8 @@ function ParseVCF(xml, fileName)
         end
 
         if rootElement.name == 'SOUNDS' then
+            vcf.sounds.nineMode = false
+
             for sid = 1, #rootElement.kids do
                 local elem = rootElement.kids[sid]
 
@@ -119,6 +119,10 @@ function ParseVCF(xml, fileName)
                     vcf.sounds.mainHorn.allowUse = elem.attr['AllowUse'] == 'true'
                     vcf.sounds.mainHorn.audioString = elem.attr['AudioString'] or 'SIRENS_AIRHORN'
                     vcf.sounds.mainHorn.soundSet = elem.attr['SoundSet']
+                end
+
+                if elem.name == 'NineMode' then
+                    vcf.sounds.nineMode = elem.attr['AllowUse'] == 'true'
                 end
 
                 if string.upper(string.sub(elem.name, 1, -2)) == 'SRNTONE' then
@@ -193,5 +197,5 @@ function ParseVCF(xml, fileName)
 
     end
 
-    VcfData[fileName] = vcf
+    ElsxmlData[fileName] = vcf
 end

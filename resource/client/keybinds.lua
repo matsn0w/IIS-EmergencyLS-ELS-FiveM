@@ -1,23 +1,20 @@
 -- statics menu
-RegisterKeyMapping('MISS-ELS:open-statics-menu', 'Open statics menu', 'KEYBOARD', 'U')
-
--- Flashing highbeams
-RegisterKeyMapping('MISS-ELS:toggle-highbeams', 'Toggle flashing highbeams', 'KEYBOARD', 'J')
+RegisterKeyMapping('MISS-ELS:open-statics-menu', 'Open els menu', 'KEYBOARD', 'U')
 
 -- indicators
-RegisterKeyMapping('MISS-ELS:toggle-indicator-hazard', 'Toggle hazard lights', 'KEYBOARD', 'DOWN')
-RegisterKeyMapping('MISS-ELS:toggle-indicator-left', 'Toggle left indicator', 'KEYBOARD', 'LEFT')
-RegisterKeyMapping('MISS-ELS:toggle-indicator-right', 'Toggle right indicator', 'KEYBOARD', 'RIGHT')
+RegisterKeyMapping('MISS-ELS:toggle-indicator-hazard', 'Gevarenlichten', 'KEYBOARD', 'ARROW_DOWN')
+RegisterKeyMapping('MISS-ELS:toggle-indicator-left', 'Knipperlicht links', 'KEYBOARD', 'LEFT')
+RegisterKeyMapping('MISS-ELS:toggle-indicator-right', 'Knipperlicht rechts', 'KEYBOARD', 'RIGHT')
 
 -- light stages
-RegisterKeyMapping('MISS-ELS:toggle-stage-primary', 'Toggle primary lights', 'KEYBOARD', 'Q')
-RegisterKeyMapping('MISS-ELS:toggle-stage-secondary', 'Toggle secondary lights', 'KEYBOARD', 'K')
-RegisterKeyMapping('MISS-ELS:toggle-stage-warning', 'Toggle warning lights', 'KEYBOARD', 'L')
+RegisterKeyMapping('MISS-ELS:toggle-stage-primary', 'Blauwe zwaailichten', 'KEYBOARD', 'Q')
+RegisterKeyMapping('MISS-ELS:toggle-stage-secondary', 'Oranje gevaarlichten', 'KEYBOARD', 'L')
+RegisterKeyMapping('MISS-ELS:toggle-stage-warning', 'Stopteken', 'KEYBOARD', 'K')
 
 -- sirens
-RegisterKeyMapping('MISS-ELS:toggle-siren', 'Toggle sirens', 'KEYBOARD', 'LMENU') -- LEFT ALT
-RegisterKeyMapping('MISS-ELS:toggle-siren-next', 'Toggle next siren', 'KEYBOARD', 'R')
-RegisterKeyMapping('MISS-ELS:toggle-siren-one', 'Toggle siren 1', 'KEYBOARD', '1')
-RegisterKeyMapping('MISS-ELS:toggle-siren-two', 'Toggle siren 2', 'KEYBOARD', '2')
-RegisterKeyMapping('MISS-ELS:toggle-siren-three', 'Toggle siren 3', 'KEYBOARD', '3')
-RegisterKeyMapping('MISS-ELS:toggle-siren-four', 'Toggle siren 4', 'KEYBOARD', '4')
+RegisterKeyMapping('MISS-ELS:toggle-siren', 'Sirene', 'KEYBOARD', 'LMENU') -- LEFT ALT
+RegisterKeyMapping('MISS-ELS:toggle-siren-next', 'Volgende sirene', 'KEYBOARD', 'R')
+RegisterKeyMapping('MISS-ELS:toggle-siren-one', 'Sirene 1', 'KEYBOARD', '1')
+RegisterKeyMapping('MISS-ELS:toggle-siren-two', 'Sirene 2', 'KEYBOARD', '2')
+RegisterKeyMapping('MISS-ELS:toggle-siren-three', 'Sirene 3', 'KEYBOARD', '3')
+RegisterKeyMapping('MISS-ELS:toggle-siren-four', 'Sirene 4', 'KEYBOARD', '4')

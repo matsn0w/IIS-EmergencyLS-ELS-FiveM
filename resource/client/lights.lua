@@ -1,110 +1,29 @@
---- @param vehicle number The vehicle to toggle the extra on
---- @param extra number The extra to toggle
---- @param toggle boolean Whether to turn the extra on or off
-local function ToggleVehicleExtra(vehicle, extra, toggle)
+local function ToggleExtra(vehicle, extra, toggle)
     local value = toggle and 0 or 1
 
     SetVehicleAutoRepairDisabled(vehicle, true)
     SetVehicleExtra(vehicle, extra, value)
 end
 
---- @param vehicle number The vehicle to toggle the misc on
---- @param misc number The misc to toggle
---- @param toggle boolean Whether to turn the misc on or off
-local function ToggleVehicleMisc(vehicle, misc, toggle)
+local function ToggleMisc(vehicle, misc, toggle)
     SetVehicleModKit(vehicle, 0)
-
-    -- respect custom wheel setting
-    local hasCustomWheelsEnabled = GetVehicleModVariation(vehicle, 23)
-
-    SetVehicleMod(vehicle, misc, toggle, hasCustomWheelsEnabled)
+    -- TODO: respect custom wheel setting
+    SetVehicleMod(vehicle, misc, toggle, false)
 end
 
-local function CreateEnviromentLight(vehicle, light, offset, color)
-    -- local boneIndex = GetEntityBoneIndexByName(vehicle, 'extra_' .. extra)
-    local boneIndex = GetEntityBoneIndexByName(vehicle, light.type .. '_' .. tostring(light.name))
-    local coords = GetWorldPositionOfEntityBone(vehicle, boneIndex)
-    local position = coords + offset
-
-    local rgb = { 0, 0, 0 }
-    local range = Config.EnvironmentalLights.Range or 50.0
-    local intensity = Config.EnvironmentalLights.Intensity or 1.0
-    local shadow = 1.0
-
-    if string.lower(color) == 'blue' then
-        rgb = { 0, 0, 255 }
-    elseif string.lower(color) == 'red' then
-        rgb = { 255, 0, 0 }
-    elseif string.lower(color) == 'green' then
-        rgb = { 0, 255, 0 }
-    elseif string.lower(color) == 'white' then
-        rgb = { 255, 255, 255 }
-    elseif string.lower(color) == 'amber' then
-        rgb = { 255, 194, 0 }
-    end
-
-    -- draw the light
-    DrawLightWithRangeAndShadow(
-        position.x, position.y, position.z,
-        rgb[1], rgb[2], rgb[3],
-        range, intensity, shadow
-    )
-end
-
---- @param vehicle number The vehicle to handle the lights on
---- @param data table The VCF data for the vehicle
-local function HandleEnvironmentLights(vehicle, data)
-    for extra, info in pairs(data.extras) do
-        if IsVehicleExtraTurnedOn(vehicle, extra) and info.env_light then
-            local offset = vector3(info.env_pos.x, info.env_pos.y, info.env_pos.z)
-            local light = {
-                type = 'extra',
-                name = extra
-            }
-
-            CreateEnviromentLight(vehicle, light, offset, info.env_color)
-        end
-    end
-
-    for misc, info in pairs(data.miscs) do
-        if IsVehicleMiscTurnedOn(vehicle, misc) and info.env_light then
-            local offset = vector3(info.env_pos.x, info.env_pos.y, info.env_pos.z)
-            local light = {
-                type = 'misc',
-                name = ConvertMiscIdToName(misc)
-            }
-
-            CreateEnviromentLight(vehicle, light, offset, info.env_color)
-        end
-    end
-end
-
---- @param netVehicle number The network ID of the vehicle
---- @param stage string The light stage to set
---- @param toggle boolean Whether to turn the stage on or off
-function SetLightStage(netVehicle, stage, toggle)
-    local vehicle = NetToVeh(netVehicle)
-    local ElsVehicle = ElsEnabledVehicles[netVehicle]
-    local VCFdata = VcfData[GetVehicleModelName(vehicle)]
+local function SetLightStage(vehicle, stage, toggle)
+    local ELSvehicle = ElsEnabledVehicles[vehicle]
+    local VCFdata = ElsxmlData[GetCarHash(vehicle)]
 
     -- get the pattern data
     local patternData = VCFdata.patterns[ConvertStageToPattern(stage)]
 
-    Debug.info('Toggling light stage')
-
     -- reset all extras and miscs
-    ResetVehicleExtras(vehicle)
-    ResetVehicleMiscs(vehicle)
+    TriggerEvent('MISS-ELS:resetExtras', vehicle)
+    TriggerEvent('MISS-ELS:resetMiscs', vehicle)
 
     -- set the light state
-    ElsVehicle[stage] = toggle
-
-    -- update the light stage on the server
-    local stages = {}
-    stages[stage] = toggle
-
-    ElsEnabledVehicles[netVehicle].stages[stage] = toggle
-    -- TriggerServerEvent('MISS-ELS:server:toggleLightStage', netVehicle, stages)
+    ELSvehicle[stage] = toggle
 
     if patternData.isEmergency then
         -- toggle the native siren ('emergency mode')
@@ -120,33 +39,33 @@ function SetLightStage(netVehicle, stage, toggle)
             if lightsOn == 0 then SetVehicleLights(vehicle, 2) end
 
             -- flash the high beam
-            while ElsVehicle[stage] do
-                if ElsVehicle.highBeamEnabled then
+            while ELSvehicle[stage] do
+                if ELSvehicle.highBeamEnabled then
                     SetVehicleFullbeam(vehicle, true)
                     SetVehicleLightMultiplier(vehicle, Config.HighBeamIntensity or 5.0)
 
-                    Citizen.Wait(500)
+                    Wait(500)
 
                     SetVehicleFullbeam(vehicle, false)
                     SetVehicleLightMultiplier(vehicle, 1.0)
 
-                    Citizen.Wait(500)
+                    Wait(500)
                 end
 
-                Citizen.Wait(0)
+                Wait(0)
             end
 
             -- reset initial vehicle state
             if lightsOn == 0 then SetVehicleLights(vehicle, 0) end
             if highbeamsOn == 1 then SetVehicleFullbeam(vehicle, true) end
 
-            Citizen.Wait(0)
+            Wait(0)
         end)
     end
 
     if patternData.enableWarningBeep then
         Citizen.CreateThread(function()
-            while ElsVehicle[stage] do
+            while ELSvehicle[stage] do
                 -- play warning sound
                 SendNUIMessage({ transactionType = 'playSound', transactionFile = 'WarningBeep', transactionVolume = 0.2 })
 
@@ -157,7 +76,7 @@ function SetLightStage(netVehicle, stage, toggle)
     end
 
     Citizen.CreateThread(function()
-        while ElsVehicle[stage] do
+        while ELSvehicle[stage] do
             -- keep the engine on whilst the lights are activated
             SetVehicleEngineOn(vehicle, true, true, false)
 
@@ -167,13 +86,13 @@ function SetLightStage(netVehicle, stage, toggle)
             }
 
             for _, flash in ipairs(patternData) do
-                if ElsVehicle[stage] then
+                if ELSvehicle[stage] then
                     for _, extra in ipairs(flash['extras']) do
                         -- disable auto repairs
                         SetVehicleAutoRepairDisabled(vehicle, true)
 
                         -- turn the extra on
-                        ToggleVehicleExtra(vehicle, extra, true)
+                        ToggleExtra(vehicle, extra, true)
 
                         -- save the extra as last flashed
                         table.insert(lastFlash.extras, extra)
@@ -181,7 +100,7 @@ function SetLightStage(netVehicle, stage, toggle)
 
                     for _, misc in ipairs(flash['miscs']) do
                         -- turn the misc on
-                        ToggleVehicleMisc(vehicle, misc, true)
+                        ToggleMisc(vehicle, misc, true)
 
                         -- save the misc as last flashed
                         table.insert(lastFlash.miscs, misc)
@@ -195,11 +114,11 @@ function SetLightStage(netVehicle, stage, toggle)
                     -- disable auto repairs
                     SetVehicleAutoRepairDisabled(vehicle, true)
 
-                    ToggleVehicleExtra(vehicle, v, false)
+                    ToggleExtra(vehicle, v, false)
                 end
 
                 for _, v in ipairs(lastFlash.miscs) do
-                    ToggleVehicleMisc(vehicle, v, false)
+                    ToggleMisc(vehicle, v, false)
                 end
 
                 lastFlash.extras = {}
@@ -209,64 +128,84 @@ function SetLightStage(netVehicle, stage, toggle)
             Citizen.Wait(0)
         end
 
-        Citizen.Wait(0)
+        Wait(0)
     end)
 end
 
---- @param model string The vehicle model to check
---- @param extra number The extra to check
 local function StaticsIncludesExtra(model, extra)
-    return VcfData[model].statics.extras[extra] ~= nil
+    return ElsxmlData[model].statics.extras[extra] ~= nil
 end
 
---- @param model string The vehicle model to check
---- @param misc number The misc ID to check
 local function StaticsIncludesMisc(model, misc)
-    return VcfData[model].statics.miscs[misc] ~= nil
+    return ElsxmlData[model].statics.miscs[misc] ~= nil
 end
 
---- @param vehicle number The vehicle to reset the extras on
-function ResetVehicleExtras(vehicle)
-    local model = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle))
-
-    if not SetContains(VcfData, model) then
-        Debug.warning('Model \'' .. model .. '\' is not in the VCF data')
+RegisterNetEvent('MISS-ELS:resetExtras')
+AddEventHandler('MISS-ELS:resetExtras', function(vehicle)
+    if not vehicle then
+        CancelEvent()
         return
     end
 
-    Debug.info('Resetting all enabled extras on vehicle')
+    local model = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle))
 
-    for extra, info in pairs(VcfData[model].extras) do
+    if not SetContains(ElsxmlData, model) then
+        CancelEvent()
+        return
+    end
+
+    -- loop through all extra's
+    for extra, info in pairs(ElsxmlData[model].extras) do
+        -- check if we can control this extra
         if info.enabled == true and not StaticsIncludesExtra(model, extra) then
             -- disable auto repairs
             SetVehicleAutoRepairDisabled(vehicle, true)
 
             -- disable the extra
-            ToggleVehicleExtra(vehicle, extra, false)
+            ToggleExtra(vehicle, extra, false)
         end
     end
-end
+end)
 
---- @param vehicle number The vehicle to reset the miscs on
-function ResetVehicleMiscs(vehicle)
-    local model = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle))
-
-    if not SetContains(VcfData, model) then
-        Debug.warning('Model \'' .. model .. '\' is not in the VCF data')
+RegisterNetEvent('MISS-ELS:resetMiscs')
+AddEventHandler('MISS-ELS:resetMiscs', function(vehicle)
+    if not vehicle then
+        CancelEvent()
         return
     end
 
-    Debug.info('Resetting all enabled miscs on vehicle')
+    local model = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle))
 
-    for misc, info in pairs(VcfData[model].miscs) do
-        if info.enabled == true and not StaticsIncludesMisc(model, misc) then
-            ToggleVehicleMisc(vehicle, misc, false)
+    if not SetContains(ElsxmlData, model) then
+        CancelEvent()
+        return
+    end
+
+    -- loop through all miscs
+    for misc, info in pairs(ElsxmlData[model].miscs) do
+        -- check if we can control this misc
+        if info.enabled == true and not StaticsIncludesMisc(model, extra) then
+            -- disable the misc
+            ToggleMisc(vehicle, misc, false)
         end
     end
-end
+end)
 
-RegisterNetEvent('MISS-ELS:client:updateHorn')
-AddEventHandler('MISS-ELS:client:updateHorn', function(playerid, status)
+RegisterNetEvent('MISS-ELS:toggleLights')
+AddEventHandler('MISS-ELS:toggleLights', function(vehicle, stage, toggle)
+    if not vehicle then
+        CancelEvent()
+        return
+    end
+
+    if ElsEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
+
+    -- set the light stage
+    SetLightStage(vehicle, stage, toggle)
+end)
+
+RegisterNetEvent('MISS-ELS:updateHorn')
+AddEventHandler('MISS-ELS:updateHorn', function(playerid, status)
     local vehicle = GetVehiclePedIsUsing(GetPlayerPed(GetPlayerFromServerId(playerid)))
 
     if not vehicle then
@@ -274,35 +213,33 @@ AddEventHandler('MISS-ELS:client:updateHorn', function(playerid, status)
         return
     end
 
-    local netVehicle = VehToNet(vehicle)
+    if ElsEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
 
-    if ElsEnabledVehicles[netVehicle] == nil then AddVehicleToTable(netVehicle) end
-
-    local ElsVehicle = ElsEnabledVehicles[vehicle]
+    local ELSvehicle = ElsEnabledVehicles[vehicle]
 
     -- toggle the horn state (true = on, false = off)
-    ElsVehicle.horn = status
+    ELSvehicle.horn = status
 
     -- get the sounds from the VCF
-    local sounds = VcfData[GetVehicleModelName(vehicle)].sounds
+    local sounds = ElsxmlData[GetCarHash(vehicle)].sounds
 
     -- horn is honking
-    if ElsVehicle.sound_id ~= nil then
+    if ELSvehicle.sound_id ~= nil then
         -- stop honking the horn
-        StopSound(ElsVehicle.sound_id)
-        ReleaseSoundId(ElsVehicle.sound_id)
+        StopSound(ELSvehicle.sound_id)
+        ReleaseSoundId(ELSvehicle.sound_id)
 
-        ElsVehicle.sound_id = nil
+        ELSvehicle.sound_id = nil
     end
 
     -- horn is set to 'on'
     if status then
         -- get a fresh sound id
-        ElsVehicle.sound_id = GetSoundId()
+        ELSvehicle.sound_id = GetSoundId()
 
         -- honk the horn
         PlaySoundFromEntity(
-            ElsVehicle.sound_id,
+            ELSvehicle.sound_id,
             sounds.mainHorn.audioString,
             vehicle,
             sounds.mainHorn.soundSet or 0,
@@ -312,106 +249,131 @@ AddEventHandler('MISS-ELS:client:updateHorn', function(playerid, status)
 end)
 
 -- run on MISS-ELS:setSirenState
--- RegisterNetEvent('MISS-ELS:updateSiren')
--- AddEventHandler('MISS-ELS:updateSiren', function(playerid, status)
---     local vehicle = GetVehiclePedIsUsing(GetPlayerPed(GetPlayerFromServerId(playerid)))
+RegisterNetEvent('MISS-ELS:updateSiren')
+AddEventHandler('MISS-ELS:updateSiren', function(playerid, status)
+    local vehicle = GetVehiclePedIsUsing(GetPlayerPed(GetPlayerFromServerId(playerid)))
 
---     if not vehicle then
---         CancelEvent()
---         return
---     end
+    if ElsEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
 
---     local netVehicle = VehToNet(vehicle)
+    local ELSvehicle = ElsEnabledVehicles[vehicle]
 
---     if ElsEnabledVehicles[netVehicle] == nil then AddVehicleToTable(netVehicle) end
+    -- toggle the siren state (true = on, false = off)
+    ELSvehicle.siren = status
 
---     local ElsVehicle = ElsEnabledVehicles[netVehicle]
+    -- siren is on
+    if ELSvehicle.sound ~= nil then
+        -- stop the siren
+        StopSound(ELSvehicle.sound)
+        ReleaseSoundId(ELSvehicle.sound)
 
---     -- toggle the siren state (true = on, false = off)
---     ElsVehicle.siren = status
---     ElsEnabledVehicles[netVehicle].siren = status
+        ELSvehicle.sound = nil
+    end
 
---     -- siren is on
---     if ElsVehicle.sound ~= nil then
---         -- stop the siren
---         StopSound(ElsVehicle.sound)
---         ReleaseSoundId(ElsVehicle.sound)
+    -- get the sounds from the VCF
+    local sounds = ElsxmlData[GetCarHash(vehicle)].sounds
 
---         ElsVehicle.sound = nil
---     end
+    -- there are 4 possible siren sounds
+    local statuses = {1, 2, 3, 4}
 
---     -- get the sounds from the VCF
---     local sounds = VcfData[GetVehicleModelName(vehicle)].sounds
+    if TableHasValue(statuses, status) then
+        -- get a fresh sound id
+        ELSvehicle.sound = GetSoundId()
 
---     -- there are 4 possible siren sounds
---     local statuses = { 1, 2, 3, 4 }
+        -- play the siren sound
+        PlaySoundFromEntity(
+            ELSvehicle.sound,
+            sounds['srnTone' .. status].audioString,
+            vehicle,
+            sounds['srnTone' .. status].soundSet,
+            0, 0
+        )
+    end
 
---     if TableHasValue(statuses, status) then
---         -- get a fresh sound id
---         ElsVehicle.sound = GetSoundId()
---         ElsEnabledVehicles[netVehicle].sound = ElsVehicle.sound
+    -- mute the native siren
+    SetVehicleHasMutedSirens(vehicle, true)
+end)
 
---         -- play the siren sound
---         PlaySoundFromEntity(
---             ElsVehicle.sound,
---             sounds['srnTone' .. status].audioString,
---             vehicle,
---             sounds['srnTone' .. status].soundSet,
---             0, 0
---         )
---     end
-
---     -- mute the native siren
---     SetVehicleHasMutedSirens(vehicle, true)
--- end)
-
-function setIndicator(netVehicle, dir, toggle)
-    local vehicle = NetToVeh(netVehicle)
-
-    Debug.info('Toggling indicators')
+RegisterNetEvent('MISS-ELS:updateIndicators')
+AddEventHandler('MISS-ELS:updateIndicators', function(dir, toggle)
+    local vehicle = GetVehiclePedIsIn(PlayerPedId())
 
     -- disable all indicators first
     SetVehicleIndicatorLights(vehicle, 1, false) -- 1 is left
     SetVehicleIndicatorLights(vehicle, 0, false) -- 0 is right
 
-    ElsEnabledVehicles[netVehicle].indicators = {
-        left = false,
-        right = false,
-        hazard = false,
-    }
-
     if dir == 'left' then
         SetVehicleIndicatorLights(vehicle, 1, toggle)
-        ElsEnabledVehicles[netVehicle].indicators.left = toggle
     elseif dir == 'right' then
         SetVehicleIndicatorLights(vehicle, 0, toggle)
-        ElsEnabledVehicles[netVehicle].indicators.right = toggle
     elseif dir == 'hazard' then
         SetVehicleIndicatorLights(vehicle, 1, toggle)
         SetVehicleIndicatorLights(vehicle, 0, toggle)
-        ElsEnabledVehicles[netVehicle].indicators.hazard = toggle
     end
+end)
+
+local function CreateEnviromentLight(vehicle, light, offset, color)
+    -- local boneIndex = GetEntityBoneIndexByName(vehicle, 'extra_' .. extra)
+    local boneIndex = GetEntityBoneIndexByName(vehicle, light.type .. '_' .. tostring(light.name))
+    local coords = GetWorldPositionOfEntityBone(vehicle, boneIndex)
+    local position = coords + offset
+
+    local rgb = { 0, 0, 0 }
+    local range = Config.EnvironmentalLights.Range or 50.0
+    local intensity = Config.EnvironmentalLights.Intensity or 1.0
+    local shadow = 1.0
+
+    if string.lower(color) == 'blue' then rgb = { 0, 0, 255 }
+    elseif string.lower(color) == 'red' then rgb = { 255, 0, 0 }
+    elseif string.lower(color) == 'green' then rgb = { 0, 255, 0 }
+    elseif string.lower(color) == 'white' then rgb = { 255, 255, 255 }
+    elseif string.lower(color) == 'amber' then rgb = { 255, 194, 0}
+    end
+
+    -- draw the light
+    DrawLightWithRangeAndShadow(
+        position.x, position.y, position.z,
+        rgb[1], rgb[2], rgb[3],
+        range, intensity, shadow
+    )
 end
 
 Citizen.CreateThread(function()
     while true do
         -- wait for VCF data to load
-        while not VcfData do Citizen.Wait(0) end
+        while not ElsxmlData do Citizen.Wait(0) end
 
-        for netVehicle, _ in pairs(ElsEnabledVehicles) do
-            local vehicle = NetToVeh(netVehicle)
-            local data = VcfData[GetVehicleModelName(vehicle)]
+        for vehicle, _ in pairs(kjEnabledVehicles) do
+            local data = ElsxmlData[GetCarHash(vehicle)]
 
-            if not data then
-                Debug.warning('No VCF data found for vehicle ')
-                goto continue
+            if data then
+                for extra, info in pairs(data.extras) do
+                    if IsVehicleExtraTurnedOn(vehicle, extra) and info.env_light then
+                        local offset = vector3(info.env_pos.x, info.env_pos.y, info.env_pos.z)
+                        local light = {
+                            type = 'extra',
+                            name = extra
+                        }
+
+                        -- flash on walls
+                        CreateEnviromentLight(vehicle, light, offset, info.env_color)
+                    end
+                end
+
+                for misc, info in pairs(data.miscs) do
+                    if IsVehicleMiscTurnedOn(vehicle, misc) and info.env_light then
+                        local offset = vector3(info.env_pos.x, info.env_pos.y, info.env_pos.z)
+                        local light = {
+                            type = 'misc',
+                            name = ConvertMiscIdToName(misc)
+                        }
+
+                        -- flash on walls
+                        CreateEnviromentLight(vehicle, light, offset, info.env_color)
+                    end
+                end
             end
-
-            HandleEnvironmentLights(vehicle, data)
-
-            ::continue::
         end
 
-        Citizen.Wait(50)
+        Citizen.Wait(0)
     end
 end)
