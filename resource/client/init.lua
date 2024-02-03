@@ -1,31 +1,54 @@
---- @type table All ELS enabled vehicles, keyed by network ID
-ElsEnabledVehicles = {}
+kjEnabledVehicles = {}
 
---- @type table All available VCF entries, keyed by vehicle model name
-VcfData = nil
+kjxmlData = nil
 
-local function loadAudioBanks()
-    for _, bank in ipairs(Config.AudioBanks) do
-        Debug.info('Requesting audio bank ' .. bank)
-        RequestScriptAudioBank(bank, false)
-    end
-end
+
 
 AddEventHandler('onClientResourceStart', function(name)
+
     if not Config then
+
         CancelEvent()
+
         return
+
     end
+
+
 
     if name:lower() ~= GetCurrentResourceName():lower() then
+
         CancelEvent()
+
         return
+
     end
 
-    loadAudioBanks()
+
+
+    -- load audio banks
+
+    for _, v in ipairs(Config.AudioBanks) do RequestScriptAudioBank(v, false) end
+
 end)
 
-RegisterNetEvent('MISS-ELS:client:sendElsInformation')
-AddEventHandler('MISS-ELS:client:sendElsInformation', function(information)
-    VcfData = information
+
+
+RegisterNetEvent('kjELS:sendELSInformation')
+
+AddEventHandler('kjELS:sendELSInformation', function(information) kjxmlData = information end)
+
+
+
+RegisterNetEvent('kjELS:initVehicle')
+
+AddEventHandler('kjELS:initVehicle', function()
+
+    local vehicle = GetVehiclePedIsUsing(PlayerPedId())
+
+
+
+    if kjEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
+
 end)
+
