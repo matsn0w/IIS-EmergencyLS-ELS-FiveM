@@ -1,6 +1,6 @@
-ELSEnabledVehicles = {}
+ElsEnabledVehicles = {}
 
-ELSxmlData = nil
+ElsxmlData = nil
 
 
 
@@ -48,7 +48,7 @@ AddEventHandler('MISS-ELS:initVehicle', function()
 
 
 
-    if ELSEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
+    if ElsEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
 
 end)
 
