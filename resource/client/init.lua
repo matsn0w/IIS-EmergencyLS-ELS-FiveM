@@ -1,6 +1,6 @@
-kjEnabledVehicles = {}
+ELSEnabledVehicles = {}
 
-kjxmlData = nil
+ELSxmlData = nil
 
 
 
@@ -34,21 +34,21 @@ end)
 
 
 
-RegisterNetEvent('kjELS:sendELSInformation')
+RegisterNetEvent('MISS-ELS:sendELSInformation')
 
-AddEventHandler('kjELS:sendELSInformation', function(information) kjxmlData = information end)
+AddEventHandler('MISS-ELS:sendELSInformation', function(information) kjxmlData = information end)
 
 
 
-RegisterNetEvent('kjELS:initVehicle')
+RegisterNetEvent('MISS-ELS:initVehicle')
 
-AddEventHandler('kjELS:initVehicle', function()
+AddEventHandler('MISS-ELS:initVehicle', function()
 
     local vehicle = GetVehiclePedIsUsing(PlayerPedId())
 
 
 
-    if kjEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
+    if ELSEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
 
 end)
 
