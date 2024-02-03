@@ -1,5 +1,5 @@
-RegisterNetEvent('MISS-ELS:toggleExtra')
-AddEventHandler('MISS-ELS:toggleExtra', function(vehicle, extra)
+RegisterNetEvent('kjELS:toggleExtra')
+AddEventHandler('kjELS:toggleExtra', function(vehicle, extra)
     if not vehicle or not extra then
         CancelEvent()
         return
@@ -32,11 +32,11 @@ RegisterCommand('extra', function(source, args)
     local vehicle = GetVehiclePedIsIn(ped)
     local extra = args[1] or -1
 
-    TriggerEvent('MISS-ELS:toggleExtra', vehicle, extra)
+    TriggerEvent('kjELS:toggleExtra', vehicle, extra)
 end)
 
-RegisterNetEvent('MISS-ELS:toggleMisc')
-AddEventHandler('MISS-ELS:toggleMisc', function(vehicle, misc)
+RegisterNetEvent('kjELS:toggleMisc')
+AddEventHandler('kjELS:toggleMisc', function(vehicle, misc)
     if not vehicle or not misc then
         CancelEvent()
         return
@@ -70,5 +70,5 @@ RegisterCommand('misc', function(source, args)
         return
     end
 
-    TriggerEvent('MISS-ELS:toggleMisc', vehicle, ConvertMiscNameToId(misc))
+    TriggerEvent('kjELS:toggleMisc', vehicle, ConvertMiscNameToId(misc))
 end)
