@@ -1,14 +1,13 @@
-local function AddHighBeamMenuEntry(netVehicle)
-    local checked = ElsEnabledVehicles[netVehicle].highBeamEnabled
+local function AddHighBeamMenuEntry(vehicle)
+    local checked = kjEnabledVehicles[vehicle].highBeamEnabled
 
     if WarMenu.CheckBox(Config.Translations.VehicleControlMenu.FlashingHighBeam, checked) then
-        ElsEnabledVehicles[netVehicle].highBeamEnabled = not checked
+        kjEnabledVehicles[vehicle].highBeamEnabled = not checked
     end
 end
 
---- @param netVehicle number
 local function AddStaticsEntries(vehicle)
-    local statics = VcfData[GetVehicleModelName(vehicle)].statics
+    local statics = kjxmlData[GetCarHash(vehicle)].statics
 
     for extra, info in spairs(statics.extras) do
         local name = info.name or ('Extra ' .. extra)
@@ -16,7 +15,10 @@ local function AddStaticsEntries(vehicle)
         local extraExists = DoesExtraExist(vehicle, extra)
 
         if WarMenu.CheckBox(name, checked) and extraExists then
+            -- disable auto repairs
             SetVehicleAutoRepairDisabled(vehicle, true)
+
+            -- toggle the extra
             SetVehicleExtra(vehicle, extra, checked)
         end
 
@@ -33,7 +35,8 @@ local function AddStaticsEntries(vehicle)
         local miscExists = DoesMiscExist(vehicle, misc)
 
         if WarMenu.CheckBox(name, checked) and miscExists then
-            TriggerEvent('MISS-ELS:toggleMisc', vehicle, misc)
+            -- toggle the misc
+            TriggerEvent('kjELS:toggleMisc', vehicle, misc)
         end
 
         if not miscExists then
@@ -49,11 +52,11 @@ local function ShowMainMenu()
         WarMenu.OpenMenu('main')
 
         while true do
-            if WarMenu.Begin('main') then
-                local ped = PlayerPedId()
-                local vehicle = GetVehiclePedIsIn(ped)
+            local ped = PlayerPedId()
+            local vehicle = GetVehiclePedIsIn(ped)
 
-                AddHighBeamMenuEntry(VehToNet(vehicle))
+            if WarMenu.Begin('main') then
+                AddHighBeamMenuEntry(vehicle)
                 AddStaticsEntries(vehicle)
 
                 WarMenu.End()
@@ -81,7 +84,7 @@ local style = {
     subTitleColor = { 88, 172, 217 },
 }
 
-WarMenu.CreateMenu('main', 'MISS-ELS', Config.Translations.VehicleControlMenu.MenuTitle)
+WarMenu.CreateMenu('main', 'MISS ELS', Config.Translations.VehicleControlMenu.MenuTitle)
 WarMenu.SetMenuStyle('main', style)
 
 RegisterCommand('MISS-ELS:open-statics-menu', function ()
