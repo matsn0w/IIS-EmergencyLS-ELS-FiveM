@@ -12,15 +12,15 @@ local function ToggleMisc(vehicle, misc, toggle)
 end
 
 local function SetLightStage(vehicle, stage, toggle)
-    local ELSvehicle = kjEnabledVehicles[vehicle]
-    local VCFdata = kjxmlData[GetCarHash(vehicle)]
+    local ELSvehicle = ElsEnabledVehicles[vehicle]
+    local VCFdata = ElsxmlData[GetCarHash(vehicle)]
 
     -- get the pattern data
     local patternData = VCFdata.patterns[ConvertStageToPattern(stage)]
 
     -- reset all extras and miscs
-    TriggerEvent('kjELS:resetExtras', vehicle)
-    TriggerEvent('kjELS:resetMiscs', vehicle)
+    TriggerEvent('MISS-ELS:resetExtras', vehicle)
+    TriggerEvent('MISS-ELS:resetMiscs', vehicle)
 
     -- set the light state
     ELSvehicle[stage] = toggle
@@ -133,15 +133,15 @@ local function SetLightStage(vehicle, stage, toggle)
 end
 
 local function StaticsIncludesExtra(model, extra)
-    return kjxmlData[model].statics.extras[extra] ~= nil
+    return ElsxmlData[model].statics.extras[extra] ~= nil
 end
 
 local function StaticsIncludesMisc(model, misc)
-    return kjxmlData[model].statics.miscs[misc] ~= nil
+    return ElsxmlData[model].statics.miscs[misc] ~= nil
 end
 
-RegisterNetEvent('kjELS:resetExtras')
-AddEventHandler('kjELS:resetExtras', function(vehicle)
+RegisterNetEvent('MISS-ELS:resetExtras')
+AddEventHandler('MISS-ELS:resetExtras', function(vehicle)
     if not vehicle then
         CancelEvent()
         return
@@ -149,13 +149,13 @@ AddEventHandler('kjELS:resetExtras', function(vehicle)
 
     local model = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle))
 
-    if not SetContains(kjxmlData, model) then
+    if not SetContains(ElsxmlData, model) then
         CancelEvent()
         return
     end
 
     -- loop through all extra's
-    for extra, info in pairs(kjxmlData[model].extras) do
+    for extra, info in pairs(ElsxmlData[model].extras) do
         -- check if we can control this extra
         if info.enabled == true and not StaticsIncludesExtra(model, extra) then
             -- disable auto repairs
@@ -167,8 +167,8 @@ AddEventHandler('kjELS:resetExtras', function(vehicle)
     end
 end)
 
-RegisterNetEvent('kjELS:resetMiscs')
-AddEventHandler('kjELS:resetMiscs', function(vehicle)
+RegisterNetEvent('MISS-ELS:resetMiscs')
+AddEventHandler('MISS-ELS:resetMiscs', function(vehicle)
     if not vehicle then
         CancelEvent()
         return
@@ -176,13 +176,13 @@ AddEventHandler('kjELS:resetMiscs', function(vehicle)
 
     local model = GetDisplayNameFromVehicleModel(GetEntityModel(vehicle))
 
-    if not SetContains(kjxmlData, model) then
+    if not SetContains(ElsxmlData, model) then
         CancelEvent()
         return
     end
 
     -- loop through all miscs
-    for misc, info in pairs(kjxmlData[model].miscs) do
+    for misc, info in pairs(ElsxmlData[model].miscs) do
         -- check if we can control this misc
         if info.enabled == true and not StaticsIncludesMisc(model, extra) then
             -- disable the misc
@@ -191,21 +191,21 @@ AddEventHandler('kjELS:resetMiscs', function(vehicle)
     end
 end)
 
-RegisterNetEvent('kjELS:toggleLights')
-AddEventHandler('kjELS:toggleLights', function(vehicle, stage, toggle)
+RegisterNetEvent('MISS-ELS:toggleLights')
+AddEventHandler('MISS-ELS:toggleLights', function(vehicle, stage, toggle)
     if not vehicle then
         CancelEvent()
         return
     end
 
-    if kjEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
+    if ElsEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
 
     -- set the light stage
     SetLightStage(vehicle, stage, toggle)
 end)
 
-RegisterNetEvent('kjELS:updateHorn')
-AddEventHandler('kjELS:updateHorn', function(playerid, status)
+RegisterNetEvent('MISS-ELS:updateHorn')
+AddEventHandler('MISS-ELS:updateHorn', function(playerid, status)
     local vehicle = GetVehiclePedIsUsing(GetPlayerPed(GetPlayerFromServerId(playerid)))
 
     if not vehicle then
@@ -213,15 +213,15 @@ AddEventHandler('kjELS:updateHorn', function(playerid, status)
         return
     end
 
-    if kjEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
+    if ElsEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
 
-    local ELSvehicle = kjEnabledVehicles[vehicle]
+    local ELSvehicle = ElsEnabledVehicles[vehicle]
 
     -- toggle the horn state (true = on, false = off)
     ELSvehicle.horn = status
 
     -- get the sounds from the VCF
-    local sounds = kjxmlData[GetCarHash(vehicle)].sounds
+    local sounds = ElsxmlData[GetCarHash(vehicle)].sounds
 
     -- horn is honking
     if ELSvehicle.sound_id ~= nil then
@@ -248,14 +248,14 @@ AddEventHandler('kjELS:updateHorn', function(playerid, status)
     end
 end)
 
--- run on kjELS:setSirenState
-RegisterNetEvent('kjELS:updateSiren')
-AddEventHandler('kjELS:updateSiren', function(playerid, status)
+-- run on MISS-ELS:setSirenState
+RegisterNetEvent('MISS-ELS:updateSiren')
+AddEventHandler('MISS-ELS:updateSiren', function(playerid, status)
     local vehicle = GetVehiclePedIsUsing(GetPlayerPed(GetPlayerFromServerId(playerid)))
 
-    if kjEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
+    if ElsEnabledVehicles[vehicle] == nil then AddVehicleToTable(vehicle) end
 
-    local ELSvehicle = kjEnabledVehicles[vehicle]
+    local ELSvehicle = ElsEnabledVehicles[vehicle]
 
     -- toggle the siren state (true = on, false = off)
     ELSvehicle.siren = status
@@ -270,7 +270,7 @@ AddEventHandler('kjELS:updateSiren', function(playerid, status)
     end
 
     -- get the sounds from the VCF
-    local sounds = kjxmlData[GetCarHash(vehicle)].sounds
+    local sounds = ElsxmlData[GetCarHash(vehicle)].sounds
 
     -- there are 4 possible siren sounds
     local statuses = {1, 2, 3, 4}
@@ -293,8 +293,8 @@ AddEventHandler('kjELS:updateSiren', function(playerid, status)
     SetVehicleHasMutedSirens(vehicle, true)
 end)
 
-RegisterNetEvent('kjELS:updateIndicators')
-AddEventHandler('kjELS:updateIndicators', function(dir, toggle)
+RegisterNetEvent('MISS-ELS:updateIndicators')
+AddEventHandler('MISS-ELS:updateIndicators', function(dir, toggle)
     local vehicle = GetVehiclePedIsIn(PlayerPedId())
 
     -- disable all indicators first
@@ -340,10 +340,10 @@ end
 Citizen.CreateThread(function()
     while true do
         -- wait for VCF data to load
-        while not kjxmlData do Citizen.Wait(0) end
+        while not ElsxmlData do Citizen.Wait(0) end
 
         for vehicle, _ in pairs(kjEnabledVehicles) do
-            local data = kjxmlData[GetCarHash(vehicle)]
+            local data = ElsxmlData[GetCarHash(vehicle)]
 
             if data then
                 for extra, info in pairs(data.extras) do
