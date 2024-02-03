@@ -1,28 +1,28 @@
-RegisterServerEvent('kjELS:setSirenState')
+RegisterServerEvent('MISS-ELS:setSirenState')
 
-AddEventHandler('kjELS:setSirenState', function(state)
+AddEventHandler('MISS-ELS:setSirenState', function(state)
 
-    TriggerClientEvent('kjELS:updateSiren', -1, source, state)
-
-end)
-
-
-
-RegisterServerEvent('kjELS:toggleHorn')
-
-AddEventHandler('kjELS:toggleHorn', function(state)
-
-    TriggerClientEvent('kjELS:updateHorn', -1, source, state)
+    TriggerClientEvent('MISS-ELS:updateSiren', -1, source, state)
 
 end)
 
 
 
-RegisterNetEvent('kjELS:sv_Indicator')
+RegisterServerEvent('MISS-ELS:toggleHorn')
 
-AddEventHandler('kjELS:sv_Indicator', function(direction, toggle)
+AddEventHandler('MISS-ELS:toggleHorn', function(state)
 
-    TriggerClientEvent('kjELS:updateIndicators', source, direction, toggle)
+    TriggerClientEvent('MISS-ELS:updateHorn', -1, source, state)
+
+end)
+
+
+
+RegisterNetEvent('MISS-ELS:sv_Indicator')
+
+AddEventHandler('MISS-ELS:sv_Indicator', function(direction, toggle)
+
+    TriggerClientEvent('MISS-ELS:updateIndicators', source, direction, toggle)
 
 end)
 
