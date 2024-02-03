@@ -1,4 +1,4 @@
-kjxmlData = {}
+ElsxmlData = {}
 
 local systemOS = nil
 
@@ -266,17 +266,17 @@ AddEventHandler('onResourceStart', function(name)
 
     -- send the ELS data to all clients
 
-    TriggerClientEvent('kjELS:sendELSInformation', -1, kjxmlData)
+    TriggerClientEvent('MISS-ELS:sendELSInformation', -1, kjxmlData)
 
 end)
 
 
 
-RegisterServerEvent('kjELS:requestELSInformation')
+RegisterServerEvent('MISS-ELS:requestELSInformation')
 
-AddEventHandler('kjELS:requestELSInformation', function()
+AddEventHandler('MISS-ELS:requestELSInformation', function()
 
-    TriggerClientEvent('kjELS:sendELSInformation', source, kjxmlData)
+    TriggerClientEvent('MISS-ELS:sendELSInformation', source, kjxmlData)
 
 end)
 
@@ -286,7 +286,7 @@ RegisterNetEvent('baseevents:enteredVehicle')
 
 AddEventHandler('baseevents:enteredVehicle', function(veh, seat, name)
 
-    TriggerClientEvent('kjELS:initVehicle', source)
+    TriggerClientEvent('MISS-ELS:initVehicle', source)
 
 end)
 
